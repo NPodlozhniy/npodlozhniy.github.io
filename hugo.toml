@@ -1,4 +1,4 @@
-baseURL = 'https://npodlozhniy.github.io'
+baseURL = 'https://npodlozhniy.github.io/'
 languageCode = 'en-gb'
 title = 'Nikita Podlozhnyi'
 theme = 'hugo-PaperMod'
