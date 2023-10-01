@@ -1,0 +1,4 @@
+baseURL = 'https://npodlozhnyi.github.io'
+languageCode = 'en-gb'
+title = 'Nikita Podlozhnyi'
+theme = 'hugo-PaperMod'
