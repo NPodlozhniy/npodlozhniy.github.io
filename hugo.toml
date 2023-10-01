@@ -1,5 +1,5 @@
 baseURL = 'https://npodlozhniy.github.io/'
 languageCode = 'en-gb'
 title = 'Nikita Podlozhnyi'
-theme = 'hugo-PaperMod'
-publishDir = 'public'
+theme = 'PaperMod'
+publishDir = 'docs'
