@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on Подложный Никита</title>
+    <link>https://npodlozhniy.github.io/ru/posts/</link>
+    <description>Recent content in Posts on Подложный Никита</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru</language>
+    <lastBuildDate>Sun, 01 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/ru/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Первая попыточка</title>
+      <link>https://npodlozhniy.github.io/ru/posts/my-first-post/</link>
+      <pubDate>Sun, 01 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://npodlozhniy.github.io/ru/posts/my-first-post/</guid>
+      <description>Введение This is bold text, and this is emphasized text.
+Текст на русском
+###Опа
+Еще текста немного</description>
+    </item>
+    
+  </channel>
+</rss>
