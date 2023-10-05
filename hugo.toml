@@ -22,8 +22,9 @@ ShowWordCount = false
 showtoc = true
 tocopen = true
 
-  [params.assets]
-  disableFingerprinting = true
+  # if failed to find a valid digest in the 'integrity' attribute for resource bug
+  # [params.assets]
+  # disableFingerprinting = true
 
   [params.profileMode]
   enabled = true
