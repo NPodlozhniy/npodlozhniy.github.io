@@ -47,15 +47,6 @@ tocopen = true
   title = "GitHub"
   url = "https://github.com/NPodlozhniy"
 
-  [params.fuseOpts]
-  isCaseSensitive = false
-  shouldSort = true
-  location = 0
-  distance = 1_000
-  threshold = 0.4
-  minMatchCharLength = 0
-  keys = [ "title", "permalink", "summary", "content" ]
-
 [languages]
 
   [languages.en]
@@ -118,7 +109,6 @@ tocopen = true
 	name = "Архив"
 	url = "archives"
 	weight = 4
-
 
 
   [languages.ru.profileMode]
