@@ -37,16 +37,16 @@ tocopen = true
     name = "Download Resume"
     url = "PodlozhnyiNikitaCV.pdf"
 
-	[[params.socialIcons]]
-	name = "linkedin"
-	title = "LinkedIn"
-	url = "https://www.linkedin.com/in/niki4-inc/"
+  [[params.socialIcons]]
+  name = "linkedin"
+  title = "LinkedIn"
+  url = "https://www.linkedin.com/in/niki4-inc/"
 
-	[[params.socialIcons]]
-	name = "github"
-	title = "GitHub"
-	url = "https://github.com/NPodlozhniy"
- 
+  [[params.socialIcons]]
+  name = "github"
+  title = "GitHub"
+  url = "https://github.com/NPodlozhniy"
+
   [params.fuseOpts]
   isCaseSensitive = false
   shouldSort = true
@@ -81,5 +81,5 @@ name = "Archive"
 url = "archives"
 weight = 4
 
-
-
+[outputs]
+home = ["HTML", "RSS", "JSON"]
