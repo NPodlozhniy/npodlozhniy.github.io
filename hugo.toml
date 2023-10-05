@@ -56,30 +56,81 @@ tocopen = true
   minMatchCharLength = 0
   keys = [ "title", "permalink", "summary", "content" ]
 
+[languages]
 
-[[menu.main]]
-identifier = "home"
-name = "Home"
-url = "/"
-weight = 1
+  [languages.en]
+  languageName = ":en:"
+  languageAltTitle = "English"
+  weight = 10
+  [languages.en.menu]
 
-[[menu.main]]
-identifier = "posts"
-name = "Posts"
-url = "/posts/"
-weight = 2
+    [[languages.en.menu.main]]
+    identifier = "home"
+    name = "Home"
+    url = "/"
+    weight = 1
 
-[[menu.main]]
-identifier = "search"
-name = "Search"
-url = "search"
-weight = 3
+	[[languages.en.menu.main]]
+	identifier = "posts"
+	name = "Posts"
+	url = "/posts/"
+	weight = 2
 
-[[menu.main]]
-identifier = "archives"
-name = "Archive"
-url = "archives"
-weight = 4
+	[[languages.en.menu.main]]
+	identifier = "search"
+	name = "Search"
+	url = "search"
+	weight = 3
+
+	[[languages.en.menu.main]]
+	identifier = "archives"
+	name = "Archive"
+	url = "archives"
+	weight = 4
+
+  [languages.ru]
+  languageName = ":ru:"
+  languageAltTitle = "Russian"
+  weight = 1
+  title = "Подложный Никита"
+  [languages.ru.menu]
+
+	[[languages.ru.menu.main]]
+	identifier = "home"
+	name = "Главная"
+	url = "/"
+	weight = 1
+
+	[[languages.ru.menu.main]]
+	identifier = "posts"
+	name = "Статьи"
+	url = "/posts/"
+	weight = 2
+
+	[[languages.ru.menu.main]]
+	identifier = "search"
+	name = "Поиск"
+	url = "search"
+	weight = 3
+
+	[[languages.ru.menu.main]]
+	identifier = "archives"
+	name = "Архив"
+	url = "archives"
+	weight = 4
+
+
+
+  [languages.ru.profileMode]
+  enabled = true
+  title = "Подложный Никита"
+  imageUrl = "https://avatars.githubusercontent.com/NPodlozhniy"
+  subtitle = "Опытный аналитик данных"
+
+    [[languages.ru.profileMode.buttons]]
+    name = "Скачать Резюме"
+    url = "PodlozhnyiNikitaCV.pdf"
+
 
 [outputs]
 home = ["HTML", "RSS", "JSON"]
