@@ -8,3 +8,5 @@ TO DO:
  - set up rss
  - add favicon
  - make comments availabile
+ - add option to suggest an edit
+ - fix surname misspelling in domain name

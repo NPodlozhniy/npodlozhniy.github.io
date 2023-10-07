@@ -1,11 +1,14 @@
 baseURL = "https://npodlozhniy.github.io/"
 languageCode = "en-gb"
-title = "Nikita Podlozhnyi"
+title = "Nikita Podlozhniy"
 theme = "PaperMod"
 publishDir = "docs"
 paginate = 3
 
 [params]
+
+env = "production"
+
 defaultTheme = "dark"
 disableThemeToggle = false
 
@@ -28,7 +31,7 @@ tocopen = true
 
   [params.profileMode]
   enabled = true
-  title = "Nikita Podlozhnyi"
+  title = "Nikita Podlozhniy"
   subtitle = "Senior Data Scientist"
   imageUrl = "https://avatars.githubusercontent.com/NPodlozhniy"
   imageTitle = "Image by Author"
