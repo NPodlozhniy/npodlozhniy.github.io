@@ -1,12 +1,14 @@
-ok, let's rebuild it from scratch
+DONE
+ - Add RU language
+ - Enable SEO indexing - [Google Search Console](https://search.google.com/search-console?resource_id=https%3A%2F%2Fnpodlozhniy.github.io%2F)
+ - Turn on Google Analytics - [GA Report](https://analytics.google.com/analytics/web/#/p410388205/reports/intelligenthome?params=_u..nav%3Dmaui)
+ - Set up RSS
 
 TO DO:
- - fix search engine (still unclear, works locally)
- - add RU language (done)
- - enable seo indexing
- - turn on google analytics
- - set up rss
- - add favicon
- - make comments availabile
- - add option to suggest an edit
- - fix surname misspelling in domain name
+ - Add favicon
+ - Make comments availabile
+ - Add option to suggest an edit (?)
+ 
+ BACKLOG
+  - Fix search engine (still unclear, works locally)
+  - Fix surname misspelling in domain name

@@ -22,7 +22,7 @@ ShowBreadCrumbs = true
 ShowPostNavLinks = true
 ShowWordCount = false
 
-# ShowRssButtonInSectionTermList = true
+ShowRssButtonInSectionTermList = true
 
 showtoc = true
 tocopen = true
