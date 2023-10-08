@@ -5,6 +5,8 @@ theme = "PaperMod"
 publishDir = "docs"
 paginate = 3
 
+googleAnalytics = "G-ESWD18X008"
+
 [params]
 
 env = "production"
