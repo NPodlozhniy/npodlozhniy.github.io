@@ -1,0 +1,24 @@
+<div id="disqus_thread"></div>
+<script>
+	
+    var disqus_config = function () {
+    this.page.url = '{{ .Permalink }}';  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = '{{ .Params.id }}'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+	this.language = document.documentElement.lang; // Define language from page
+	};
+ 
+    (function() { // DON'T EDIT THIS FUNCTION
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-npodlozhniy-github-io-2.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+	
+    document.addEventListener('theme-change', function(e) { // DISQUS THEME SWITCHING
+		if (document.readyState == 'complete') {
+			DISQUS.reset({ reload: true, config: disqus_config });
+		}
+	});
+
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>

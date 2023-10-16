@@ -15,7 +15,7 @@ defaultTheme = "dark"
 disableThemeToggle = false
 
 ShowShareButtons = true
-ShareButtons = ["telegram", "linkedin", "facebook"]
+ShareButtons = ["twitter", "telegram", "linkedin", "facebook"]
 ShowReadingTime = true
 ShowCodeCopyButtons = true
 ShowBreadCrumbs = true
@@ -26,6 +26,8 @@ ShowRssButtonInSectionTermList = true
 
 showtoc = true
 tocopen = true
+
+comments = true
 
   # if failed to find a valid digest in the 'integrity' attribute for resource bug
   # [params.assets]
