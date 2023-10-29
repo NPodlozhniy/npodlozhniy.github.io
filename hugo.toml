@@ -7,6 +7,11 @@ paginate = 3
 
 googleAnalytics = "G-ESWD18X008"
 
+# configure Hugo’s markdown renderer to allow raw HTML
+ignoreFiles = ["\\.ipynb$", "\\.csv$"]
+[markup.goldmark.renderer]
+unsafe= true
+
 [params]
 
 env = "production"
