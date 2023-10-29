@@ -30,6 +30,20 @@
 
     </style>
 </noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+    onload="renderMathInElement(document.body, 
+    {
+              delimiters: [
+                  {left: '$$', right: '$$', display: true},
+                  {left: '\\[', right: '\\]', display: true},
+                  {left: '$', right: '$', display: false},
+                  {left: '\\(', right: '\\)', display: false}
+              ]
+          }
+    );"></script>
+
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
 <script>
 var doNotTrack = false;
@@ -148,6 +162,19 @@ if (!doNotTrack) {
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2>Customer Feedback Analysis in Python
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Background Every company has always taken pride in providing excellent customer service, therefore it’s crucial as part of ongoing improvements for product to collect and analyse feedback after each customer interaction on support channels
+A top-notch analyst in Hi-Tech industry should be in capable of handle at least base feedback analysis quickly and efficiently and going through this article you will be introduced with the necessary concepts and eventually given the base guide on how to unlock the true power of text data...</p>
+  </div>
+  <footer class="entry-footer"><span title='2023-10-29 00:00:00 +0000 UTC'>October 29, 2023</span>&nbsp;·&nbsp;17 min&nbsp;·&nbsp;Nikita Podlozhniy</footer>
+  <a class="entry-link" aria-label="post link to Customer Feedback Analysis in Python" href="https://npodlozhniy.github.io/posts/feedback-analysis/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2>My First Post<sup><span class="entry-isdraft">&nbsp;&nbsp;[draft]</span></sup>
     </h2>
   </header>
@@ -157,19 +184,6 @@ Visit the Hugo website!</p>
   </div>
   <footer class="entry-footer"><span title='2023-10-01 15:37:38 +0100 BST'>October 1, 2023</span>&nbsp;·&nbsp;1 min</footer>
   <a class="entry-link" aria-label="post link to My First Post" href="https://npodlozhniy.github.io/posts/my-first-post/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2>My Second Post<sup><span class="entry-isdraft">&nbsp;&nbsp;[draft]</span></sup>
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Introduction Again in English
-Note, here is no transalate option</p>
-  </div>
-  <footer class="entry-footer"><span title='2023-10-01 15:37:38 +0100 BST'>October 1, 2023</span>&nbsp;·&nbsp;1 min</footer>
-  <a class="entry-link" aria-label="post link to My Second Post" href="https://npodlozhniy.github.io/posts/my-second-post/"></a>
 </article>
     </main>
     
@@ -238,6 +252,10 @@ Note, here is no transalate option</p>
             document.body.classList.add('dark');
             localStorage.setItem("pref-theme", 'dark');
         }
+
+		
+		const event = new Event('theme-change');
+		document.dispatchEvent(event)
     })
 
 </script>

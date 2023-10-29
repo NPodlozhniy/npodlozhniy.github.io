@@ -6,7 +6,17 @@
     <description>Recent content in Posts on Nikita Podlozhniy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 01 Oct 2023 15:37:38 +0100</lastBuildDate><atom:link href="https://npodlozhniy.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 29 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Customer Feedback Analysis in Python</title>
+      <link>https://npodlozhniy.github.io/posts/feedback-analysis/</link>
+      <pubDate>Sun, 29 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://npodlozhniy.github.io/posts/feedback-analysis/</guid>
+      <description>Background Every company has always taken pride in providing excellent customer service, therefore it&amp;rsquo;s crucial as part of ongoing improvements for product to collect and analyse feedback after each customer interaction on support channels
+A top-notch analyst in Hi-Tech industry should be in capable of handle at least base feedback analysis quickly and efficiently and going through this article you will be introduced with the necessary concepts and eventually given the base guide on how to unlock the true power of text data</description>
+    </item>
+    
     <item>
       <title>My First Post</title>
       <link>https://npodlozhniy.github.io/posts/my-first-post/</link>
@@ -15,16 +25,6 @@
       <guid>https://npodlozhniy.github.io/posts/my-first-post/</guid>
       <description>Introduction This is bold text, and this is emphasized text.
 Visit the Hugo website!</description>
-    </item>
-    
-    <item>
-      <title>My Second Post</title>
-      <link>https://npodlozhniy.github.io/posts/my-second-post/</link>
-      <pubDate>Sun, 01 Oct 2023 15:37:38 +0100</pubDate>
-      
-      <guid>https://npodlozhniy.github.io/posts/my-second-post/</guid>
-      <description>Introduction Again in English
-Note, here is no transalate option</description>
     </item>
     
   </channel>
