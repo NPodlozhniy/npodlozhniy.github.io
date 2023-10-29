@@ -19,7 +19,7 @@ ShareButtons = ["twitter", "telegram", "linkedin", "facebook"]
 ShowReadingTime = true
 ShowCodeCopyButtons = true
 ShowBreadCrumbs = true
-ShowPostNavLinks = true
+ShowPostNavLinks = false
 ShowWordCount = false
 
 ShowRssButtonInSectionTermList = true
@@ -28,6 +28,7 @@ showtoc = true
 tocopen = true
 
 comments = true
+math = true
 
   # if failed to find a valid digest in the 'integrity' attribute for resource bug
   # [params.assets]
