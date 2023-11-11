@@ -14,6 +14,7 @@ jupyter: python3
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
 -->
 
 
@@ -76,7 +77,7 @@ As a general rule the analysis should be organized in a top-down manner, simple 
 
 1.  Data Mining - simple unsupervised data exploration to have a general idea of the data nature
 2.  Sentiment Analysis - search on what matters the most which reasons drive review to be positive or negative
-3.  Topic Modeling - main feedback themes extraction, improvement focuses identification
+3.  Topic Modelling - main feedback themes extraction, improvement focuses identification
 
 ## Analysis Process
 
@@ -105,6 +106,18 @@ profile.to_file("data-profile.html")
 ```
 
 </details>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"6b990a5e22dc416aa5853963b9a3df8c","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"2fa332dd7a7340888b6fab7e43c990d9","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"6917f082be9f4b2b931cf66b22bb476f","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"4939a00530444014ae409b5d8e92b11e","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
 
 Well, what are the main data patterns
 - the dataset constitutes 1276 tickets with customer feedback consisted of `csat_score` and `comment`
@@ -135,7 +148,7 @@ df['sentiment'] = df['csat_score'].apply(define_sentiment)
 
 #### Text cleaning
 
-Barely the role of data cleaning might be underestimated, its incredibly important step, if this is skipped the rest of analysis doesn't make any sense then.
+Barely the role of data cleaning might be underestimated, it's an incredibly important step, if this is skipped the rest of analysis doesn't make any sense then.
 
 Main cleaning that should be applied:
 - remove all the symbols and keep only words
@@ -148,7 +161,7 @@ The next step is tokenization: the are two main approaches here:
 - stemming - fast process of removing prefixes and suffixes to give a word a short form, that might not be a dictionary word though
 - lemmatization - finds meaningful word representation from dictionary and depends on the part-of-speech
 
-To summarize, the stemming is just searching for a common ground between words and cut ends then and therefore takes less time whereas lemmatization provides better results by performing a specific morphological analysis and produce real word which is extremely important for some human-interactive applications
+To summarize, the stemming is just searching for a common ground between words and cutting ends then and therefore it takes less time whereas lemmatization provides better results by performing a specific morphological analysis and produces a real word which is extremely important for some human-interactive applications
 
 Sounds like if the resources are not a problem it's better to use lemmatization by default, but there is an opinion that Stemming works efficiently for some specific tasks like: spam classification and feedback sentiment classification, given that it's the case, let's apply both and take a choice in the end
 
@@ -210,10 +223,10 @@ df[df.comments.notnull()][
 </details>
 
     ticket_id
-    43532202206808    In general, your app fails to much… don't reco...
+    43532202076873    Just asking me to show what I’m doing to give ...
+    43532202076331                                I haven’t had a reply
     43532202117219                                    All good 👍 thanks
-    43532202055120    Don´t find the wrong thing, but I get answer t...
-    43532202100779    Issue still isn’t resolved.I’ve waited and ref...
+    43532202073174    Chat went silent. After talking to someone the...
     43532202202546    Hi Valéria,\nIt still does not work. There mus...
     Name: comments, dtype: object
 
@@ -344,7 +357,7 @@ make_word_cloud(frequent_ngrams(X_train["lemma_text"], 1))
 
 ![](PleoText_files/figure-markdown_strict/cell-11-output-1.png)
 
-Well, at first glance it looks like both tokenizers work very similar, one noticeable difference is that stemmer treats word pairs like `help` and `helpful` or `quick` and `quickly` as one token and actually it might be wrong, imagine if we encounter `helpful` more in positive sentence and `help` in negative, then they shouldn't be united
+Well, at first glance it looks like both tokenizers work very similarly, one noticeable difference is that stemmer treats word pairs like `help` and `helpful` or `quick` and `quickly` as one token and actually it might be wrong, imagine if we encounter `helpful` more in positive sentence and `help` in negative, then they shouldn't be united
 
 <details>
 <summary>Code</summary>
@@ -416,7 +429,7 @@ N-grams appear to be very informative:
 - in positive sentences, based on bigrams, customers say that the `response` was `quick`, `problem` was `solved` and the support was `very helpful`
 - in negative sentences, on the basis of trigrams, customers claim that the `issue`/`problem` `not` `resolved` sometimes the add `yet` or `still` to fully express their dissatisfaction
 
-To summarize, basic approach already give some meaningful insights and the hope that the reviews might be classified automatically quite well and themes can be modeled then
+To summarize, the basic approach has already given some meaningful insights and the hope that the reviews might be classified automatically quite well and themes can be modelled then
 
 #### Unsupervised TF-IDF
 
@@ -458,7 +471,7 @@ ax1.plot(min_word_counts, scores, "g--", linewidth=2)
 ax1.set_ylabel('Accuracy, %', color="g")
 ax1.set_xlabel('Minimal Word Frequency, #')
 ax2.set_ylabel('N Features, #', color="b")
-plt.title('K-Means Clasterization')
+plt.title('K-Means Clusterization')
 plt.show()
 ```
 
@@ -476,16 +489,16 @@ tfidf = TfidfVectorizer(min_df=69)
 X = tfidf.fit_transform(X_train["lemma_text"])
 words = np.array(tfidf.get_feature_names())
 
-print(f"Number of fetures: {X.shape[1]}, namely: ")
+print(f"Number of features: {X.shape[1]}, namely: ")
 print(*words)
 ```
 
 </details>
 
-    Number of fetures: 14, namely: 
+    Number of features: 14, namely: 
     answer get help helpful issue not problem quick resolve response solve still thank very
 
-The clasterization which based just on **14 words!** gives an accuracy higher than 75%, but it's the result only valid for the train sample, which was used to identify `min_df` hyperparameter, so to have an unbiased estimation test sample should be considered here
+The clusterization which is based just on **14 words!** gives an accuracy higher than 75%, but it's the result only valid for the train sample, which was used to identify `min_df` hyperparameter, so to have an unbiased estimation test sample should be considered here
 
 <details>
 <summary>Code</summary>
@@ -511,7 +524,7 @@ for idx in range(km.get_params()['n_clusters']):
     Cluster No. 0 very issue thank helpful quick resolve response
     Cluster No. 1 not issue resolve still solve problem get
 
-Well, looks like Cluster-0 catched positive feedback and Cluster-1 negative, then given that target is the value from \[-1, 1\] set, to define an accuracy some transformation must be in place first
+Well, looks like Cluster-0 caught positive feedback and Cluster-1 negative, then given that target is the value from \[-1, 1\] set, to define an accuracy some transformation must be put in place first
 
 <details>
 <summary>Code</summary>
@@ -547,19 +560,19 @@ Splendid, this toy example gives a clue that it's pretty good approach when you 
 
 ### Sentiment Analysis
 
-The goal of this part of article is to enhance unsupervised and build powerful classifier to eventually understand key drivers for review to be positive or negative from features extraction
+The goal of this part of the article is to enhance the unsupervised model and build a powerful classifier to eventually understand key drivers for review to be positive or negative from features extraction
 
 There are 2 main ways of doing Semantic Analysis:
 - train your own model using the available data
-- use pre trained deep learning models and fine-tune them if needed for this particular text specific
+- use pre-trained deep learning models and fine-tune them if needed for this particular text specific
 
-Below both approaches will be consider
+Both approaches is considered below
 
 #### Custom Regression Model
 
-Training of the custom model will be holded in 3 steps (again?)
+Training of the custom model will be held in 3 steps (again?)
 - Model architecture selection
-- Chosen model training and cross-validation
+- Selected model training and cross-validation
 - Feature analysis and general evaluation
 
 Well, by the `model` term stands combination of Vectorizer, which transform text data into a vector representation and Classifier that is training on these vectors to predict sentiment
@@ -679,7 +692,7 @@ Winners:
 
 On the basis of above analysis, the better approach will be to go with the first option because:
 1. there is a clear rationale to apply tf-idf over usual counter for the majority of text analysis task
-2. regression model is more flexible and highly likely after cross-validation we can get the value even higher from it than from Naive Bayes approach
+2. regression is more flexible model than Naive Bayes and highly likely that after cross-validation it can accomplish even higher accuracy
 3. reducing the feature space makes sense as it was for unsupervised learning
 
 <details>
@@ -929,12 +942,14 @@ scoring_results = sentiment_transformer_model(X_test["lemma_text"].to_list())
 
 </details>
 
+<!-- comment it out
     All model checkpoint layers were used when initializing TFRobertaForSequenceClassification.
 
     Some layers of TFRobertaForSequenceClassification were not initialized from the model checkpoint at cardiffnlp/twitter-roberta-base-sentiment-latest and are newly initialized: ['classifier']
     You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+-->
 
-The drawback of these approach becomes obvious as soon as you start apply it, even inference is taking a lot of time, finger crossed that it worths it, let's look at the classification quality
+The drawback of this approach becomes obvious as soon as you start applying it, even inference is taking a lot of time, fingers crossed it's worths it, let's look at the classification quality
 
 <details>
 <summary>Code</summary>
@@ -5863,17 +5878,17 @@ shap.plots.bar(
 
 ![](PleoText_files/figure-markdown_strict/cell-36-output-1.png)
 
-The shap library is very powerful tool to analyze text data, the logic which is hidden by many layers of the neural network might be easily and explicitly reflected, just have to wait
+The shap library is a very powerful tool to analyze text data, the logic which is hidden by many layers of the neural network might be easily and explicitly reflected, just wait
 
-Given that the model isn't very precise, there aren't much sense in detailed analysis of it's work, let's go to the next step and keep in mind that neural network altogether with shap is a very convenient tool to analyze texts in case of large datasets
+Given that the model isn't very precise, there isn't much sense in detailed analysis of its work, let's go to the next step and keep in mind that the neural network altogether with shap is a very convenient tool to analyze texts in case of large datasets
 
-### Topic Modeling
+### Topic Modelling
 
-The final section is devoted to the topic modeling problem. It's a family of algorithms that allows you to build the topics distribution model for the corpus of texts in an unsupervised manner.
+The final section is devoted to the topic modelling problem. It's a family of algorithms that allows you to build the topics distribution model for the corpus of texts in an unsupervised manner.
 
 The idea is to analyze positive and negative feedback separately and retrieve the things that customers appreciate in the support and the improvement focuses respectively. For now the focus will be on negative feedback, because it's more critical to identify the potential process problem whereas the positive feedback isn't as informative, apparently it should be modeled too if time permits
 
-Here for topic modeling is used one of the well-known model - LDA
+Here for topic modelling is used one of the well-known model - LDA
 
 <details>
 <summary>Code</summary>
@@ -6019,7 +6034,7 @@ for word in range(topic_profile.shape[0]):
 
 </details>
 
-Once we have all the matrices, let's visualize the data with Word Cloud where the size is represent the total probability for the word over all the themes and the color represent the theme for which the probability is maximum when receiving such a word as input
+Once we have all the matrices, let's visualize the data with Word Cloud where the size represents the total probability for the word over all the themes and the color reflects the theme for which the probability is reaching the maximum when receiving such a word as an input
 
 <details>
 <summary>Code</summary>
@@ -6134,7 +6149,7 @@ Using the excerpt of the data that is provided, it is barely possible to draw co
 
 2.  In addition from sentiment analysis it comes that the majority of reviews where the customer writes about chatbot `sonja` is positive, of course it doesn't necessarily mean that this bot is very helpful, it might be that clients just don't mention its name within the negative reviews, for example because of the ask to leave a comment is formulated in a different way after customer rate the support as 0 starts. Here more domain and business field knowledge are required to have an ultimate judgment, without such an expertise the bot looks useful at first glance
 
-3.  When it comes to improvement focuses on the basis of topic modeling approach it might be concluded that the negative feedback has 3 main categories (with examples):
+3.  When it comes to improvement focuses on the basis of topic modelling approach it might be concluded that the negative feedback has 3 main categories (with examples):
 
 -   Specific feedback - Particular account or payment problem
     \> When verifying my email. The link has expired? This has been consistent for the last 24hours. Please help.
