@@ -4,9 +4,10 @@ DONE
  - Turn on Google Analytics - [GA Report](https://analytics.google.com/analytics/web/#/p410388205/reports/intelligenthome?params=_u..nav%3Dmaui)
  - Set up RSS
  - Make comments availabile
+ - Add favicon
 
 TO DO
- - Add favicon
+  - ...
  
  BACKLOG
   - Fix search engine (still unclear, works locally)
