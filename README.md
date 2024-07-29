@@ -8,9 +8,10 @@
     For the last two scenarious don't forget to set env var to use the same Python kernel as used in your notebook, in my case `QUARTO_PYTHON=python311`
  3. Run `quarto preview content/posts/<your-folder>/<your-notebook>.ipynb`
  4. Run `hugo server -D` to test the site locally including draft posts
- 5. Comment the header <scripts> in you `.md` file if it wasn't rendered correctly
+ 5. Comment the header <script>'s in you `.md` file if the notebook .md file wasn't rendered correctly
  6. Move `.md` file one level up to `content/posts/`
- 6. Deploy to production with simple `hugo` command
+ 7. Deploy to production with simple `hugo` command
+ 8. Push to a remote github server. Done!
 
 ### Backlog
 

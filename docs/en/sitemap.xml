@@ -20,29 +20,9 @@
   </url><url>
     <loc>https://npodlozhniy.github.io/posts/</loc>
     <lastmod>2023-10-29T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="ru"
-                href="https://npodlozhniy.github.io/ru/posts/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://npodlozhniy.github.io/posts/"
-                />
   </url><url>
-    <loc>https://npodlozhniy.github.io/posts/my-first-post/</loc>
-    <lastmod>2023-10-01T15:37:38+01:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="ru"
-                href="https://npodlozhniy.github.io/ru/posts/my-first-post/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://npodlozhniy.github.io/posts/my-first-post/"
-                />
+    <loc>https://npodlozhniy.github.io/posts/dunnett-correction/</loc>
+    <lastmod>2023-07-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://npodlozhniy.github.io/archives/</loc>
     <xhtml:link
