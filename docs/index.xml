@@ -23,7 +23,7 @@ A top-notch analyst in Hi-Tech industry should be in capable of handle at least 
       <pubDate>Fri, 28 Jul 2023 00:00:00 +0000</pubDate>
       
       <guid>https://npodlozhniy.github.io/posts/dunnett-correction/</guid>
-      <description>Background We at HomeBuddy run a various number of AB tests to improve customer journey. A big part of efforts is allocated to onboarding funnel, hence the main metrics are conversions throughout this funnel. Usually we design multivariate tests with a few testing groups reflecting slightly different variations (often in terms of actual design) of the business hypothesis behind. No matter how you run the experiments you want to get accurate and powerful procedure, that&amp;rsquo;s why we use Dunnett&amp;rsquo;s correction for all of the experiments that we have to maximize the power of AB engine.</description>
+      <description>Background We at HomeBuddy run a various number of AB tests to improve customer journey. A big part of efforts is allocated to onboarding funnel, hence the main metrics are conversions throughout this funnel. Usually we design multivariate tests with a few testing groups reflecting slightly different variations (often in terms of actual design) of the business hypothesis behind. No matter how you run the experiments you want to get an accurate and powerful procedure, that&amp;rsquo;s why we use Dunnett&amp;rsquo;s correction for all of the experiments where we have to maximize the power of AB engine.</description>
     </item>
     
     
