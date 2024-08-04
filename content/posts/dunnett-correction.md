@@ -18,7 +18,7 @@ execute:
 We at HomeBuddy run a various number of AB tests to improve customer journey.
 A big part of efforts is allocated to onboarding funnel, hence the main metrics are conversions throughout this funnel.
 Usually we design multivariate tests with a few testing groups reflecting slightly different variations (often in terms of actual design) of the business hypothesis behind.
-No matter how you run the experiments you want to get accurate and powerful procedure, that's why we use Dunnett's correction for all of the experiments that we have to maximize the power of AB engine.
+No matter how you run the experiments you want to get an accurate and powerful procedure, that's why we use Dunnett's correction for all of the experiments where we have to maximize the power of AB engine.
 Are you curious what it is?
 
 ### Prerequisites
@@ -45,7 +45,7 @@ It's not a secret that in such a scenario the best practice is a standard Z-test
 
 $$ Z = \frac{\hat{p}_1 - \hat{p}_2}{\sqrt{P(1 - P)(\frac{1}{n_1} + \frac{1}{n_2})}} \space\text{,where}\space P  = \frac{\hat{p}_1n_1 + \hat{p}_2n_2}{n_1 + n_2} $$
 
-Under the conditions of the truth of the null hypothesis statistic follows standard normal distribution
+Under the conditions of the truth of the null hypothesis the statistic follows the standard normal distribution
 
 $$ Z \stackrel{H_0}{\sim} \mathbb{N}(0, 1) $$
 
@@ -122,7 +122,7 @@ print(f"p-value: {test.variant_pvalue(alternative='less'):.3f}, Z-statistic: {te
 
     p-value: 0.151, Z-statistic: -1.032
 
-For on the fly verification, the results might be compared to the output of well known `statsmodels` package.
+For an on fly verification, the results might be compared to the output of a well known `statsmodels` package.
 
 <details>
 <summary>Code</summary>
@@ -143,10 +143,10 @@ The numbers coincide and now we're ready to move to the main topic.
 ## Theory
 
 While often basic Z-test procedure is the appropriate option for AB analysis, it doesn't satisfy the genuine requirements for the statistical method when it comes to multiple hypothesis testing.
-I hope you understand what is the problem in case of having $n$ independent metrics in your test: if you set up acceptable Type I error rate $\alpha$ for each of them then the total probability to get at least one significant difference (dabbed as FWER) under the conditions of the truth of the null hypothesis (which means no difference between the groups by design) would be not $\alpha$ but $1 - (1 - \alpha)^n$ what totally invalidates the procedure.
+I hope you understand what is the problem in case of having $n$ independent metrics in your test: if you set up acceptable Type I error rate $\alpha$ for each of them then the total probability to get at least one significant difference (dubbed as FWER) under the conditions of the truth of the null hypothesis (which means no difference between the groups by design) would be not $\alpha$ but $1 - (1 - \alpha)^n$ what totally invalidates the procedure.
 
 There are two possible scenarios: either we have multiple metrics that we want to compare across the test and control group or we have several testing groups that apply different treatment to customers.
-Whilst the first option is more popular by a wide margin and has lots of solutions, the second one is often undercovered in the business industry and generally the same procedures are used.
+Whilst the first problem is more popular by a wide margin and has lots of solutions, the second one is often neglected in the business industry and generally the same procedures are used to solve it.
 If you apply any type of corrections for multiple testing you're already ahead of 80% of teams that don't, although what I want to show you is that the second scenario must be treated differently to extract more insights from your experiments.
 
 [Dunnet's test](https://en.wikipedia.org/wiki/Dunnett%27s_test) is a multiple comparison procedure developed specifically to compare each of a number of treatment groups to a control one, extended original [paper](https://www.jstor.org/stable/2528490?origin=crossref) was released in 1964. Dunnett's test is not a set aside procedure but more like an extension of monumental Student's T-test, for a specific design where every treatment group is compared to a single control one, which is leveraged to take into account the dependencies between comparisons. In case of proportions it's a Z-test, as long as we don't need to estimate variance for binomial distribution in addition to the probability of success.
@@ -173,12 +173,12 @@ $$ S^{2} = \frac{\sum_{i=0}^{n}{N_i\bar{p_i}(1 - \bar{p_i})}}{df} $$
 ## Canonical AB test
 
 First of all, to guarantee the accuracy we should challenge this specific criterion against a classical one in case when both of them are applicable - standard AB test.
-What is good about proportions we can easily simulate the data in the blink of an eye, so we're setting up a simulation and employ Monte Carlo process to check two things:
+What is good about proportions is that we can easily simulate the data in the blink of an eye, so we're setting up a simulation and employ Monte Carlo process to check two things:
 
 -   correctness - the criterion should meet the identified confidence level, which means that in case of AA comparison we should get Type I error in $\alpha$ percent of experiments
 -   power - as it comes from the theory in case of only two groups Dunnett's test is equal to a classical Z-test, so shall we call the implementation out?
 
-In addition to point estimate of False Positive Rate I offer to build 90% confidence interval to be more precise in the comparisons
+In addition to a point estimate of False Positive Rate I suggest building a 90% confidence interval to be more precise in the comparisons
 
 <details>
 <summary>Code</summary>
@@ -449,7 +449,7 @@ Super cool, both methods: Dunnett's Test without any corrections and Z-Test with
 
 ### Power
 
-Now it's the time to define a full fledged step-down procedure for multivariate testing as although its shortened version works well to define FWER it doesn't when it comes to a power analysis.
+Now it's the time to define a full-fledged step-down procedure for multivariate testing. Despite the fact that its shortened version works well to define FWER it doesn't when it comes to a power analysis.
 I prefer Sidak-Holm procedure as it's known as the most powerful procedure that controls FWER, however as long as sample size is increased the difference from Bonferroni-Holm is hardly noticeable.
 
 <details>
