@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Maturing conversions in AB-experiment | Nikita Podlozhniy</title>
+<meta name="keywords" content="">
+<meta name="description" content="Why you need to be patient and when cohort-wise approach is a flaw">
+<meta name="author" content="Nikita Podlozhniy">
+<link rel="canonical" href="https://npodlozhniy.github.io/posts/maturing-conversions/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.5c25c975546c048d1a5600aadb48425ae1bc921a9a18fe67d6955c9535260811.css" integrity="" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.acb54fd32bbc1982428b8850317e45d076b95012730a5936667e6bc21777692a.js" integrity="sha256-rLVP0yu8GYJCi4hQMX5F0Ha5UBJzClk2Zn5rwhd3aSo="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://npodlozhniy.github.io/favicons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://npodlozhniy.github.io/favicons/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://npodlozhniy.github.io/favicons/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://npodlozhniy.github.io/favicons/apple-touch-icon.png">
+<link rel="mask-icon" href="https://npodlozhniy.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://npodlozhniy.github.io/posts/maturing-conversions/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+    onload="renderMathInElement(document.body, 
+    {
+              delimiters: [
+                  {left: '$$', right: '$$', display: true},
+                  {left: '\\[', right: '\\]', display: true},
+                  {left: '$', right: '$', display: false},
+                  {left: '\\(', right: '\\)', display: false}
+              ]
+          }
+    );"></script>
+
+
+
+<script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-ESWD18X008', { 'anonymize_ip': false });
+}
+</script>
+<meta property="og:title" content="Maturing conversions in AB-experiment" />
+<meta property="og:description" content="Why you need to be patient and when cohort-wise approach is a flaw" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://npodlozhniy.github.io/posts/maturing-conversions/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-08-20T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-08-20T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Maturing conversions in AB-experiment"/>
+<meta name="twitter:description" content="Why you need to be patient and when cohort-wise approach is a flaw"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://npodlozhniy.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Maturing conversions in AB-experiment",
+      "item": "https://npodlozhniy.github.io/posts/maturing-conversions/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Maturing conversions in AB-experiment",
+  "name": "Maturing conversions in AB-experiment",
+  "description": "Why you need to be patient and when cohort-wise approach is a flaw",
+  "keywords": [
+    
+  ],
+  "articleBody": "\rBackground Hey, some time passed since the last post, where I described why it’s must to apply Dunnett’s correction for multivariate testing. This time I’m eager to open the topic of maturing metrics, particularly conversions, how to properly analyse the experiment with such a target, what are the options and which one is applied at HomeBuddy where we strive to squeeze maximum from every experiment.\nPrerequisites As usual the code snippets that are used for demo are written in Python, so to thoroughly follow the content, it’s better to have some exposure to the language and its main packages, although I’m adding extensive comments, so even if you’re not into programming you can grasp the pith anyway.\nDisclaimer: The actual notebook was written on Python 3.11.4 and to keep the results reproducible here is the list of particular packages that are being used specified with their versions.\nCode\rpip install --quiet --upgrade numpy==1.25.2 pandas==2.0.3 scipy==1.11.2 statsmodels==0.14.0 podlozhnyy_module==2.5.3 Data We need more data! This time the data simulation process is a little tricky than in case of a plain conversion as soon as we need to specify the maturation curve.\nIf you are not familiar with the concept of a maturation let me provide you with an example: imagine as a target in an AB experiment you have a deep conversion from a visit to a final goal, it may be an order for an arbitrary e-commerce web-site or the first payment in a mobile game.\nWhat all these deep actions usually have in common is that they are revenue-generating events which makes them a good proxy to measure the success of the experiment, from the other flip they take time to happen, depending on the specifics of the business, this could be even days or weeks.\nIn the context of HomeBuddy this might be an appointment or a deal that is our north star, as this is the reaper point where both sides (lead and contractor) reached their primary goal.\nIn order to avoid revealing the cards, I suggest we use an arbitrary maturation curve that is not inherited from our data, however it’s a pretty true-to-life example of how metric adds up to the final value.\nMaturation curves are usually might be described to a very high extent with Pareto distribution, which was initially developed to define a wealth’s distribution in the society, however the theory underneath is going way beyond widely known Pareto 80-20 principle as in essence it’s a parametric distribution that is good to define highly skewed data samples with a long heavy tail.\nIf you’re interested in challenging your metric using the materials from the post, I suggest you give a shot to ParetoApprox function from my module that basically finds the best Pareto distribution parameters to fit the supplied array of the data, and voila you have a random variable that describes your metric and therefore you can do an infinite sampling and verify hypotheses about the applied techniques.\nFor this post let’s stop at one specific and quite realistic distribution of the metric maturation by days.\nCode\rimport numpy as np import pandas as pd import podlozhnyy_module as pm from tqdm.notebook import tqdm What’s important is barely we can expect that all visitors finally will reach the goal and hence while those, who will, can be described with Pareto, the major part of visitors will never convert and hence the true distribution of visitors is the sampling between never converted visitors and the rest of them, whose conversion day is distributed by Pareto.\nHopefully I’ve already created such an “Extended” Pareto distribution and you can define a metric of such a nature right out of the box: ParetoExtended in addition to Pareto specific alpha, loc and scale params is taking default_proba and default_value which means what ultimate percentage of visitors would never convert and which particular value should I assign to them, it’s an arbitrary (usually negative) number that stands on the left of X axis from the main Pareto distribution.\nCode\rf = pm.pareto.ParetoExtended( alpha=1.161, default_value=0, default_proba=0.5 ) As an example here is the metric where the ultimate conversion is a half of the users (and the other half is never converted) and their conversions happen accordingly to a textbook Pareto principle 80-20\nCode\rfrom matplotlib import pyplot as plt plt.style.use('dark_background') def plot_maturating_curve(f: pm.pareto.ParetoExtended, xmin=0, ymin=None) -\u003e None: \"\"\" Plot maturating curve for the conversion that has given distribution \"\"\" xarr = np.linspace(xmin, 24, 100) cdf = [f.cdf(x) for x in xarr] weeks_x = range(6, 24, 7) weeks_cdf = [f.cdf(x) for x in weeks_x] plt.plot(xarr, cdf, 'y-', linewidth=2) plt.scatter(x=weeks_x, y=weeks_cdf, marker='o', s=36, c='y') plt.xlabel('Day No.') plt.ylabel('Cumulative Share of Conversions') plt.title('Maturating Curve') plt.xlim([min(xarr), max(xarr) + 1]) plt.ylim([ymin if ymin else f._zero_p, 1.0]) plt.grid() plt.show() plot_maturating_curve(f, xmin=1) The line start from 0.5 because it’s defined with default_proba that only a half of users will have a conversion after all, for the half of them there will be no conversion at all, so they reach the maturatity on the first day.\nCode\r# eval: false sample = f.rvs(100_000) # 80th percentile of Pareto part is 90th percentile of declared random variable # as half of values are set to zero with default_proba percentile80 = np.percentile(sample, 90) print(f\"20% of population possess {sum(sample[sample \u003e= percentile80]) / sum(sample):.1%} of wealth\") 20% of population possess 75.2% of wealth\rSo, as you can see everything works as expected, and in addition you have flexibility for sampling as non-converted users are embedded\nPower Research The focus of the article is to explore what happens to the power of an experiment when a maturating conversion is not treated properly\nSample Size First of all let’s set a few introductory parameters and move on to the sample’s size calculation, that we have to provide in order to achieve 80% power. We explore a deep conversion, so the base value is a matter of tenths of a percent, in addition we will employ multivariate testing approach as it’s usually the case.\nCode\rfrom podlozhnyy_module.abtesting import ZDunnett from statsmodels.stats.proportion import proportion_confint CONVERSION = 0.004 N_GROUPS = 3 DURATION_DAYS = 21 USERS_PER_DAY = 10_000 EFFECT_SIZE = 0.12 from scipy.stats import norm, binom def min_sample_size(mde: float, var: float, alpha: float=0.05, power: float=0.8): \"\"\" General-purpose calculator for T-test sample size. As long as a variance is supplied as a prameter, it can be accountant for different variations of a classical test. Args: mde: absolute value of a minimal detectable effect var: variance of leveraged T-statistic alpha: Type I error rate power: 1 - Type II error rate Returns: int, minimum size of each sample \"\"\" effect_size = mde / var ** 0.5 return round(2 * ((norm.ppf(1 - alpha/2) + norm.ppf(power)) / effect_size) ** 2) For an accurate size calculation let’s get a proper estimate of the variance from a simulation of a future experiment. The conversions number is considered a binomial random variable, like there is no maturity, it’s equal to a size estimation on the basis of the historical value of your conversion.\nCode\rinput = dict() input[\"names\"] = [chr(ord(\"A\") + i) for i in range(N_GROUPS)] input[\"variant\"] = input[\"names\"][-1] input[\"base\"] = [DURATION_DAYS * USERS_PER_DAY] * N_GROUPS input[\"target\"] = [binom(n=DURATION_DAYS * USERS_PER_DAY, p=CONVERSION).rvs() for _ in range(N_GROUPS)] test = ZDunnett(input, \"base\", \"target\", \"names\", \"variant\") test.groups_results() {'variant': ['B', 'C'],\r'statistic': array([-0.71881574, -0.47094824]),\r'p-value': array([0.69330407, 0.85181339])}\rCode\rmin_sample_size(mde=EFFECT_SIZE * CONVERSION, var=test.variance, alpha=0.1, power=0.8) 207983\rOf course there is some variance in this variance calculation, although it’s essentially enough to carry an experiment for 21 day with 10K users per day to get 80% power, given the rest of input parameters and if you wait an infinite amount of time after the sampling is finished and consequently take into account every single conversion that happens sooner or later.\nMonte-Carlo Let’s design a procedure to look at the power in case of early stopping for different time frames and as a good habit it’s always better to ensure the correctness of the criterion beforehand - so will measure that FWER is controlled accordingly as well.\nCode\r# it can by any negative number, that works just like a signal of the lack of conversion DEFAULT = -10 It is proposed to use some arbitrary extended Pareto distribution, that has a few characteristics\n75% of conversions happen during the first week 90% of conversions happen within 3 weeks in total percentage of conversions is equal to CONVERSION Code\rdef distribution(conv_proba: float) -\u003e pm.pareto.ParetoExtended: \"\"\" Returns a possible distribution of a maturating metric Args: conv_proba: ultimate share of conversions equals to: 1 - the share of users who will not convert \"\"\" return pm.pareto.ParetoExtended( alpha=1.136, loc=-4.475, scale=2.981, default_value=DEFAULT, default_proba=1-conv_proba, ) f = distribution(1.0) plot_maturating_curve(f, xmin=0, ymin=0.4) for idx, val in enumerate([f.cdf(x) for x in range(6, 22, 7)]): print(f\"{val:.0%} of conversions happen during {1 + idx} week{'s' if idx \u003e 0 else ''}\") 76% of conversions happen during 1 week\r87% of conversions happen during 2 weeks\r91% of conversions happen during 3 weeks\rIn addition we need a sample generator that would count the conversions that happen only before we draw a conclusion. Method generate_sample would vary throughout the notebook: the first implementation reflects the idea of drawing a conclusion right after we stopped the experiment.\nAs usual Monte-Carlo process comes handy when you want to carry some “meta” experiments. Simplifying the code, Monte Carlo procedure is wrapped into a function with all the necessary parameters supplied as arguments.\nCode\rdef generate_sample( conv_proba: float, exp_duration: int, users_per_day: int, ) -\u003e int: \"\"\" Build a sample of bernoulli random variable where 1 = conversion happened during the time of an experiment 0 = conversion wouldn't happen at all or only after we stopped and draw a conclusion The output is the sum of the sample = total number of conversions Args: conv_proba: ultimate share of conversions exp_duration: experiment duration (days) users_per_day: number of users received per day Returns: int: number of registered conversions \"\"\" rv = distribution(conv_proba) conversions = 0 for day in range(exp_duration): data = rv.rvs(users_per_day) conversions += sum((data \u003e DEFAULT) \u0026 (data \u003c= day)) return conversions def monte_carlo( aa_test: bool = True, verbose: bool = True, n_iterations: int = 1_000, exp_duration: int = DURATION_DAYS, users_per_day: int = USERS_PER_DAY, p_general: float = CONVERSION, n_groups: int = N_GROUPS, effect_size: float = EFFECT_SIZE, alpha: float = 0.10, **kwargs, ) -\u003e tuple: input = dict.fromkeys([\"base\", \"target\", \"names\", \"variant\"]) input[\"names\"] = [chr(ord(\"A\") + i) for i in range(n_groups)] input[\"variant\"] = input[\"names\"][-1] dunnett_positives = 0 z_positives = 0 for i in range(n_iterations): input[\"base\"] = [exp_duration * users_per_day] * n_groups input[\"target\"] = [ generate_sample( p_general, exp_duration, users_per_day, **kwargs ) for _ in range(n_groups - 1) ] input[\"target\"] += [ generate_sample( p_general * (1 + effect_size * (1 - aa_test)), exp_duration, users_per_day, **kwargs ) ] dunnett_test = ZDunnett(input, \"base\", \"target\", \"names\", \"variant\") dunnett_p_value = dunnett_test.groups_results(alternative=\"two-sided\")[\"p-value\"] if aa_test: if max(dunnett_p_value \u003c= alpha): dunnett_positives += 1 else: if isinstance(dunnett_p_value, np.ndarray) and dunnett_p_value[-1] \u003c= alpha: dunnett_positives += 1 elif isinstance(dunnett_p_value, np.float64) and dunnett_p_value \u003c= alpha: dunnett_positives += 1 dl, dr = proportion_confint(count=dunnett_positives, nobs=n_iterations, alpha=0.10, method='wilson') if verbose: buffer_window = kwargs.get(\"extra_waiting_days\") baking_window = kwargs.get(\"baking_window\") print ( f\"{'FPR ' if aa_test else f'TPR of {effect_size:.0%} effect size {chr(10)}'}\" f\"for {exp_duration}-day's experiment\" f\"{f'{chr(10)}with {buffer_window} buffer days in the end' if buffer_window else ''}\" f\"{f'{chr(10)}with baking window of {baking_window} days' if baking_window else ''}\" f\"{chr(10)}where {users_per_day:,} users are exposed per day:{chr(10)}\" f\" {dunnett_positives / n_iterations:.3f} ± {(dr - dl) / 2:.3f}\" ) return [dl, dunnett_positives / n_iterations, dr] Correctness It’s never an excess to double check that the criterion that is used works as expected.\nCode\r%%time np.random.seed(2024) _ = monte_carlo() FPR for 21-day's experiment\rwhere 10,000 users are exposed per day:\r0.101 ± 0.016\rCPU times: total: 8min\rWall time: 8min 5s\rAlpha is way between the bounds for Type I error rate, so we’re free to go ahead.\nPower In case of no pause after the latest visitor exposure - the power falls off to 60%, just a reminder that it supposed to be 80%, insane!\nCode\r%%time np.random.seed(2024) _ = monte_carlo(aa_test=False) TPR of 12% effect size for 21-day's experiment\rwhere 10,000 users are exposed per day:\r0.568 ± 0.026\rCPU times: total: 7min 29s\rWall time: 7min 32s\rLet’s explore what happens to the power if we are not in a hurry with conclusions.\nCode\rdef generate_sample( conv_proba: float, exp_duration: int, users_per_day: int, extra_waiting_days: int, ) -\u003e int: \"\"\" Extra Args: extra_waiting_days: how many days we wait until drawing a conclusion \"\"\" rv = distribution(conv_proba) conversions = 0 for day in range(exp_duration): data = rv.rvs(users_per_day) conversions += sum((data \u003e DEFAULT) \u0026 (data \u003c= day + extra_waiting_days)) return conversions A new way to generate a sample provides and extra opportunity to select how many days we’re ready to wait until the experiment is finished. Be careful as the code below takes time!\nCode\r%%time np.random.seed(2024) power_with_waiting = [] for to_wait_for in tqdm(range(1, 22, 2)): result = monte_carlo(aa_test=False, verbose=False, extra_waiting_days=to_wait_for) power_with_waiting.append(result) CPU times: total: 1h 17min 19s\rWall time: 1h 17min 40s\rCode\r%%time np.random.seed(2024) power_with_waiting_4weeks = [] for to_wait_for in tqdm(range(1, 22, 2)): result = monte_carlo(aa_test=False, verbose=False, exp_duration=28, effect_size=0.10, extra_waiting_days=to_wait_for) power_with_waiting_4weeks.append(result) CPU times: total: 1h 37min 48s\rWall time: 1h 37min 56s\rThe chart makes it clear how important it is - not to rush with conclusions, in parenthesis, in everyday life it works exactly the same! We lose about 10 percentage points of the power if we are not ready to wait yet another week.\nCode\rimport plotly.express as px import plotly.graph_objs as go def hex2rgba(hex, alpha): \"\"\" Convert plotly hex colors to rgb and enables transparency adjustment \"\"\" col_hex = hex.lstrip('#') col_rgb = tuple(int(col_hex[i : i + 2], 16) for i in (0, 2, 4)) col_rgb += (alpha,) return 'rgba' + str(col_rgb) def get_new_color(colors): while True: for color in colors: yield color colors_list = px.colors.qualitative.Plotly rgba_colors = [hex2rgba(color, alpha=0.5) for color in colors_list] palette = get_new_color(rgba_colors) def add_chart(figure, data, title=None, showtitle=False): x = list(range(1, 22, 2)) color = next(palette) figure.add_trace( go.Scatter( name=title if title else \"Point Estimate\", x=x, y=[v[1] for v in data], mode='lines', line=dict(color=color), showlegend=showtitle, ), ) figure.add_trace( go.Scatter( name='Upper Bound', x=x, y=[v[2] for v in data], mode='lines', line=dict(width=0), marker=dict(color=\"#444\"), hovertemplate=\"%{y:.3f}\", showlegend=False, ), ) figure.add_trace( go.Scatter( name='Lower Bound', x=x, y=[v[0] for v in data], mode='lines', line=dict(width=0), marker=dict(color=\"#444\"), hovertemplate=\"%{y:.3f}\", showlegend=False, fillcolor=color, fill='tonexty', ), ) figure = go.Figure() add_chart(figure, power_with_waiting) figure.update_xaxes( title_text=\"Days passed since the exposure was stopped until a conclusion was made\" ) figure.update_layout( yaxis_title='True Positive Rate', title={ \"x\": 0.5, \"text\": 'Power of criterion', }, hovermode=\"x\", template=\"plotly_dark\", ) figure.show() Essentially, it’s a mediocre example, when it comes to the real experiments we usually have more hidden variables that impact metrics maturation: working days and hours, holidays, etc. To show you the dependency on the day of the week let me add a basic weekly seasonality. In simple words a delay to maturation of the metric during the weekend is added, that applies a sense of a business process that can’t be done on a weekend so conversion happens only during the working week. Of course it’s intensely simplified example that only takes into account the first week of the maturation and doesn’t account for users variation per day, the result speaks for itself though.\nCode\rdef generate_sample( conv_proba: float, exp_duration: int, users_per_day: int, extra_waiting_days: int, weekday_exp_start: int, ) -\u003e int: \"\"\" Extra Args: weekday_exp_start: number of a weekday in ISO format From 1 through 7, where Monday = 1 and so on \"\"\" rv = distribution(conv_proba) conversions = 0 for day in range(exp_duration): data = rv.rvs(users_per_day) if weekday_exp_start and (weekday_exp_start + day) % 6 == 0: conversions += sum((data \u003e DEFAULT) \u0026 (data + 2 \u003c= day + extra_waiting_days)) elif weekday_exp_start and (weekday_exp_start + day) % 7 == 0: conversions += sum((data \u003e DEFAULT) \u0026 (data + 1 \u003c= day + extra_waiting_days)) else: conversions += sum((data \u003e DEFAULT) \u0026 (data \u003c= day + extra_waiting_days)) return conversions As a rule of thumb the experiments are run during the working week only and are analyzed during the working week, usually if one was run on the night from Monday to Tuesday it will be stopped on the corresponding night a few weeks later and analyzed on the next day. I suggest we reproducing this set up and assume we draw a conclusion at the next day after stopping (for simplicity you can imagine that we run all experiments at midnight). How the power of an experiment depends on a day of the week when it was run?\nCode\r%%time np.random.seed(2024) weekday_power = [] for day_of_week in tqdm(range(1, 6)): result = monte_carlo(aa_test=False, verbose=False, extra_waiting_days=0, weekday_exp_start=day_of_week) weekday_power.append(result) CPU times: total: 33min 27s\rWall time: 33min 28s\rCode\rimport plotly.graph_objects as go fig = go.Figure() fig.add_trace(go.Bar( name='TPR', x=['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], y=[v[1] for v in weekday_power], marker_color=next(palette), error_y=dict(type='data', array=[round(v[1] - v[0], 3) for v in weekday_power]), )) fig.update_layout( yaxis_title='True Positive Rate', title={ \"x\": 0.5, \"text\": 'Power of criterion', }, hovermode=\"x\", template=\"plotly_dark\", ) fig.show() As expected, worst day of the week scenario is Monday, interesting what happens to the power if we’re ready to wait with analysis for an extra week until the next Monday?\nCode\rnp.random.seed(2024) _ = monte_carlo(aa_test=False, extra_waiting_days=7, weekday_exp_start=1) TPR of 12% effect size for 21-day's experiment\rwith 7 buffer days in the end\rwhere 10,000 users are exposed per day:\r0.623 ± 0.025\rIt improves the power and levels the weekday effect out; it’s what I suggest you take away: any extra dependency complicates the process and may decrease the power, although to wait for an extra week to let the metric reach its maturation appears to be a solution anyway.\nBaking Window Often it’s suggested to use a baking window concept: so to register a conversion during the defined time frame respectively for every cohort, it’s a viable option and always a go-to technique. Let’s compare such a “cohort based” approach power against the basis “count everything that’s converted so far”.\nCode\rdef generate_sample( conv_proba: float, exp_duration: int, users_per_day: int, baking_window: int, ) -\u003e int: \"\"\" Extra Args: baking_window: only count a conversion if it happens during this number of days \"\"\" rv = distribution(conv_proba) data = rv.rvs(users_per_day * exp_duration) conversions = sum((data \u003e DEFAULT) \u0026 (data \u003c baking_window)) return conversions We need to recalculate sample size as it would be different because now the ultimate conversion is lower, we only take into account specific time frame for every cohort.\nCode\rinput = dict() input[\"names\"] = [chr(ord(\"A\") + i) for i in range(N_GROUPS)] input[\"variant\"] = input[\"names\"][-1] input[\"base\"] = [DURATION_DAYS * USERS_PER_DAY] * N_GROUPS input[\"target\"] = [generate_sample(CONVERSION, DURATION_DAYS, USERS_PER_DAY, baking_window=7) for _ in range(N_GROUPS)] test = ZDunnett(input, \"base\", \"target\", \"names\", \"variant\") test.groups_results() {'variant': ['B', 'C'],\r'statistic': array([0.77838058, 0.30579237]),\r'p-value': array([0.65239556, 0.93402278])}\rCode\rmin_sample_size(mde=EFFECT_SIZE * np.mean(test.p_samples / test.n_samples), var=test.variance) 344708\rAs you can see more days of sampling are required for this technique, followed by those after the end of experiment when we wait for a convergence of a conversion.\nCode\rnp.random.seed(2024) _ = monte_carlo(aa_test=False, baking_window=7) TPR of 12% effect size for 21-day's experiment\rwith baking window of 7 days\rwhere 10,000 users are exposed per day:\r0.594 ± 0.026\rIf no more days provided - then the power is rather low, although for more extensive experiment it’s mush higher.\nCode\rnp.random.seed(2024) _ = monte_carlo(aa_test=False, exp_duration=28, baking_window=7) TPR of 12% effect size for 28-day's experiment\rwith baking window of 7 days\rwhere 10,000 users are exposed per day:\r0.712 ± 0.024\rSo, it’s interesting which strategy outperforms another one, so let’s make a comparison for different time spans.\nthe first one it’s just how many days we wait until the end of experiment before the analysis with the second one in addition baking window is applied, so we only count a conversion within a specific window that is exact same width like the break after the end of the experiment Code\r%%time np.random.seed(2024) power_baking_window = [] for to_wait_for in tqdm(range(1, 22, 2)): result = monte_carlo(aa_test=False, verbose=False, baking_window=to_wait_for) power_baking_window.append(result) CPU times: total: 1h 16min 21s\rWall time: 1h 16min 40s\rCode\rfigure = go.Figure() add_chart(figure, power_with_waiting, title=\"w/o baking window\", showtitle=True) add_chart(figure, power_baking_window, title=\"with baking window\", showtitle=True) figure.update_xaxes( title_text=\"Days passed since the exposure was stopped (doubles up as baking window width)\" ) figure.update_layout( yaxis_title='True Positive Rate', title={ \"x\": 0.5, \"text\": 'Power of criterion (3 weeks experiment)', }, hovermode=\"x\", template=\"plotly_dark\", ) figure.show() So, for the analyzed set up it’s obvious that the basic approach is a winner and uniformly no less powerful. It provides a higher power by a wide margin if you wait just a few days after the experiment while if you have a forbearance to wait longer the difference is not significant.\nCode\r%%time np.random.seed(2024) power_baking_window_4weeks = [] for to_wait_for in tqdm(range(1, 22, 2)): result = monte_carlo(aa_test=False, verbose=False, exp_duration=28, effect_size=0.10, baking_window=to_wait_for) power_baking_window_4weeks.append(result) CPU times: total: 1h 43min 17s\rWall time: 1h 43min 22s\rOne last thing that is important to be mentioned is how this tendency is affected by a duration of an experiment. It’s quite obvious that the longer experiment takes the less significant will be an effect of waiting (under the conditions of the same target metric maturation curve). Here is the comparison similar to one above but for 4-weeks experiment with a little less effect size, so it shall show close power numbers.\nCode\rfigure = go.Figure() add_chart(figure, power_with_waiting_4weeks, title=\"w/o baking window\", showtitle=True) add_chart(figure, power_baking_window_4weeks, title=\"with baking window\", showtitle=True) figure.update_xaxes( title_text=\"Days passed since the exposure was stopped (doubles up as baking window width)\" ) figure.update_layout( yaxis_title='True Positive Rate', title={ \"x\": 0.5, \"text\": 'Power of Сriterion (4 weeks experiment)', }, hovermode=\"x\", template=\"plotly_dark\", ) figure.show() So, two observations:\nit seems that no matter what is the experiment’s duration the strategy where all events are counted works better in case of a short baking window waiting at least for a week after the experiment is over for more conversions to happen is must for short experiments only Conclusion Now you know, how important it’s to give your metric time to mature and don’t rush with the conclusions for “gray” experiments, even if you didn’t reach statistically significant result immediately after you stopped the exposure to the experiment, it doesn’t mean that you would finally get it a little later.\nThe effect is especially great for the shorter experiments, within your data specific the time frames may strongly vary although this rule is an invariant, the longer you run it the less power you lose when drawing a conclusion right after the experiment’s finish. However it totally makes sense to give some time to the recent users to have their conversions if you want to take them into account in the same way as those who came earlier, otherwise the latest users performance is neglected and the conclusion relies on those who came earlier mostly.\nThe final thought is that not every time well-known techniques fits your personal set up, in our case it was easy to show that movement to a baking window can only either (or even both simultaneously) drop the power down or push the experiment duration up, so the simpler default approach works uniformly better.\n",
+  "wordCount" : "3822",
+  "inLanguage": "en",
+  "datePublished": "2024-08-20T00:00:00Z",
+  "dateModified": "2024-08-20T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Nikita Podlozhniy"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://npodlozhniy.github.io/posts/maturing-conversions/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Nikita Podlozhniy",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://npodlozhniy.github.io/favicons/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://npodlozhniy.github.io/" accesskey="h" title="Nikita Podlozhniy (Alt + H)">Nikita Podlozhniy</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                    <li>
+                        <a href="https://npodlozhniy.github.io/ru/" title="Russian"
+                            aria-label=":ru:">Ru</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://npodlozhniy.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://npodlozhniy.github.io/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://npodlozhniy.github.io/search" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://npodlozhniy.github.io/archives" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://npodlozhniy.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://npodlozhniy.github.io/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Maturing conversions in AB-experiment
+    </h1>
+    <div class="post-meta"><span title='2024-08-20 00:00:00 +0000 UTC'>August 20, 2024</span>&nbsp;·&nbsp;18 min&nbsp;·&nbsp;Nikita Podlozhniy
+
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#background" aria-label="Background">Background</a><ul>
+                        
+                <li>
+                    <a href="#prerequisites" aria-label="Prerequisites">Prerequisites</a></li>
+                <li>
+                    <a href="#data" aria-label="Data">Data</a></li></ul>
+                </li>
+                <li>
+                    <a href="#power-research" aria-label="Power Research">Power Research</a><ul>
+                        
+                <li>
+                    <a href="#sample-size" aria-label="Sample Size">Sample Size</a></li>
+                <li>
+                    <a href="#monte-carlo" aria-label="Monte-Carlo">Monte-Carlo</a></li>
+                <li>
+                    <a href="#correctness" aria-label="Correctness">Correctness</a></li>
+                <li>
+                    <a href="#power" aria-label="Power">Power</a></li>
+                <li>
+                    <a href="#baking-window" aria-label="Baking Window">Baking Window</a></li></ul>
+                </li>
+                <li>
+                    <a href="#conclusion" aria-label="Conclusion">Conclusion</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
+<h2 id="background">Background<a hidden class="anchor" aria-hidden="true" href="#background">#</a></h2>
+<p>Hey, some time passed since the last post, where I described why it&rsquo;s must to apply Dunnett&rsquo;s correction for multivariate testing.
+This time I&rsquo;m eager to open the topic of maturing metrics, particularly conversions, how to properly analyse the experiment with such a target, what are the options and which one is applied at HomeBuddy where we strive to squeeze maximum from every experiment.</p>
+<h3 id="prerequisites">Prerequisites<a hidden class="anchor" aria-hidden="true" href="#prerequisites">#</a></h3>
+<p>As usual the code snippets that are used for demo are written in Python, so to thoroughly follow the content, it&rsquo;s better to have some exposure to the language and its main packages, although I&rsquo;m adding extensive comments, so even if you&rsquo;re not into programming you can grasp the pith anyway.</p>
+<blockquote>
+<p><em>Disclaimer: The actual notebook was written on Python 3.11.4 and to keep the results reproducible here is the list of particular packages that are being used specified with their versions.</em></p>
+</blockquote>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>pip install <span style="color:#f92672">--</span>quiet <span style="color:#f92672">--</span>upgrade numpy<span style="color:#f92672">==</span><span style="color:#ae81ff">1.25.2</span> pandas<span style="color:#f92672">==</span><span style="color:#ae81ff">2.0.3</span> scipy<span style="color:#f92672">==</span><span style="color:#ae81ff">1.11.2</span> statsmodels<span style="color:#f92672">==</span><span style="color:#ae81ff">0.14.0</span> podlozhnyy_module<span style="color:#f92672">==</span><span style="color:#ae81ff">2.5.3</span>
+</span></span></code></pre></div></details>
+<h3 id="data">Data<a hidden class="anchor" aria-hidden="true" href="#data">#</a></h3>
+<p>We need more data!
+This time the data simulation process is a little tricky than in case of a plain conversion as soon as we need to specify the maturation curve.</p>
+<p>If you are not familiar with the concept of a maturation let me provide you with an example: imagine as a target in an AB experiment you have a deep conversion from a visit to a final goal, it may be an order for an arbitrary e-commerce web-site or the first payment in a mobile game.</p>
+<p>What all these deep actions usually have in common is that they are revenue-generating events which makes them a good proxy to measure the success of the experiment, from the other flip they take time to happen, depending on the specifics of the business, this could be even days or weeks.</p>
+<p>In the context of HomeBuddy this might be an appointment or a deal that is our north star, as this is the reaper point where both sides (lead and contractor) reached their primary goal.</p>
+<p>In order to avoid revealing the cards, I suggest we use an arbitrary maturation curve that is not inherited from our data, however it&rsquo;s a pretty true-to-life example of how metric adds up to the final value.</p>
+<p>Maturation curves are usually might be described to a very high extent with <a href="https://en.wikipedia.org/wiki/Pareto_distribution">Pareto</a> distribution, which was initially developed to define a wealth&rsquo;s distribution in the society, however the theory underneath is going way beyond widely known Pareto 80-20 principle as in essence it&rsquo;s a parametric distribution that is good to define highly skewed data samples with a long heavy tail.</p>
+<p>If you&rsquo;re interested in challenging your metric using the materials from the post, I suggest you give a shot to <a href="https://github.com/NPodlozhniy/podlozhnyy-module/blob/d01847c676180537cc2f0a3279f2ae2748d1fecf/podlozhnyy_module/pareto.py#L7">ParetoApprox</a> function from my module that basically finds the best Pareto distribution parameters to fit the supplied array of the data, and voila you have a random variable that describes your metric and therefore you can do an infinite sampling and verify hypotheses about the applied techniques.</p>
+<p>For this post let&rsquo;s stop at one specific and quite realistic distribution of the metric maturation by days.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> podlozhnyy_module <span style="color:#66d9ef">as</span> pm
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> tqdm.notebook <span style="color:#f92672">import</span> tqdm
+</span></span></code></pre></div></details>
+<p>What&rsquo;s important is barely we can expect that all visitors finally will reach the goal and hence while those, who will, can be described with Pareto, the major part of visitors will never convert and hence the true distribution of visitors is the sampling between never converted visitors and the rest of them, whose conversion day is distributed by Pareto.</p>
+<p>Hopefully I&rsquo;ve already created such an &ldquo;Extended&rdquo; Pareto distribution and you can define a metric of such a nature right out of the box:
+<a href="https://github.com/NPodlozhniy/podlozhnyy-module/blob/d01847c676180537cc2f0a3279f2ae2748d1fecf/podlozhnyy_module/pareto.py#L54">ParetoExtended</a> in addition to Pareto specific <code>alpha</code>, <code>loc</code> and <code>scale</code> params is taking <code>default_proba</code> and <code>default_value</code> which means what ultimate percentage of visitors would never convert and which particular value should I assign to them, it&rsquo;s an arbitrary (usually negative) number that stands on the left of X axis from the main Pareto distribution.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>f <span style="color:#f92672">=</span> pm<span style="color:#f92672">.</span>pareto<span style="color:#f92672">.</span>ParetoExtended(
+</span></span><span style="display:flex;"><span>    alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">1.161</span>,
+</span></span><span style="display:flex;"><span>    default_value<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>    default_proba<span style="color:#f92672">=</span><span style="color:#ae81ff">0.5</span>
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div></details>
+<p>As an example here is the metric where the ultimate conversion is a half of the users (and the other half is never converted) and their conversions happen accordingly to a textbook Pareto principle 80-20</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> matplotlib <span style="color:#f92672">import</span> pyplot <span style="color:#66d9ef">as</span> plt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>style<span style="color:#f92672">.</span>use(<span style="color:#e6db74">&#39;dark_background&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">plot_maturating_curve</span>(f: pm<span style="color:#f92672">.</span>pareto<span style="color:#f92672">.</span>ParetoExtended, xmin<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, ymin<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>) <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Plot maturating curve for the conversion that has given distribution
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    xarr <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>linspace(xmin, <span style="color:#ae81ff">24</span>, <span style="color:#ae81ff">100</span>)
+</span></span><span style="display:flex;"><span>    cdf <span style="color:#f92672">=</span> [f<span style="color:#f92672">.</span>cdf(x) <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> xarr]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    weeks_x <span style="color:#f92672">=</span> range(<span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">24</span>, <span style="color:#ae81ff">7</span>)
+</span></span><span style="display:flex;"><span>    weeks_cdf <span style="color:#f92672">=</span> [f<span style="color:#f92672">.</span>cdf(x) <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> weeks_x]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>plot(xarr, cdf, <span style="color:#e6db74">&#39;y-&#39;</span>, linewidth<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>scatter(x<span style="color:#f92672">=</span>weeks_x, y<span style="color:#f92672">=</span>weeks_cdf, marker<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;o&#39;</span>, s<span style="color:#f92672">=</span><span style="color:#ae81ff">36</span>, c<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;y&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>xlabel(<span style="color:#e6db74">&#39;Day No.&#39;</span>)
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>ylabel(<span style="color:#e6db74">&#39;Cumulative Share of Conversions&#39;</span>)
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>title(<span style="color:#e6db74">&#39;Maturating Curve&#39;</span>)
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>xlim([min(xarr), max(xarr) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>ylim([ymin <span style="color:#66d9ef">if</span> ymin <span style="color:#66d9ef">else</span> f<span style="color:#f92672">.</span>_zero_p, <span style="color:#ae81ff">1.0</span>])
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>grid()
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>show()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>plot_maturating_curve(f, xmin<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span></code></pre></div></details>
+<p><img loading="lazy" src="MaturityResearch_files/figure-markdown_strict/cell-5-output-1.png" alt=""  />
+</p>
+<p>The line start from 0.5 because it&rsquo;s defined with <code>default_proba</code> that only a half of users will have a conversion after all, for the half of them there will be no conversion at all, so they reach the maturatity on the first day.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># eval: false</span>
+</span></span><span style="display:flex;"><span>sample <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>rvs(<span style="color:#ae81ff">100_000</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 80th percentile of Pareto part is 90th percentile of declared random variable</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># as half of values are set to zero with default_proba</span>
+</span></span><span style="display:flex;"><span>percentile80 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>percentile(sample, <span style="color:#ae81ff">90</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;20% of population possess </span><span style="color:#e6db74">{</span>sum(sample[sample <span style="color:#f92672">&gt;=</span> percentile80]) <span style="color:#f92672">/</span> sum(sample)<span style="color:#e6db74">:</span><span style="color:#e6db74">.1%</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> of wealth&#34;</span>)
+</span></span></code></pre></div></details>
+<pre><code>20% of population possess 75.2% of wealth
+</code></pre>
+<p>So, as you can see everything works as expected, and in addition you have flexibility for sampling as non-converted users are embedded</p>
+<h2 id="power-research">Power Research<a hidden class="anchor" aria-hidden="true" href="#power-research">#</a></h2>
+<p>The focus of the article is to explore what happens to the power of an experiment when a maturating conversion is not treated properly</p>
+<h3 id="sample-size">Sample Size<a hidden class="anchor" aria-hidden="true" href="#sample-size">#</a></h3>
+<p>First of all let&rsquo;s set a few introductory parameters and move on to the sample&rsquo;s size calculation, that we have to provide in order to achieve 80% power. We explore a deep conversion, so the base value is a matter of tenths of a percent, in addition we will employ multivariate testing approach as it&rsquo;s usually the case.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> podlozhnyy_module.abtesting <span style="color:#f92672">import</span> ZDunnett
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> statsmodels.stats.proportion <span style="color:#f92672">import</span> proportion_confint
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>CONVERSION <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.004</span>
+</span></span><span style="display:flex;"><span>N_GROUPS <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>DURATION_DAYS <span style="color:#f92672">=</span> <span style="color:#ae81ff">21</span>
+</span></span><span style="display:flex;"><span>USERS_PER_DAY <span style="color:#f92672">=</span> <span style="color:#ae81ff">10_000</span>
+</span></span><span style="display:flex;"><span>EFFECT_SIZE <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.12</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> scipy.stats <span style="color:#f92672">import</span> norm, binom
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">min_sample_size</span>(mde: float, var: float, alpha: float<span style="color:#f92672">=</span><span style="color:#ae81ff">0.05</span>, power: float<span style="color:#f92672">=</span><span style="color:#ae81ff">0.8</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    General-purpose calculator for T-test sample size.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    As long as a variance is supplied as a prameter, 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    it can be accountant for different variations of a classical test.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Args:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        mde: absolute value of a minimal detectable effect
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        var: variance of leveraged T-statistic
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        alpha: Type I error rate
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        power: 1 - Type II error rate
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Returns:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        int, minimum size of each sample
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    effect_size <span style="color:#f92672">=</span> mde <span style="color:#f92672">/</span> var <span style="color:#f92672">**</span> <span style="color:#ae81ff">0.5</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> round(<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> ((norm<span style="color:#f92672">.</span>ppf(<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> alpha<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>) <span style="color:#f92672">+</span> norm<span style="color:#f92672">.</span>ppf(power)) <span style="color:#f92672">/</span> effect_size) <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span>)
+</span></span></code></pre></div></details>
+<p>For an accurate size calculation let&rsquo;s get a proper estimate of the variance from a simulation of a future experiment. The conversions number is considered a binomial random variable, like there is no maturity, it&rsquo;s equal to a size estimation on the basis of the historical value of your conversion.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>input <span style="color:#f92672">=</span> dict()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>input[<span style="color:#e6db74">&#34;names&#34;</span>] <span style="color:#f92672">=</span> [chr(ord(<span style="color:#e6db74">&#34;A&#34;</span>) <span style="color:#f92672">+</span> i) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(N_GROUPS)]
+</span></span><span style="display:flex;"><span>input[<span style="color:#e6db74">&#34;variant&#34;</span>] <span style="color:#f92672">=</span> input[<span style="color:#e6db74">&#34;names&#34;</span>][<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>input[<span style="color:#e6db74">&#34;base&#34;</span>] <span style="color:#f92672">=</span> [DURATION_DAYS <span style="color:#f92672">*</span> USERS_PER_DAY] <span style="color:#f92672">*</span> N_GROUPS
+</span></span><span style="display:flex;"><span>input[<span style="color:#e6db74">&#34;target&#34;</span>] <span style="color:#f92672">=</span> [binom(n<span style="color:#f92672">=</span>DURATION_DAYS <span style="color:#f92672">*</span> USERS_PER_DAY, p<span style="color:#f92672">=</span>CONVERSION)<span style="color:#f92672">.</span>rvs() <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(N_GROUPS)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>test <span style="color:#f92672">=</span> ZDunnett(input, <span style="color:#e6db74">&#34;base&#34;</span>, <span style="color:#e6db74">&#34;target&#34;</span>, <span style="color:#e6db74">&#34;names&#34;</span>, <span style="color:#e6db74">&#34;variant&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>test<span style="color:#f92672">.</span>groups_results()
+</span></span></code></pre></div></details>
+<pre><code>{'variant': ['B', 'C'],
+ 'statistic': array([-0.71881574, -0.47094824]),
+ 'p-value': array([0.69330407, 0.85181339])}
+</code></pre>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>min_sample_size(mde<span style="color:#f92672">=</span>EFFECT_SIZE <span style="color:#f92672">*</span> CONVERSION, var<span style="color:#f92672">=</span>test<span style="color:#f92672">.</span>variance, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.1</span>, power<span style="color:#f92672">=</span><span style="color:#ae81ff">0.8</span>)
+</span></span></code></pre></div></details>
+<pre><code>207983
+</code></pre>
+<p>Of course there is some variance in this variance calculation, although it&rsquo;s essentially enough to carry an experiment for 21 day with 10K users per day to get 80% power, given the rest of input parameters and if you wait an infinite amount of time after the sampling is finished and consequently take into account every single conversion that happens sooner or later.</p>
+<h3 id="monte-carlo">Monte-Carlo<a hidden class="anchor" aria-hidden="true" href="#monte-carlo">#</a></h3>
+<p>Let&rsquo;s design a procedure to look at the power in case of early stopping for different time frames and as a good habit it&rsquo;s always better to ensure the correctness of the criterion beforehand - so will measure that FWER is controlled accordingly as well.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># it can by any negative number, that works just like a signal of the lack of conversion</span>
+</span></span><span style="display:flex;"><span>DEFAULT <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">10</span>
+</span></span></code></pre></div></details>
+<p>It is proposed to use some arbitrary extended Pareto distribution, that has a few characteristics</p>
+<ul>
+<li>75% of conversions happen during the first week</li>
+<li>90% of conversions happen within 3 weeks</li>
+<li>in total percentage of conversions is equal to <code>CONVERSION</code></li>
+</ul>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">distribution</span>(conv_proba: float) <span style="color:#f92672">-&gt;</span> pm<span style="color:#f92672">.</span>pareto<span style="color:#f92672">.</span>ParetoExtended:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Returns a possible distribution of a maturating metric
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Args:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        conv_proba: ultimate share of conversions
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        equals to: 1 - the share of users who will not convert
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> pm<span style="color:#f92672">.</span>pareto<span style="color:#f92672">.</span>ParetoExtended(
+</span></span><span style="display:flex;"><span>        alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">1.136</span>,
+</span></span><span style="display:flex;"><span>        loc<span style="color:#f92672">=-</span><span style="color:#ae81ff">4.475</span>,
+</span></span><span style="display:flex;"><span>        scale<span style="color:#f92672">=</span><span style="color:#ae81ff">2.981</span>,
+</span></span><span style="display:flex;"><span>        default_value<span style="color:#f92672">=</span>DEFAULT,
+</span></span><span style="display:flex;"><span>        default_proba<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>conv_proba,
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>f <span style="color:#f92672">=</span> distribution(<span style="color:#ae81ff">1.0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>plot_maturating_curve(f, xmin<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, ymin<span style="color:#f92672">=</span><span style="color:#ae81ff">0.4</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> idx, val <span style="color:#f92672">in</span> enumerate([f<span style="color:#f92672">.</span>cdf(x) <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">22</span>, <span style="color:#ae81ff">7</span>)]):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>val<span style="color:#e6db74">:</span><span style="color:#e6db74">.0%</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> of conversions happen during </span><span style="color:#e6db74">{</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> idx<span style="color:#e6db74">}</span><span style="color:#e6db74"> week</span><span style="color:#e6db74">{</span><span style="color:#e6db74">&#39;s&#39;</span> <span style="color:#66d9ef">if</span> idx <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#39;&#39;</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div></details>
+<p><img loading="lazy" src="MaturityResearch_files/figure-markdown_strict/cell-11-output-1.png" alt=""  />
+</p>
+<pre><code>76% of conversions happen during 1 week
+87% of conversions happen during 2 weeks
+91% of conversions happen during 3 weeks
+</code></pre>
+<p>In addition we need a sample generator that would count the conversions that happen only before we draw a conclusion. Method <code>generate_sample</code> would vary throughout the notebook: the first implementation reflects the idea of drawing a conclusion right after we stopped the experiment.</p>
+<p>As usual Monte-Carlo process comes handy when you want to carry some &ldquo;meta&rdquo; experiments.
+Simplifying the code, Monte Carlo procedure is wrapped into a function with all the necessary parameters supplied as arguments.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_sample</span>(
+</span></span><span style="display:flex;"><span>    conv_proba: float,
+</span></span><span style="display:flex;"><span>    exp_duration: int,
+</span></span><span style="display:flex;"><span>    users_per_day: int,
+</span></span><span style="display:flex;"><span>) <span style="color:#f92672">-&gt;</span> int:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Build a sample of bernoulli random variable where
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    1 = conversion happened during the time of an experiment
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    0 = conversion wouldn&#39;t happen at all or only after we stopped and draw a conclusion
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    The output is the sum of the sample = total number of conversions
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Args:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        conv_proba: ultimate share of conversions
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        exp_duration: experiment duration (days)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        users_per_day: number of users received per day
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Returns:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        int: number of registered conversions
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    rv <span style="color:#f92672">=</span> distribution(conv_proba)
+</span></span><span style="display:flex;"><span>    conversions <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> day <span style="color:#f92672">in</span> range(exp_duration):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> rv<span style="color:#f92672">.</span>rvs(users_per_day)
+</span></span><span style="display:flex;"><span>        conversions <span style="color:#f92672">+=</span> sum((data <span style="color:#f92672">&gt;</span> DEFAULT) <span style="color:#f92672">&amp;</span> (data <span style="color:#f92672">&lt;=</span> day))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> conversions
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">monte_carlo</span>(
+</span></span><span style="display:flex;"><span>    aa_test: bool <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>,
+</span></span><span style="display:flex;"><span>    verbose: bool <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>,
+</span></span><span style="display:flex;"><span>    n_iterations: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">1_000</span>,
+</span></span><span style="display:flex;"><span>    exp_duration: int <span style="color:#f92672">=</span> DURATION_DAYS,
+</span></span><span style="display:flex;"><span>    users_per_day: int <span style="color:#f92672">=</span> USERS_PER_DAY,
+</span></span><span style="display:flex;"><span>    p_general: float <span style="color:#f92672">=</span> CONVERSION,
+</span></span><span style="display:flex;"><span>    n_groups: int <span style="color:#f92672">=</span> N_GROUPS,
+</span></span><span style="display:flex;"><span>    effect_size: float <span style="color:#f92672">=</span> EFFECT_SIZE,
+</span></span><span style="display:flex;"><span>    alpha: float <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.10</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">**</span>kwargs,
+</span></span><span style="display:flex;"><span>) <span style="color:#f92672">-&gt;</span> tuple:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    input <span style="color:#f92672">=</span> dict<span style="color:#f92672">.</span>fromkeys([<span style="color:#e6db74">&#34;base&#34;</span>, <span style="color:#e6db74">&#34;target&#34;</span>, <span style="color:#e6db74">&#34;names&#34;</span>, <span style="color:#e6db74">&#34;variant&#34;</span>])
+</span></span><span style="display:flex;"><span>    input[<span style="color:#e6db74">&#34;names&#34;</span>] <span style="color:#f92672">=</span> [chr(ord(<span style="color:#e6db74">&#34;A&#34;</span>) <span style="color:#f92672">+</span> i) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(n_groups)]
+</span></span><span style="display:flex;"><span>    input[<span style="color:#e6db74">&#34;variant&#34;</span>] <span style="color:#f92672">=</span> input[<span style="color:#e6db74">&#34;names&#34;</span>][<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    dunnett_positives <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    z_positives <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(n_iterations):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        input[<span style="color:#e6db74">&#34;base&#34;</span>] <span style="color:#f92672">=</span> [exp_duration <span style="color:#f92672">*</span> users_per_day] <span style="color:#f92672">*</span> n_groups
+</span></span><span style="display:flex;"><span>        input[<span style="color:#e6db74">&#34;target&#34;</span>] <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>            generate_sample(
+</span></span><span style="display:flex;"><span>                p_general,
+</span></span><span style="display:flex;"><span>                exp_duration,
+</span></span><span style="display:flex;"><span>                users_per_day,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">**</span>kwargs
+</span></span><span style="display:flex;"><span>            ) <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(n_groups <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        ]
+</span></span><span style="display:flex;"><span>        input[<span style="color:#e6db74">&#34;target&#34;</span>] <span style="color:#f92672">+=</span> [
+</span></span><span style="display:flex;"><span>            generate_sample(
+</span></span><span style="display:flex;"><span>                p_general <span style="color:#f92672">*</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> effect_size <span style="color:#f92672">*</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> aa_test)),
+</span></span><span style="display:flex;"><span>                exp_duration,
+</span></span><span style="display:flex;"><span>                users_per_day,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">**</span>kwargs
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>        ]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        dunnett_test <span style="color:#f92672">=</span> ZDunnett(input, <span style="color:#e6db74">&#34;base&#34;</span>, <span style="color:#e6db74">&#34;target&#34;</span>, <span style="color:#e6db74">&#34;names&#34;</span>, <span style="color:#e6db74">&#34;variant&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        dunnett_p_value <span style="color:#f92672">=</span> dunnett_test<span style="color:#f92672">.</span>groups_results(alternative<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;two-sided&#34;</span>)[<span style="color:#e6db74">&#34;p-value&#34;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> aa_test:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> max(dunnett_p_value <span style="color:#f92672">&lt;=</span> alpha):
+</span></span><span style="display:flex;"><span>                dunnett_positives <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> isinstance(dunnett_p_value, np<span style="color:#f92672">.</span>ndarray) <span style="color:#f92672">and</span> dunnett_p_value[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;=</span> alpha:
+</span></span><span style="display:flex;"><span>                dunnett_positives <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">elif</span> isinstance(dunnett_p_value, np<span style="color:#f92672">.</span>float64) <span style="color:#f92672">and</span> dunnett_p_value <span style="color:#f92672">&lt;=</span> alpha:
+</span></span><span style="display:flex;"><span>                dunnett_positives <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>    dl, dr <span style="color:#f92672">=</span> proportion_confint(count<span style="color:#f92672">=</span>dunnett_positives, nobs<span style="color:#f92672">=</span>n_iterations, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.10</span>, method<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;wilson&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> verbose:
+</span></span><span style="display:flex;"><span>        buffer_window <span style="color:#f92672">=</span> kwargs<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;extra_waiting_days&#34;</span>)
+</span></span><span style="display:flex;"><span>        baking_window <span style="color:#f92672">=</span> kwargs<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;baking_window&#34;</span>)
+</span></span><span style="display:flex;"><span>        print (
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span><span style="color:#e6db74">&#39;FPR &#39;</span> <span style="color:#66d9ef">if</span> aa_test <span style="color:#66d9ef">else</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;TPR of </span><span style="color:#e6db74">{</span>effect_size<span style="color:#e6db74">:</span><span style="color:#e6db74">.0%</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> effect size </span><span style="color:#e6db74">{</span>chr(<span style="color:#ae81ff">10</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;for </span><span style="color:#e6db74">{</span>exp_duration<span style="color:#e6db74">}</span><span style="color:#e6db74">-day&#39;s experiment&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span><span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>chr(<span style="color:#ae81ff">10</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">with </span><span style="color:#e6db74">{</span>buffer_window<span style="color:#e6db74">}</span><span style="color:#e6db74"> buffer days in the end&#39;</span> <span style="color:#66d9ef">if</span> buffer_window <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#39;&#39;</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span><span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>chr(<span style="color:#ae81ff">10</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">with baking window of </span><span style="color:#e6db74">{</span>baking_window<span style="color:#e6db74">}</span><span style="color:#e6db74"> days&#39;</span> <span style="color:#66d9ef">if</span> baking_window <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#39;&#39;</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>chr(<span style="color:#ae81ff">10</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">where </span><span style="color:#e6db74">{</span>users_per_day<span style="color:#e6db74">:</span><span style="color:#e6db74">,</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> users are exposed per day:</span><span style="color:#e6db74">{</span>chr(<span style="color:#ae81ff">10</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34; </span><span style="color:#e6db74">{</span>dunnett_positives <span style="color:#f92672">/</span> n_iterations<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> ± </span><span style="color:#e6db74">{</span>(dr <span style="color:#f92672">-</span> dl) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span><span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> [dl, dunnett_positives <span style="color:#f92672">/</span> n_iterations, dr]
+</span></span></code></pre></div></details>
+<h3 id="correctness">Correctness<a hidden class="anchor" aria-hidden="true" href="#correctness">#</a></h3>
+<p>It&rsquo;s never an excess to double check that the criterion that is used works as expected.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+</span></span><span style="display:flex;"><span>_ <span style="color:#f92672">=</span> monte_carlo()
+</span></span></code></pre></div></details>
+<pre><code>FPR for 21-day's experiment
+where 10,000 users are exposed per day:
+ 0.101 ± 0.016
+CPU times: total: 8min
+Wall time: 8min 5s
+</code></pre>
+<p>Alpha is way between the bounds for Type I error rate, so we&rsquo;re free to go ahead.</p>
+<h3 id="power">Power<a hidden class="anchor" aria-hidden="true" href="#power">#</a></h3>
+<p>In case of no pause after the latest visitor exposure - the power falls off to 60%, just a reminder that it supposed to be 80%, insane!</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+</span></span><span style="display:flex;"><span>_ <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span></code></pre></div></details>
+<pre><code>TPR of 12% effect size 
+for 21-day's experiment
+where 10,000 users are exposed per day:
+ 0.568 ± 0.026
+CPU times: total: 7min 29s
+Wall time: 7min 32s
+</code></pre>
+<p>Let&rsquo;s explore what happens to the power if we are not in a hurry with conclusions.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_sample</span>(
+</span></span><span style="display:flex;"><span>    conv_proba: float,
+</span></span><span style="display:flex;"><span>    exp_duration: int,
+</span></span><span style="display:flex;"><span>    users_per_day: int,
+</span></span><span style="display:flex;"><span>    extra_waiting_days: int,
+</span></span><span style="display:flex;"><span>) <span style="color:#f92672">-&gt;</span> int:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Extra Args:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        extra_waiting_days: how many days we wait until drawing a conclusion
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    rv <span style="color:#f92672">=</span> distribution(conv_proba)
+</span></span><span style="display:flex;"><span>    conversions <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> day <span style="color:#f92672">in</span> range(exp_duration):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> rv<span style="color:#f92672">.</span>rvs(users_per_day)
+</span></span><span style="display:flex;"><span>        conversions <span style="color:#f92672">+=</span> sum((data <span style="color:#f92672">&gt;</span> DEFAULT) <span style="color:#f92672">&amp;</span> (data <span style="color:#f92672">&lt;=</span> day <span style="color:#f92672">+</span> extra_waiting_days))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> conversions
+</span></span></code></pre></div></details>
+<p>A new way to generate a sample provides and extra opportunity to select how many days we&rsquo;re ready to wait until the experiment is finished.
+Be careful as the code below takes time!</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>power_with_waiting <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> to_wait_for <span style="color:#f92672">in</span> tqdm(range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">22</span>, <span style="color:#ae81ff">2</span>)):
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, verbose<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, extra_waiting_days<span style="color:#f92672">=</span>to_wait_for)
+</span></span><span style="display:flex;"><span>    power_with_waiting<span style="color:#f92672">.</span>append(result)
+</span></span></code></pre></div></details>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"688ad45d75a045a3a805844a0061a3ea","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+<pre><code>CPU times: total: 1h 17min 19s
+Wall time: 1h 17min 40s
+</code></pre>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>power_with_waiting_4weeks <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> to_wait_for <span style="color:#f92672">in</span> tqdm(range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">22</span>, <span style="color:#ae81ff">2</span>)):
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, verbose<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, exp_duration<span style="color:#f92672">=</span><span style="color:#ae81ff">28</span>, effect_size<span style="color:#f92672">=</span><span style="color:#ae81ff">0.10</span>, extra_waiting_days<span style="color:#f92672">=</span>to_wait_for)
+</span></span><span style="display:flex;"><span>    power_with_waiting_4weeks<span style="color:#f92672">.</span>append(result)
+</span></span></code></pre></div></details>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"ca3184db00364f349af039725caa487d","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+<pre><code>CPU times: total: 1h 37min 48s
+Wall time: 1h 37min 56s
+</code></pre>
+<p>The chart makes it clear how important it is - not to rush with conclusions, in parenthesis, in everyday life it works exactly the same!
+We lose about 10 percentage points of the power if we are not ready to wait yet another week.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly.express <span style="color:#66d9ef">as</span> px
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly.graph_objs <span style="color:#66d9ef">as</span> go
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">hex2rgba</span>(hex, alpha):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Convert plotly hex colors to rgb and enables transparency adjustment
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    col_hex <span style="color:#f92672">=</span> hex<span style="color:#f92672">.</span>lstrip(<span style="color:#e6db74">&#39;#&#39;</span>)
+</span></span><span style="display:flex;"><span>    col_rgb <span style="color:#f92672">=</span> tuple(int(col_hex[i : i <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>], <span style="color:#ae81ff">16</span>) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> (<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">4</span>))
+</span></span><span style="display:flex;"><span>    col_rgb <span style="color:#f92672">+=</span> (alpha,)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;rgba&#39;</span> <span style="color:#f92672">+</span> str(col_rgb)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_new_color</span>(colors):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> color <span style="color:#f92672">in</span> colors:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">yield</span> color
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>colors_list <span style="color:#f92672">=</span> px<span style="color:#f92672">.</span>colors<span style="color:#f92672">.</span>qualitative<span style="color:#f92672">.</span>Plotly
+</span></span><span style="display:flex;"><span>rgba_colors <span style="color:#f92672">=</span> [hex2rgba(color, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.5</span>) <span style="color:#66d9ef">for</span> color <span style="color:#f92672">in</span> colors_list]
+</span></span><span style="display:flex;"><span>palette <span style="color:#f92672">=</span> get_new_color(rgba_colors)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add_chart</span>(figure, data, title<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, showtitle<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    x <span style="color:#f92672">=</span> list(range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">22</span>, <span style="color:#ae81ff">2</span>))
+</span></span><span style="display:flex;"><span>    color <span style="color:#f92672">=</span> next(palette)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    figure<span style="color:#f92672">.</span>add_trace(
+</span></span><span style="display:flex;"><span>        go<span style="color:#f92672">.</span>Scatter(
+</span></span><span style="display:flex;"><span>            name<span style="color:#f92672">=</span>title <span style="color:#66d9ef">if</span> title <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;Point Estimate&#34;</span>,
+</span></span><span style="display:flex;"><span>            x<span style="color:#f92672">=</span>x,
+</span></span><span style="display:flex;"><span>            y<span style="color:#f92672">=</span>[v[<span style="color:#ae81ff">1</span>] <span style="color:#66d9ef">for</span> v <span style="color:#f92672">in</span> data],
+</span></span><span style="display:flex;"><span>            mode<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;lines&#39;</span>,
+</span></span><span style="display:flex;"><span>            line<span style="color:#f92672">=</span>dict(color<span style="color:#f92672">=</span>color),
+</span></span><span style="display:flex;"><span>            showlegend<span style="color:#f92672">=</span>showtitle,
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    figure<span style="color:#f92672">.</span>add_trace(
+</span></span><span style="display:flex;"><span>        go<span style="color:#f92672">.</span>Scatter(
+</span></span><span style="display:flex;"><span>            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Upper Bound&#39;</span>,
+</span></span><span style="display:flex;"><span>            x<span style="color:#f92672">=</span>x,
+</span></span><span style="display:flex;"><span>            y<span style="color:#f92672">=</span>[v[<span style="color:#ae81ff">2</span>] <span style="color:#66d9ef">for</span> v <span style="color:#f92672">in</span> data],
+</span></span><span style="display:flex;"><span>            mode<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;lines&#39;</span>,
+</span></span><span style="display:flex;"><span>            line<span style="color:#f92672">=</span>dict(width<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>),
+</span></span><span style="display:flex;"><span>            marker<span style="color:#f92672">=</span>dict(color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#444&#34;</span>),
+</span></span><span style="display:flex;"><span>            hovertemplate<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;%</span><span style="color:#e6db74">{y:.3f}</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>            showlegend<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>,
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    figure<span style="color:#f92672">.</span>add_trace(
+</span></span><span style="display:flex;"><span>        go<span style="color:#f92672">.</span>Scatter(
+</span></span><span style="display:flex;"><span>            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Lower Bound&#39;</span>,
+</span></span><span style="display:flex;"><span>            x<span style="color:#f92672">=</span>x,
+</span></span><span style="display:flex;"><span>            y<span style="color:#f92672">=</span>[v[<span style="color:#ae81ff">0</span>] <span style="color:#66d9ef">for</span> v <span style="color:#f92672">in</span> data],
+</span></span><span style="display:flex;"><span>            mode<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;lines&#39;</span>,
+</span></span><span style="display:flex;"><span>            line<span style="color:#f92672">=</span>dict(width<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>),
+</span></span><span style="display:flex;"><span>            marker<span style="color:#f92672">=</span>dict(color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#444&#34;</span>),            
+</span></span><span style="display:flex;"><span>            hovertemplate<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;%</span><span style="color:#e6db74">{y:.3f}</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>            showlegend<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>,
+</span></span><span style="display:flex;"><span>            fillcolor<span style="color:#f92672">=</span>color,
+</span></span><span style="display:flex;"><span>            fill<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;tonexty&#39;</span>,
+</span></span><span style="display:flex;"><span>        ),
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>figure <span style="color:#f92672">=</span> go<span style="color:#f92672">.</span>Figure()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>add_chart(figure, power_with_waiting)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>figure<span style="color:#f92672">.</span>update_xaxes(
+</span></span><span style="display:flex;"><span>    title_text<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Days passed since the exposure was stopped until a conclusion was made&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>figure<span style="color:#f92672">.</span>update_layout(
+</span></span><span style="display:flex;"><span>    yaxis_title<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;True Positive Rate&#39;</span>,
+</span></span><span style="display:flex;"><span>    title<span style="color:#f92672">=</span>{
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;x&#34;</span>: <span style="color:#ae81ff">0.5</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;text&#34;</span>: <span style="color:#e6db74">&#39;Power of criterion&#39;</span>,
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    hovermode<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;x&#34;</span>,
+</span></span><span style="display:flex;"><span>    template<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;plotly_dark&#34;</span>,
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>figure<span style="color:#f92672">.</span>show()
+</span></span></code></pre></div></details>
+
+
+<div id="plotly-001"></div>
+
+<script>
+  Plotly.newPlot(document.getElementById("plotly-001"), {"data":[{"line":{"color":"rgba(99, 110, 250, 0.5)"},"mode":"lines","name":"Point Estimate","showlegend":false,"type":"scatter","x":[1,3,5,7,9,11,13,15,17,19,21],"y":[0.581,0.617,0.629,0.64,0.645,0.646,0.636,0.677,0.662,0.665,0.646]},{"hovertemplate":"%{y:.3f}","line":{"width":0},"marker":{"color":"#444"},"mode":"lines","name":"Upper Bound","showlegend":false,"type":"scatter","x":[1,3,5,7,9,11,13,15,17,19,21],"y":[0.6064116081868854,0.6419375077383432,0.6537473544778318,0.6645585235468656,0.6694680250068393,0.6704495717079301,0.6606288138306091,0.7008175882207796,0.686138058739669,0.6890761958161914,0.6704495717079301]},{"fill":"tonexty","fillcolor":"rgba(99, 110, 250, 0.5)","hovertemplate":"%{y:.3f}","line":{"width":0},"marker":{"color":"#444"},"mode":"lines","name":"Lower Bound","showlegend":false,"type":"scatter","x":[1,3,5,7,9,11,13,15,17,19,21],"y":[0.5551512764082732,0.5914311033435528,0.60355649876631,0.6146859683460015,0.6197494844536301,0.6207625412660599,0.6106372640081761,0.6522272336723453,0.6369877104506485,0.6400333839146878,0.6207625412660599]}],"layout":{"hovermode":"x","template":{"data":{"bar":[{"error_x":{"color":"#f2f5fa"},"error_y":{"color":"#f2f5fa"},"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"barpolar":[{"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"carpet":[{"aaxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"baxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"contour"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"heatmap"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"heatmapgl"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"histogram2d"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"histogram2dcontour"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter":[{"marker":{"line":{"color":"#283442"}},"type":"scatter"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#283442"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#506784"},"line":{"color":"rgb(17,17,17)"}},"header":{"fill":{"color":"#2a3f5f"},"line":{"color":"rgb(17,17,17)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#f2f5fa","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"sequentialminus":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#f2f5fa"},"geo":{"bgcolor":"rgb(17,17,17)","lakecolor":"rgb(17,17,17)","landcolor":"rgb(17,17,17)","showlakes":true,"showland":true,"subunitcolor":"#506784"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(17,17,17)","plot_bgcolor":"rgb(17,17,17)","polar":{"angularaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","radialaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"yaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"zaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"}},"shapedefaults":{"line":{"color":"#f2f5fa"}},"sliderdefaults":{"bgcolor":"#C8D4E3","bordercolor":"rgb(17,17,17)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"baxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","caxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#506784","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2}}},"title":{"text":"Power of criterion","x":0.5},"xaxis":{"title":{"text":"Days passed since the exposure was stopped until a conclusion was made"}},"yaxis":{"title":{"text":"True Positive Rate"}}}});
+</script>
+<p>Essentially, it&rsquo;s a mediocre example, when it comes to the real experiments we usually have more hidden variables that impact metrics maturation: working days and hours, holidays, etc.
+To show you the dependency on the day of the week let me add a basic weekly seasonality.
+In simple words a delay to maturation of the metric during the weekend is added, that applies a sense of a business process that can&rsquo;t be done on a weekend so conversion happens only during the working week.
+Of course it&rsquo;s intensely simplified example that only takes into account the first week of the maturation and doesn&rsquo;t account for users variation per day, the result speaks for itself though.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_sample</span>(
+</span></span><span style="display:flex;"><span>    conv_proba: float,
+</span></span><span style="display:flex;"><span>    exp_duration: int,
+</span></span><span style="display:flex;"><span>    users_per_day: int,
+</span></span><span style="display:flex;"><span>    extra_waiting_days: int,
+</span></span><span style="display:flex;"><span>    weekday_exp_start: int,
+</span></span><span style="display:flex;"><span>) <span style="color:#f92672">-&gt;</span> int:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Extra Args:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        weekday_exp_start: number of a weekday in ISO format
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        From 1 through 7, where Monday = 1 and so on
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    rv <span style="color:#f92672">=</span> distribution(conv_proba)
+</span></span><span style="display:flex;"><span>    conversions <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> day <span style="color:#f92672">in</span> range(exp_duration):
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> rv<span style="color:#f92672">.</span>rvs(users_per_day)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> weekday_exp_start <span style="color:#f92672">and</span> (weekday_exp_start <span style="color:#f92672">+</span> day) <span style="color:#f92672">%</span> <span style="color:#ae81ff">6</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>            conversions <span style="color:#f92672">+=</span> sum((data <span style="color:#f92672">&gt;</span> DEFAULT) <span style="color:#f92672">&amp;</span> (data <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">&lt;=</span> day <span style="color:#f92672">+</span> extra_waiting_days))
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> weekday_exp_start <span style="color:#f92672">and</span> (weekday_exp_start <span style="color:#f92672">+</span> day) <span style="color:#f92672">%</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>            conversions <span style="color:#f92672">+=</span> sum((data <span style="color:#f92672">&gt;</span> DEFAULT) <span style="color:#f92672">&amp;</span> (data <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;=</span> day <span style="color:#f92672">+</span> extra_waiting_days))
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            conversions <span style="color:#f92672">+=</span> sum((data <span style="color:#f92672">&gt;</span> DEFAULT) <span style="color:#f92672">&amp;</span> (data <span style="color:#f92672">&lt;=</span> day <span style="color:#f92672">+</span> extra_waiting_days))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> conversions
+</span></span></code></pre></div></details>
+<p>As a rule of thumb the experiments are run during the working week only and are analyzed during the working week, usually if one was run on the night from Monday to Tuesday it will be stopped on the corresponding night a few weeks later and analyzed on the next day.
+I suggest we reproducing this set up and assume we draw a conclusion at the next day after stopping (for simplicity you can imagine that we run all experiments at midnight).
+How the power of an experiment depends on a day of the week when it was run?</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>weekday_power <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> day_of_week <span style="color:#f92672">in</span> tqdm(range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">6</span>)):
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, verbose<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, extra_waiting_days<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, weekday_exp_start<span style="color:#f92672">=</span>day_of_week)
+</span></span><span style="display:flex;"><span>    weekday_power<span style="color:#f92672">.</span>append(result)
+</span></span></code></pre></div></details>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"cddeaf2b36f248c1b0de1734f70ed54d","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+<pre><code>CPU times: total: 33min 27s
+Wall time: 33min 28s
+</code></pre>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly.graph_objects <span style="color:#66d9ef">as</span> go
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fig <span style="color:#f92672">=</span> go<span style="color:#f92672">.</span>Figure()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fig<span style="color:#f92672">.</span>add_trace(go<span style="color:#f92672">.</span>Bar(
+</span></span><span style="display:flex;"><span>    name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;TPR&#39;</span>,
+</span></span><span style="display:flex;"><span>    x<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;Mon&#39;</span>, <span style="color:#e6db74">&#39;Tue&#39;</span>, <span style="color:#e6db74">&#39;Wed&#39;</span>, <span style="color:#e6db74">&#39;Thu&#39;</span>, <span style="color:#e6db74">&#39;Fri&#39;</span>],
+</span></span><span style="display:flex;"><span>    y<span style="color:#f92672">=</span>[v[<span style="color:#ae81ff">1</span>] <span style="color:#66d9ef">for</span> v <span style="color:#f92672">in</span> weekday_power],
+</span></span><span style="display:flex;"><span>    marker_color<span style="color:#f92672">=</span>next(palette),
+</span></span><span style="display:flex;"><span>    error_y<span style="color:#f92672">=</span>dict(type<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;data&#39;</span>, array<span style="color:#f92672">=</span>[round(v[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">-</span> v[<span style="color:#ae81ff">0</span>], <span style="color:#ae81ff">3</span>) <span style="color:#66d9ef">for</span> v <span style="color:#f92672">in</span> weekday_power]),
+</span></span><span style="display:flex;"><span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fig<span style="color:#f92672">.</span>update_layout(
+</span></span><span style="display:flex;"><span>    yaxis_title<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;True Positive Rate&#39;</span>,
+</span></span><span style="display:flex;"><span>    title<span style="color:#f92672">=</span>{
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;x&#34;</span>: <span style="color:#ae81ff">0.5</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;text&#34;</span>: <span style="color:#e6db74">&#39;Power of criterion&#39;</span>,
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    hovermode<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;x&#34;</span>,
+</span></span><span style="display:flex;"><span>    template<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;plotly_dark&#34;</span>,
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fig<span style="color:#f92672">.</span>show()
+</span></span></code></pre></div></details>
+
+
+<div id="plotly-002"></div>
+
+<script>
+  Plotly.newPlot(document.getElementById("plotly-002"), {"data":[{"error_y":{"array":[0.026,0.026,0.026,0.026,0.026],"type":"data"},"marker":{"color":"rgba(25, 211, 243, 0.5)"},"name":"TPR","type":"bar","x":["Mon","Tue","Wed","Thu","Fri"],"y":[0.558,0.588,0.564,0.56,0.571]}],"layout":{"hovermode":"x","template":{"data":{"bar":[{"error_x":{"color":"#f2f5fa"},"error_y":{"color":"#f2f5fa"},"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"barpolar":[{"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"carpet":[{"aaxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"baxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"contour"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"heatmap"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"heatmapgl"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"histogram2d"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"histogram2dcontour"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter":[{"marker":{"line":{"color":"#283442"}},"type":"scatter"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#283442"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#506784"},"line":{"color":"rgb(17,17,17)"}},"header":{"fill":{"color":"#2a3f5f"},"line":{"color":"rgb(17,17,17)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#f2f5fa","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"sequentialminus":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#f2f5fa"},"geo":{"bgcolor":"rgb(17,17,17)","lakecolor":"rgb(17,17,17)","landcolor":"rgb(17,17,17)","showlakes":true,"showland":true,"subunitcolor":"#506784"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(17,17,17)","plot_bgcolor":"rgb(17,17,17)","polar":{"angularaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","radialaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"yaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"zaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"}},"shapedefaults":{"line":{"color":"#f2f5fa"}},"sliderdefaults":{"bgcolor":"#C8D4E3","bordercolor":"rgb(17,17,17)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"baxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","caxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#506784","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2}}},"title":{"text":"Power of criterion","x":0.5},"yaxis":{"title":{"text":"True Positive Rate"}}}});
+</script>
+<p>As expected, worst day of the week scenario is Monday, interesting what happens to the power if we&rsquo;re ready to wait with analysis for an extra week until the next Monday?</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+</span></span><span style="display:flex;"><span>_ <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, extra_waiting_days<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span>, weekday_exp_start<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span></code></pre></div></details>
+<pre><code>TPR of 12% effect size 
+for 21-day's experiment
+with 7 buffer days in the end
+where 10,000 users are exposed per day:
+ 0.623 ± 0.025
+</code></pre>
+<p>It improves the power and levels the weekday effect out; it&rsquo;s what I suggest you take away: any extra dependency complicates the process and may decrease the power, although to wait for an extra week to let the metric reach its maturation appears to be a solution anyway.</p>
+<h3 id="baking-window">Baking Window<a hidden class="anchor" aria-hidden="true" href="#baking-window">#</a></h3>
+<p>Often it&rsquo;s suggested to use a baking window concept: so to register a conversion during the defined time frame respectively for every cohort, it&rsquo;s a viable option and always a go-to technique.
+Let&rsquo;s compare such a &ldquo;cohort based&rdquo; approach power against the basis &ldquo;count everything that&rsquo;s converted so far&rdquo;.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_sample</span>(
+</span></span><span style="display:flex;"><span>    conv_proba: float,
+</span></span><span style="display:flex;"><span>    exp_duration: int,
+</span></span><span style="display:flex;"><span>    users_per_day: int,
+</span></span><span style="display:flex;"><span>    baking_window: int,
+</span></span><span style="display:flex;"><span>) <span style="color:#f92672">-&gt;</span> int:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Extra Args:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        baking_window: only count a conversion if it happens during this number of days
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    rv <span style="color:#f92672">=</span> distribution(conv_proba)
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> rv<span style="color:#f92672">.</span>rvs(users_per_day <span style="color:#f92672">*</span> exp_duration)
+</span></span><span style="display:flex;"><span>    conversions <span style="color:#f92672">=</span> sum((data <span style="color:#f92672">&gt;</span> DEFAULT) <span style="color:#f92672">&amp;</span> (data <span style="color:#f92672">&lt;</span> baking_window))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> conversions
+</span></span></code></pre></div></details>
+<p>We need to recalculate sample size as it would be different because now the ultimate conversion is lower, we only take into account specific time frame for every cohort.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>input <span style="color:#f92672">=</span> dict()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>input[<span style="color:#e6db74">&#34;names&#34;</span>] <span style="color:#f92672">=</span> [chr(ord(<span style="color:#e6db74">&#34;A&#34;</span>) <span style="color:#f92672">+</span> i) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(N_GROUPS)]
+</span></span><span style="display:flex;"><span>input[<span style="color:#e6db74">&#34;variant&#34;</span>] <span style="color:#f92672">=</span> input[<span style="color:#e6db74">&#34;names&#34;</span>][<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>input[<span style="color:#e6db74">&#34;base&#34;</span>] <span style="color:#f92672">=</span> [DURATION_DAYS <span style="color:#f92672">*</span> USERS_PER_DAY] <span style="color:#f92672">*</span> N_GROUPS
+</span></span><span style="display:flex;"><span>input[<span style="color:#e6db74">&#34;target&#34;</span>] <span style="color:#f92672">=</span> [generate_sample(CONVERSION, DURATION_DAYS, USERS_PER_DAY, baking_window<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span>) <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(N_GROUPS)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>test <span style="color:#f92672">=</span> ZDunnett(input, <span style="color:#e6db74">&#34;base&#34;</span>, <span style="color:#e6db74">&#34;target&#34;</span>, <span style="color:#e6db74">&#34;names&#34;</span>, <span style="color:#e6db74">&#34;variant&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>test<span style="color:#f92672">.</span>groups_results()
+</span></span></code></pre></div></details>
+<pre><code>{'variant': ['B', 'C'],
+ 'statistic': array([0.77838058, 0.30579237]),
+ 'p-value': array([0.65239556, 0.93402278])}
+</code></pre>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>min_sample_size(mde<span style="color:#f92672">=</span>EFFECT_SIZE <span style="color:#f92672">*</span> np<span style="color:#f92672">.</span>mean(test<span style="color:#f92672">.</span>p_samples <span style="color:#f92672">/</span> test<span style="color:#f92672">.</span>n_samples), var<span style="color:#f92672">=</span>test<span style="color:#f92672">.</span>variance)
+</span></span></code></pre></div></details>
+<pre><code>344708
+</code></pre>
+<p>As you can see more days of sampling are required for this technique, followed by those after the end of experiment when we wait for a convergence of a conversion.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+</span></span><span style="display:flex;"><span>_ <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, baking_window<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span>)
+</span></span></code></pre></div></details>
+<pre><code>TPR of 12% effect size 
+for 21-day's experiment
+with baking window of 7 days
+where 10,000 users are exposed per day:
+ 0.594 ± 0.026
+</code></pre>
+<p>If no more days provided - then the power is rather low, although for more extensive experiment it&rsquo;s mush higher.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+</span></span><span style="display:flex;"><span>_ <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, exp_duration<span style="color:#f92672">=</span><span style="color:#ae81ff">28</span>, baking_window<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span>)
+</span></span></code></pre></div></details>
+<pre><code>TPR of 12% effect size 
+for 28-day's experiment
+with baking window of 7 days
+where 10,000 users are exposed per day:
+ 0.712 ± 0.024
+</code></pre>
+<p>So, it&rsquo;s interesting which strategy outperforms another one, so let&rsquo;s make a comparison for different time spans.</p>
+<ul>
+<li>the first one it&rsquo;s just how many days we wait until the end of experiment before the analysis</li>
+<li>with the second one in addition baking window is applied, so we only count a conversion within a specific window that is exact same width like the break after the end of the experiment</li>
+</ul>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>power_baking_window <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> to_wait_for <span style="color:#f92672">in</span> tqdm(range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">22</span>, <span style="color:#ae81ff">2</span>)):
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, verbose<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, baking_window<span style="color:#f92672">=</span>to_wait_for)
+</span></span><span style="display:flex;"><span>    power_baking_window<span style="color:#f92672">.</span>append(result)
+</span></span></code></pre></div></details>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"efa549a869964e18866bdbc89d8e6f8c","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+<pre><code>CPU times: total: 1h 16min 21s
+Wall time: 1h 16min 40s
+</code></pre>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>figure <span style="color:#f92672">=</span> go<span style="color:#f92672">.</span>Figure()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>add_chart(figure, power_with_waiting, title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;w/o baking window&#34;</span>, showtitle<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>add_chart(figure, power_baking_window, title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;with baking window&#34;</span>, showtitle<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>figure<span style="color:#f92672">.</span>update_xaxes(
+</span></span><span style="display:flex;"><span>    title_text<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Days passed since the exposure was stopped (doubles up as baking window width)&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>figure<span style="color:#f92672">.</span>update_layout(
+</span></span><span style="display:flex;"><span>    yaxis_title<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;True Positive Rate&#39;</span>,
+</span></span><span style="display:flex;"><span>    title<span style="color:#f92672">=</span>{
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;x&#34;</span>: <span style="color:#ae81ff">0.5</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;text&#34;</span>: <span style="color:#e6db74">&#39;Power of criterion (3 weeks experiment)&#39;</span>,
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    hovermode<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;x&#34;</span>,
+</span></span><span style="display:flex;"><span>    template<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;plotly_dark&#34;</span>,
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>figure<span style="color:#f92672">.</span>show()
+</span></span></code></pre></div></details>
+
+
+<div id="plotly-003"></div>
+
+<script>
+  Plotly.newPlot(document.getElementById("plotly-003"), {"data":[{"line":{"color":"rgba(99, 110, 250, 0.5)"},"mode":"lines","name":"w/o baking window","showlegend":true,"type":"scatter","x":[1,3,5,7,9,11,13,15,17,19,21],"y":[0.581,0.617,0.629,0.64,0.645,0.646,0.636,0.677,0.662,0.665,0.646]},{"hovertemplate":"%{y:.3f}","line":{"width":0},"marker":{"color":"#444"},"mode":"lines","name":"Upper Bound","showlegend":false,"type":"scatter","x":[1,3,5,7,9,11,13,15,17,19,21],"y":[0.6064116081868854,0.6419375077383432,0.6537473544778318,0.6645585235468656,0.6694680250068393,0.6704495717079301,0.6606288138306091,0.7008175882207796,0.686138058739669,0.6890761958161914,0.6704495717079301]},{"fill":"tonexty","fillcolor":"rgba(99, 110, 250, 0.5)","hovertemplate":"%{y:.3f}","line":{"width":0},"marker":{"color":"#444"},"mode":"lines","name":"Lower Bound","showlegend":false,"type":"scatter","x":[1,3,5,7,9,11,13,15,17,19,21],"y":[0.5551512764082732,0.5914311033435528,0.60355649876631,0.6146859683460015,0.6197494844536301,0.6207625412660599,0.6106372640081761,0.6522272336723453,0.6369877104506485,0.6400333839146878,0.6207625412660599]},{"line":{"color":"rgba(239, 85, 59, 0.5)"},"mode":"lines","name":"with baking window","showlegend":true,"type":"scatter","x":[1,3,5,7,9,11,13,15,17,19,21],"y":[0.396,0.503,0.552,0.604,0.629,0.627,0.62,0.649,0.652,0.687,0.618]},{"hovertemplate":"%{y:.3f}","line":{"width":0},"marker":{"color":"#444"},"mode":"lines","name":"Upper Bound","showlegend":false,"type":"scatter","x":[1,3,5,7,9,11,13,15,17,19,21],"y":[0.4216864307483132,0.5289637475475552,0.5776915408156466,0.629125196154443,0.6537473544778318,0.6517801866431471,0.6448915027335195,0.673393500600439,0.6763363578329976,0.7105881771010999,0.642922285675727]},{"fill":"tonexty","fillcolor":"rgba(239, 85, 59, 0.5)","hovertemplate":"%{y:.3f}","line":{"width":0},"marker":{"color":"#444"},"mode":"lines","name":"Lower Bound","showlegend":false,"type":"scatter","x":[1,3,5,7,9,11,13,15,17,19,21],"y":[0.3708748038455571,0.4770200629930062,0.5260278418874184,0.5783135692516869,0.60355649876631,0.6015344595739537,0.5944609188889379,0.6238024229141124,0.6268433762221152,0.6624026799272297,0.5924409289196896]}],"layout":{"hovermode":"x","template":{"data":{"bar":[{"error_x":{"color":"#f2f5fa"},"error_y":{"color":"#f2f5fa"},"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"barpolar":[{"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"carpet":[{"aaxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"baxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"contour"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"heatmap"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"heatmapgl"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"histogram2d"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"histogram2dcontour"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter":[{"marker":{"line":{"color":"#283442"}},"type":"scatter"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#283442"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#506784"},"line":{"color":"rgb(17,17,17)"}},"header":{"fill":{"color":"#2a3f5f"},"line":{"color":"rgb(17,17,17)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#f2f5fa","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"sequentialminus":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#f2f5fa"},"geo":{"bgcolor":"rgb(17,17,17)","lakecolor":"rgb(17,17,17)","landcolor":"rgb(17,17,17)","showlakes":true,"showland":true,"subunitcolor":"#506784"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(17,17,17)","plot_bgcolor":"rgb(17,17,17)","polar":{"angularaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","radialaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"yaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"zaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"}},"shapedefaults":{"line":{"color":"#f2f5fa"}},"sliderdefaults":{"bgcolor":"#C8D4E3","bordercolor":"rgb(17,17,17)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"baxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","caxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#506784","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2}}},"title":{"text":"Power of criterion (3 weeks experiment)","x":0.5},"xaxis":{"title":{"text":"Days passed since the exposure was stopped (doubles up as baking window width)"}},"yaxis":{"title":{"text":"True Positive Rate"}}}});
+</script>
+<p>So, for the analyzed set up it&rsquo;s obvious that the basic approach is a winner and uniformly no less powerful.
+It provides a higher power by a wide margin if you wait just a few days after the experiment while if you have a forbearance to wait longer the difference is not significant.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>power_baking_window_4weeks <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> to_wait_for <span style="color:#f92672">in</span> tqdm(range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">22</span>, <span style="color:#ae81ff">2</span>)):
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, verbose<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, exp_duration<span style="color:#f92672">=</span><span style="color:#ae81ff">28</span>, effect_size<span style="color:#f92672">=</span><span style="color:#ae81ff">0.10</span>, baking_window<span style="color:#f92672">=</span>to_wait_for)
+</span></span><span style="display:flex;"><span>    power_baking_window_4weeks<span style="color:#f92672">.</span>append(result)
+</span></span></code></pre></div></details>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"8a07f745d3634dd0861ae668aa44c61d","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+<pre><code>CPU times: total: 1h 43min 17s
+Wall time: 1h 43min 22s
+</code></pre>
+<p>One last thing that is important to be mentioned is how this tendency is affected by a duration of an experiment.
+It&rsquo;s quite obvious that the longer experiment takes the less significant will be an effect of waiting (under the conditions of the same target metric maturation curve).
+Here is the comparison similar to one above but for 4-weeks experiment with a little less effect size, so it shall show close power numbers.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>figure <span style="color:#f92672">=</span> go<span style="color:#f92672">.</span>Figure()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>add_chart(figure, power_with_waiting_4weeks, title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;w/o baking window&#34;</span>, showtitle<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>add_chart(figure, power_baking_window_4weeks, title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;with baking window&#34;</span>, showtitle<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>figure<span style="color:#f92672">.</span>update_xaxes(
+</span></span><span style="display:flex;"><span>    title_text<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Days passed since the exposure was stopped (doubles up as baking window width)&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>figure<span style="color:#f92672">.</span>update_layout(
+</span></span><span style="display:flex;"><span>    yaxis_title<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;True Positive Rate&#39;</span>,
+</span></span><span style="display:flex;"><span>    title<span style="color:#f92672">=</span>{
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;x&#34;</span>: <span style="color:#ae81ff">0.5</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;text&#34;</span>: <span style="color:#e6db74">&#39;Power of Сriterion (4 weeks experiment)&#39;</span>,
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    hovermode<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;x&#34;</span>,
+</span></span><span style="display:flex;"><span>    template<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;plotly_dark&#34;</span>,
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>figure<span style="color:#f92672">.</span>show()
+</span></span></code></pre></div></details>
+
+
+<div id="plotly-004"></div>
+
+<script>
+  Plotly.newPlot(document.getElementById("plotly-004"), {"data":[{"line":{"color":"rgba(0, 204, 150, 0.5)"},"mode":"lines","name":"w/o baking window","showlegend":true,"type":"scatter","x":[1,3,5,7,9,11,13,15,17,19,21],"y":[0.596,0.595,0.634,0.584,0.626,0.607,0.657,0.599,0.641,0.638,0.631]},{"hovertemplate":"%{y:.3f}","line":{"width":0},"marker":{"color":"#444"},"mode":"lines","name":"Upper Bound","showlegend":false,"type":"scatter","x":[1,3,5,7,9,11,13,15,17,19,21],"y":[0.6212313765994907,0.6202441545613524,0.6586632607455766,0.6093775147475473,0.6507964309153482,0.6320835558602028,0.6812387209913375,0.6241923846036866,0.665540658834935,0.6625939019813496,0.6557140628950722]},{"fill":"tonexty","fillcolor":"rgba(0, 204, 150, 0.5)","hovertemplate":"%{y:.3f}","line":{"width":0},"marker":{"color":"#444"},"mode":"lines","name":"Lower Bound","showlegend":false,"type":"scatter","x":[1,3,5,7,9,11,13,15,17,19,21],"y":[0.5702505606984752,0.569243179223093,0.6086136100661675,0.5581691803881728,0.6005236117882322,0.5813390200864884,0.6319140306313777,0.5732733632348407,0.6156984365714525,0.6126613828844765,0.6055789973761105]},{"line":{"color":"rgba(171, 99, 250, 0.5)"},"mode":"lines","name":"with baking window","showlegend":true,"type":"scatter","x":[1,3,5,7,9,11,13,15,17,19,21],"y":[0.394,0.495,0.527,0.551,0.591,0.565,0.606,0.575,0.588,0.618,0.614]},{"hovertemplate":"%{y:.3f}","line":{"width":0},"marker":{"color":"#444"},"mode":"lines","name":"Upper Bound","showlegend":false,"type":"scatter","x":[1,3,5,7,9,11,13,15,17,19,21],"y":[0.4196695744631634,0.5209845045940409,0.5528616630076232,0.5766996033744572,0.6162941730121511,0.5905771187750806,0.631097546896334,0.6004768868985177,0.6133305422867752,0.642922285675727,0.6389824983011156]},{"fill":"tonexty","fillcolor":"rgba(171, 99, 250, 0.5)","hovertemplate":"%{y:.3f}","line":{"width":0},"marker":{"color":"#444"},"mode":"lines","name":"Lower Bound","showlegend":false,"type":"scatter","x":[1,3,5,7,9,11,13,15,17,19,21],"y":[0.36890245310366593,0.46904247783835673,0.5009926318574297,0.5250251758150873,0.5652147467182124,0.5390721096037505,0.5803304255368367,0.5491183766155181,0.5621945669030268,0.5924409289196896,0.5884023022402189]}],"layout":{"hovermode":"x","template":{"data":{"bar":[{"error_x":{"color":"#f2f5fa"},"error_y":{"color":"#f2f5fa"},"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"barpolar":[{"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"carpet":[{"aaxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"baxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"contour"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"heatmap"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"heatmapgl"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"histogram2d"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"histogram2dcontour"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter":[{"marker":{"line":{"color":"#283442"}},"type":"scatter"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#283442"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#506784"},"line":{"color":"rgb(17,17,17)"}},"header":{"fill":{"color":"#2a3f5f"},"line":{"color":"rgb(17,17,17)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#f2f5fa","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"sequentialminus":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#f2f5fa"},"geo":{"bgcolor":"rgb(17,17,17)","lakecolor":"rgb(17,17,17)","landcolor":"rgb(17,17,17)","showlakes":true,"showland":true,"subunitcolor":"#506784"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(17,17,17)","plot_bgcolor":"rgb(17,17,17)","polar":{"angularaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","radialaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"yaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"zaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"}},"shapedefaults":{"line":{"color":"#f2f5fa"}},"sliderdefaults":{"bgcolor":"#C8D4E3","bordercolor":"rgb(17,17,17)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"baxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","caxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#506784","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2}}},"title":{"text":"Power of Сriterion (4 weeks experiment)","x":0.5},"xaxis":{"title":{"text":"Days passed since the exposure was stopped (doubles up as baking window width)"}},"yaxis":{"title":{"text":"True Positive Rate"}}}});
+</script>
+<p>So, two observations:</p>
+<ul>
+<li>it seems that no matter what is the experiment&rsquo;s duration the strategy where all events are counted works better in case of a short baking window</li>
+<li>waiting at least for a week after the experiment is over for more conversions to happen is must for short experiments only</li>
+</ul>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>Now you know, how important it&rsquo;s to give your metric time to mature and don&rsquo;t rush with the conclusions for &ldquo;gray&rdquo; experiments, even if you didn&rsquo;t reach statistically significant result immediately after you stopped the exposure to the experiment, it doesn&rsquo;t mean that you would finally get it a little later.</p>
+<p>The effect is especially great for the shorter experiments, within your data specific the time frames may strongly vary although this rule is an invariant, the longer you run it the less power you lose when drawing a conclusion right after the experiment&rsquo;s finish. However it totally makes sense to give some time to the recent users to have their conversions if you want to take them into account in the same way as those who came earlier, otherwise the latest users performance is neglected and the conclusion relies on those who came earlier mostly.</p>
+<p>The final thought is that not every time well-known techniques fits your personal set up, in our case it was easy to show that movement to a baking window can only either (or even both simultaneously) drop the power down or push the experiment duration up, so the simpler default approach works uniformly better.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Maturing conversions in AB-experiment on twitter"
+        href="https://twitter.com/intent/tweet/?text=Maturing%20conversions%20in%20AB-experiment&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fmaturing-conversions%2f&amp;hashtags=">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Maturing conversions in AB-experiment on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fmaturing-conversions%2f&amp;title=Maturing%20conversions%20in%20AB-experiment&amp;summary=Maturing%20conversions%20in%20AB-experiment&amp;source=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fmaturing-conversions%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Maturing conversions in AB-experiment on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fmaturing-conversions%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Maturing conversions in AB-experiment on telegram"
+        href="https://telegram.me/share/url?text=Maturing%20conversions%20in%20AB-experiment&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fmaturing-conversions%2f">
+        <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+        </svg>
+    </a>
+</div>
+
+  </footer><div id="disqus_thread"></div>
+<script>
+	
+    var disqus_config = function () {
+    this.page.url = 'https:\/\/npodlozhniy.github.io\/posts\/maturing-conversions\/';  
+    this.page.identifier = ''; 
+	this.language = document.documentElement.lang; 
+	};
+ 
+    (function() { 
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-npodlozhniy-github-io-2.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+	
+    document.addEventListener('theme-change', function(e) { 
+		if (document.readyState == 'complete') {
+			DISQUS.reset({ reload: true, config: disqus_config });
+		}
+	});
+
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+
+		
+		const event = new Event('theme-change');
+		document.dispatchEvent(event)
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

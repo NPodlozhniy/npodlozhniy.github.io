@@ -6,7 +6,25 @@
     <description>Recent content in Posts on Nikita Podlozhniy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 29 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 20 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Maturing conversions in AB-experiment</title>
+      <link>https://npodlozhniy.github.io/posts/maturing-conversions/</link>
+      <pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://npodlozhniy.github.io/posts/maturing-conversions/</guid>
+      <description>Why you need to be patient and when cohort-wise approach is a flaw</description>
+    </item>
+    
+    <item>
+      <title>Dunnett&#39;s Correction for ABC testing</title>
+      <link>https://npodlozhniy.github.io/posts/dunnett-correction/</link>
+      <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://npodlozhniy.github.io/posts/dunnett-correction/</guid>
+      <description>Improve your multivariate testing framework power and roll out the experiments much faster</description>
+    </item>
+    
     <item>
       <title>Customer Feedback Analysis in Python</title>
       <link>https://npodlozhniy.github.io/posts/feedback-analysis/</link>
@@ -15,15 +33,6 @@
       <guid>https://npodlozhniy.github.io/posts/feedback-analysis/</guid>
       <description>Background Every company has always taken pride in providing excellent customer service, therefore it&amp;rsquo;s crucial as part of ongoing improvements for product to collect and analyse feedback after each customer interaction on support channels
 A top-notch analyst in Hi-Tech industry should be in capable of handle at least base feedback analysis quickly and efficiently and going through this article you will be introduced with the necessary concepts and eventually given the base guide on how to unlock the true power of text data</description>
-    </item>
-    
-    <item>
-      <title>Dunnett&#39;s Correction for ABC testing</title>
-      <link>https://npodlozhniy.github.io/posts/dunnett-correction/</link>
-      <pubDate>Fri, 28 Jul 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://npodlozhniy.github.io/posts/dunnett-correction/</guid>
-      <description>Background We at HomeBuddy run a various number of AB tests to improve customer journey. A big part of efforts is allocated to onboarding funnel, hence the main metrics are conversions throughout this funnel. Usually we design multivariate tests with a few testing groups reflecting slightly different variations (often in terms of actual design) of the business hypothesis behind. No matter how you run the experiments you want to get an accurate and powerful procedure, that&amp;rsquo;s why we use Dunnett&amp;rsquo;s correction for all of the experiments where we have to maximize the power of AB engine.</description>
     </item>
     
   </channel>
