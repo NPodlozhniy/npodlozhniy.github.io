@@ -1,7 +1,8 @@
 ---
 title: "Dunnett's Correction for ABC testing"
 author: "Nikita Podlozhniy"
-date: "2023-07-28"
+summary: "Improve your multivariate testing framework power and roll out the experiments much faster"
+date: "2024-07-28"
 format:
     hugo-md:
         output-file: "dunnett-correction.md"
