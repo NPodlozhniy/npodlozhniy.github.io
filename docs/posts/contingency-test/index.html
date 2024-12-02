@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Mastering Homogeneity hypothesis testing | Nikita Podlozhniy</title>
+<meta name="keywords" content="">
+<meta name="description" content="Why Fisher&rsquo;s Exact test is the relic of the past and Chi-squared is the only one you need">
+<meta name="author" content="Nikita Podlozhniy">
+<link rel="canonical" href="https://npodlozhniy.github.io/posts/contingency-test/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.5c25c975546c048d1a5600aadb48425ae1bc921a9a18fe67d6955c9535260811.css" integrity="" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.acb54fd32bbc1982428b8850317e45d076b95012730a5936667e6bc21777692a.js" integrity="sha256-rLVP0yu8GYJCi4hQMX5F0Ha5UBJzClk2Zn5rwhd3aSo="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://npodlozhniy.github.io/favicons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://npodlozhniy.github.io/favicons/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://npodlozhniy.github.io/favicons/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://npodlozhniy.github.io/favicons/apple-touch-icon.png">
+<link rel="mask-icon" href="https://npodlozhniy.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://npodlozhniy.github.io/posts/contingency-test/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+    onload="renderMathInElement(document.body, 
+    {
+              delimiters: [
+                  {left: '$$', right: '$$', display: true},
+                  {left: '\\[', right: '\\]', display: true},
+                  {left: '$', right: '$', display: false},
+                  {left: '\\(', right: '\\)', display: false}
+              ]
+          }
+    );"></script>
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-ESWD18X008', { 'anonymize_ip': false });
+}
+</script>
+<meta property="og:title" content="Mastering Homogeneity hypothesis testing" />
+<meta property="og:description" content="Why Fisher&rsquo;s Exact test is the relic of the past and Chi-squared is the only one you need" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://npodlozhniy.github.io/posts/contingency-test/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-12-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-12-01T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Mastering Homogeneity hypothesis testing"/>
+<meta name="twitter:description" content="Why Fisher&rsquo;s Exact test is the relic of the past and Chi-squared is the only one you need"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://npodlozhniy.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Mastering Homogeneity hypothesis testing",
+      "item": "https://npodlozhniy.github.io/posts/contingency-test/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Mastering Homogeneity hypothesis testing",
+  "name": "Mastering Homogeneity hypothesis testing",
+  "description": "Why Fisher\u0026rsquo;s Exact test is the relic of the past and Chi-squared is the only one you need",
+  "keywords": [
+    
+  ],
+  "articleBody": "Contingency Tests Overview Intro\nIn the world of statistical analysis, contingency tests play a crucial role in examining the relationship between two categorical variables. These tests are essential tools for researchers across various disciplines, enabling them to determine whether there is a significant correlation between the variables of interest.\nReal-world Relevance\nTo illustrate the practical significance of contingency tests, let’s consider a real-world scenario: imagine a market research team is investigating the relationship between customer satisfaction (a few levels e.g. Satisfied, Neutral, Dissatisfied) and the type of product purchased (there are multiple products) from an online marketplace. They collect data from a limited sample of customers who recently made purchases building a contingency table. By applying a contingency test, such as Fisher’s exact or Chi-squared test, researchers can determine whether customer satisfaction and the type of product purchased are connected.\nFocus\nThis notebook embarks on a journey to explore the subtleties of Fisher’s exact vs. Chi-squared tests application, delving into Fisher’s implementation nuances, and performance characteristics. A comparative analysis of two implementations of the Fisher’s exact test is covered: one crafted in pure Python and the other leveraging the statistical package of R through the rpy2 library. Furthermore, we’ll scrutinize the performance and accuracy of both approaches, comparing their results and dissecting their respective advantages.\nBackground: Fisher’s Exact and Chi-Squared Contingency Tables and Statistical Independence\nContingency tables serve as the foundation for these tests, presenting the observed frequencies of different combinations of categories for the two or more variables. By analyzing the distribution of frequencies within the table, contingency tests help to assess whether the observed patterns are likely due to chance or reflect a genuine interconnection between the variables.\nCode\rtable = [[1, 24, 5], [5, 20, 7], [14, 11, 7], [11, 14, 8], [10, 10, 10], [12, 12, 12]] Fisher’s Exact Fisher’s Exact Test, a non-parametric statistical test, plays a pivotal role in hypothesis testing for categorical data. This test is particularly valuable when dealing with small sample sizes, where the assumptions of the chi-squared test are violated.\nDerivation of the Hypergeometric Distribution\nThe hypergeometric distribution arises from a scenario involving sampling without replacement from a finite population containing two types of objects: “successes” and “failures.” In the context of contingency tables, these objects correspond to the different categories of the two variables being analyzed.\nConsider a population of size N, containing K objects classified as “successes” and N-K objects classified as “failures.” We draw a sample of size n without replacement from this population. The hypergeometric distribution describes the probability of obtaining exactly k successes in the sample.\nThe Hypergeometric Distribution Formula\nThe probability mass function of the hypergeometric distribution is given by:\n$$P(X=k) = \\frac{\\binom{K}{k} \\binom{N-K}{n-k}}{\\binom{N}{n}}$$\nwhere:\nN: Total population size K: Number of successes in the population n: Sample size k: Number of successes in the sample Fisher’s Exact Test: Applying the Hypergeometric Distribution\nFisher’s Exact Test leverages the hypergeometric distribution to calculate the exact probability of observing a given contingency table, or one more extreme, assuming the null hypothesis of independence between the variables. This exact probability is then used to assess the statistical significance of the observed association.\nChi-Squared The Chi-squared test is another widely used method for analyzing contingency tables to determine whether there is a significant connection between categorical variables. It relies on a statistical approach based on the Chi-squared distribution.\nChi-Squared Statistic: Measuring the Difference\nThe Chi-squared test calculates a test statistic, denoted by $\\chi^2$, which quantifies the difference between the observed frequencies in the contingency table and the frequencies expected under the null hypothesis of independence. The null hypothesis assumes that there is no association between the variables, meaning that the observed frequencies should be close to the expected frequencies.\nTesting the Null Hypothesis\nThe calculated chi-squared statistic is then compared to the chi-squared distribution with degrees of freedom determined by the dimensions of the contingency table. If the table has $N \\times M$ size then degrees of freedom = $(N-1)(M-1)$\nAssumptions and Limitations\nBoth of these procedures, like any statistical test, operates under certain assumptions which are crucial for ensuring the validity of the test’s results. Their common requirements are:\nCategorical Data: The variables being analyzed must be categorical, meaning they can be divided into distinct categories or groups. Independent Observations: The observations in the contingency table should be independent of each other. This means that the outcome of one observation should not influence the outcome of another observation. In addition each of them has a third extra requirement\nFisher: Fixed Margins The row and column totals in the contingency table are considered fixed. This implies that the sample sizes for each category are predetermined.\nChi-squared: Sample sizes The expected cell frequencies should be sufficiently large for the chi-squared approximation to be valid\nApparently namely the third condition for each is the most challenging.\nThe third assumption for Fisher is quite strict and is not usually satisfied in practice. There are other representatives of exact test’s family that are free of this requirement like Boschloo’s or Barnard’s tests, although they are much more computationally expensive, as they require the nuisance parameters estimation and it’s not feasible to implement them for the tables larger than 2x2. So the performance is the main issue of the exact tests and if it’s the case then Chi-squared test is advised to be applied instead.\nFor Chi-squared violations of the third assumption can lead to inaccurate results. In such cases, Fisher’s exact test is often preferred due to its ability to handle small sample sizes and sparse tables where the chi-squared test’s approximations may not hold true.\nFisher’s Exact Test Implementation Pythonic Fisher NxM As long as widely used python packages for statistics like scipy or statsmodels don’t furnish Fisher’s exact test for tables larger than 2x2, here is the author’s pure Pythonic implementation for this procedure, to get more details follow the function documentation below.\nCode\rimport math def _pvalue(func: object, shape: tuple=(2,2)) -\u003e str: print(f\"p-value: {func([row[:shape[1]] for row in table[:shape[0]]]):.5f}\") def NxM_Fisher_exact_test(table: list[list]) -\u003e float: \"\"\" Performs Fisher's exact test for a contingency table of an arbitrary size. Parameters ---------- table: list[list] contigency matrix M x N Returns ------- p-value: float \"\"\" num_rows = len(table) num_cols = len(table[0]) row_sums = [sum(row) for row in table] col_sums = [sum(table[i][j] for i in range(num_rows)) for j in range(num_cols)] log_p_constant = ( sum(math.lgamma(x + 1) for x in row_sums) + sum(math.lgamma(y + 1) for y in col_sums) - math.lgamma(sum(row_sums) + 1) ) def calculate_log_probability(matrix): \"\"\" Calculates the log-probability of a contingency table n x m. Fisher's statistic under the truthful null hypothesis has a hypergeometric distribution of the numbers in the cells of the table. Therefore the probability of the contingency table follows hypergeometric probability mass function $C^K_k * C^N-K_n-k / C^N_n$ So, simplifying it's clear that the probability follows: the product of factorials of total row and total columns counts divided by the total count factorial and factorials of each cell count. row_1! x..x row_n! x col_1! x..x col_m! / (cell_11! x..x cell_nm! x total!) 1. As the gamma function satisfies: gamma(n + 1) = n! and it's computationally more stable- it's used instead of factorials. 2. Making the computations more stable I'm switching from product to sum using logarithmic probability. \"\"\" return log_p_constant - sum( math.lgamma(cell + 1) for row in matrix for cell in row ) log_p_obs = calculate_log_probability(table) p_value = 0 def dfs(matrix: list[list], row_id, col_id, tol=1e-10): \"\"\" Recursive deep-first search function Generates all possible contingency tables and calculates their log-probability adding up those, that are at least as extreme as the observed contingency table, to the total p-value Args: matrix: A list of lists representing the contingency table row_id: Row index up to which the table is already filled col_id: Column index up to which the table is already filled tol: Maximum absolute log-probability comparison error Returns: None \"\"\" nonlocal p_value # Copy is necessary to make recursion working table = [row.copy() for row in matrix] # Stopping condition - only the last row and column are left if row_id == num_rows - 1 and col_id == num_cols - 1: for i in range(row_id): # fill last column table[i][col_id] = row_sums[i] - sum(table[i][:col_id]) for j in range(col_id): # fill last row table[row_id][j] = col_sums[j] - sum(table[i][j] for i in range(row_id)) bottom_right_cell = row_sums[row_id] - sum(table[row_id][:col_id]) if bottom_right_cell \u003c 0: # Non-reliable table, all cells must be non-negative return else: table[row_id][col_id] = bottom_right_cell log_p = calculate_log_probability(table) if log_p \u003c= log_p_obs + tol: p_value += math.exp(log_p) return # Fill the table until the Stopping condition isn't met else: remaining_row_sum = row_sums[row_id] - sum(table[row_id]) remaining_col_sum = col_sums[col_id] - sum(table[i][col_id] for i in range(num_rows)) for k in range(min(remaining_row_sum, remaining_col_sum) + 1): table[row_id][col_id] = k if row_id == num_rows - 2 and col_id == num_cols - 2: dfs(table, row_id + 1, col_id + 1, tol=tol) elif row_id == num_rows - 2: dfs(table, 0, col_id + 1, tol=tol) else: dfs(table, row_id + 1, col_id, tol=tol) dfs(matrix=[[0] * num_cols for _ in range(num_rows)], row_id=0, col_id=0) return p_value While this exact test above is a precise solution, it does have limitations related to the computational intensity of the test, especially when dealing with large contingency tables. As the table size increases, the number of possible arrangements of data grows exponentially, making the calculations more time-consuming.\n_pvalue(NxM_Fisher_exact_test, shape=(3, 2)) p-value: 0.00014\rR Fisher NxM Another option that is to use rpy bridge from Python to R, this function works for an arbitrary shape of contingency table and unfortunately doesn’t have alternatives in Python.\nCode\rimport numpy as np import rpy2.robjects.numpy2ri from rpy2.robjects.packages import importr def R_fisher_exact_test(table: list[list]) -\u003e float: \"\"\" Performs exact Fisher's test using R Parameters ---------- table: list[list] contigency matrix M x N Returns ------- p-value: float \"\"\" # Enable automatic conversion between NumPy and R arrays rpy2.robjects.numpy2ri.activate() # Import necessary R package stats = importr('stats') # Perform Fisher's test using the R function with more memory to get p-value result = stats.fisher_test(np.array(table), workspace = 2e9) # Extract the p-value p_value = result[0][0] return p_value Note that the rpy2 package has native dependencies, what in particular means that, installed R accompanied by the corresponding libraries is required.\n_pvalue(R_fisher_exact_test, shape=(3, 2)) p-value: 0.00014\rAlgorithmic Differences: Python vs R While both the Python and R implementations ultimately calculate the p-value for Fisher’s Exact Test, they employ distinct algorithms under the hood, each with its own strengths and weaknesses. Understanding these differences is crucial for selecting the most appropriate implementation for a given scenario.\nPython: utilizes a recursive algorithm to enumerate all possible contingency tables that could arise under the null hypothesis. This approach, while conceptually straightforward, can become computationally expensive.\nR: in contrast, it leverages optimized algorithms and data structures that are specifically designed for efficient calculation of Fisher’s Exact Test. These algorithms, often implemented in compiled languages, take advantage of advanced numerical techniques and data representations to minimize computational overhead.\nPerformance Comparison Trade-offs and Considerations:\nThe choice between the Python and R implementations depends on the specific needs of the analysis. For smaller tables, the Python implementation may suffice, offering ease of understanding and implementation. However, as the table size increases, the computational advantages of the R implementation become more pronounced.\nI suggest we generate random contingency tables with dimensions ranging from 2x2 to 5x5, representing a diverse range of scenarios encountered in real-world applications. For each table size, we will measure the execution time required by both the Python and R implementations to calculate the p-value.\nCode\r%%time _pvalue(NxM_Fisher_exact_test, shape=(3, 2)) _pvalue(NxM_Fisher_exact_test, shape=(4, 2)) _pvalue(NxM_Fisher_exact_test, shape=(3, 3)) p-value: 0.00014\rp-value: 0.00012\rp-value: 0.00085\rCPU times: user 745 ms, sys: 7.96 ms, total: 753 ms\rWall time: 756 ms\rCode\r%%time _pvalue(R_fisher_exact_test, shape=(3, 2)) _pvalue(R_fisher_exact_test, shape=(4, 2)) _pvalue(R_fisher_exact_test, shape=(3, 3)) p-value: 0.00014\rp-value: 0.00012\rp-value: 0.00085\rCPU times: user 2.6 s, sys: 219 ms, total: 2.82 s\rWall time: 2.82 s\rCode\r%%time _pvalue(R_fisher_exact_test, shape=(4, 3)) p-value: 0.00149\rCPU times: user 1.46 s, sys: 97 ms, total: 1.55 s\rWall time: 1.88 s\rCode\r%%time _pvalue(NxM_Fisher_exact_test, shape=(4, 3)) p-value: 0.00149\rCPU times: user 8min, sys: 921 ms, total: 8min 1s\rWall time: 8min 5s\rFor sizes more than 2 x 5 and 3 x 3, R package function can significantly outperform the Python counterpart, whereas with tables of less size pure Python function is shining.\nThe results of the benchmarks revealed a clear trend: Python implementation is beaten in terms of execution time for larger tables. As the table dimensions increased, the performance gap between the two implementations is widened drastically. This observation aligns with the algorithmic differences discussed earlier, where the optimized algorithms and data structures employed by the R implementation proved to be more efficient.\nAs a rule of thumb I propose to apply R if $N \\times M \u003e 10$, otherwise Python is preferable and what is more - it doesn’t have any dependencies on non-native packages\nAccuracy Comparison Along with the performance let’s assure that the p-values generated by both methods are equivalent\nCode\rfrom scipy.stats import multinomial from statsmodels.stats.proportion import proportion_confint P = np.arange(.1, .35, .05) n = 40 rv = multinomial(n, P) np.random.seed(2024) tol = 1e-5 alpha = 0.05 n_iterations = 100 for shape in [(2, 2), (2, 4), (3, 3)]: false_positives = 0 for i in range(n_iterations): contingency_table = rv.rvs(shape[0]) p_value_py = NxM_Fisher_exact_test([row[:shape[1]] for row in contingency_table]) p_value_r = R_fisher_exact_test([row[:shape[1]] for row in contingency_table]) if abs(p_value_py - p_value_r) \u003e tol: print(f\"Different p-values! Python: {p_value_py}, R: {p_value_r}\") break elif p_value_py \u003c= alpha: false_positives += 1 l, r = proportion_confint(count=false_positives, nobs=n_iterations, alpha=0.10, method='wilson') print(f\"shape: {shape}, false positives: {false_positives/n_iterations:.3f} ± {(r - l) / 2:.3f}\") shape: (2, 2), false positives: 0.020 ± 0.026\rshape: (2, 4), false positives: 0.030 ± 0.030\rshape: (3, 3), false positives: 0.030 ± 0.030\rSo, it’s clear from multiple iterations for different tables and sizes that there is no a single case of different p-values, so the equivalence is practically evident. In addition I’ve checked Type I error level, it’s well below the bound of 5%, which means that ideologically the criterions are valid.\nPerformance Analysis: A Comparative Benchmark As the textbooks say, Fisher’s Exact Test stands out as a particularly versatile option when dealing with small sample sizes or sparse contingency tables. It provides accurate p-values, even when the assumptions of other commonly used test, such as the chi-squared test, might be violated. This benefit makes Fisher’s Exact test an invaluable method when working with limited data or situations where the chi-squared test’s approximation is not applicable.\nI offer you a procedure to challenge these statements, namely to call the power of the exact test out, when chi-squared assumptions are not satisfied. First we will check the correctness of these two methods and then the power.\nCode\rdef chi_squared_challenge( shape: tuple = (2, 2), n_iterations: int=1_000, alpha: float=0.05, aa_test: bool=True ) -\u003e None: for i in range(1 + len(rv.rvs()[0]) - shape[1]): fisher_positives = 0 chi2_positives = 0 chi2_yates_positives = 0 zero_expected_count = 0 less_than_5 = 0 less_than_10 = 0 for _ in range(n_iterations): contingency_table = rv.rvs(shape[0])[:, i:i+shape[1]] if not aa_test: contingency_table[0] = contingency_table[0] ** 2 if np.min(contingency_table) == 0: zero_expected_count += 1 continue less_than_5 += np.max(np.array(contingency_table) \u003c 5) less_than_10 += np.max(np.array(contingency_table) \u003c 10) if shape == (2, 2): p_value_fisher = fisher_exact(contingency_table).pvalue p_value_chi2_yates = chi2_contingency(contingency_table, correction=True).pvalue if p_value_chi2_yates \u003c= alpha: chi2_yates_positives += 1 else: p_value_fisher = NxM_Fisher_exact_test(contingency_table) p_value_chi2 = chi2_contingency(contingency_table, correction=False).pvalue if p_value_chi2 \u003c= alpha: chi2_positives += 1 if p_value_fisher \u003c= alpha: fisher_positives += 1 valid_tables = n_iterations - zero_expected_count print( f\"\\nIf out of {valid_tables} valid {shape[0]}x{shape[1]} tables \" f\"(w/o zero expected count) number of tables with less than:\" f\"\\n - 5 elements in any cell is {less_than_5}\" f\"\\n - 10 elements in any cell is {less_than_10}\" f\"\\n Then p-values are:\" ) l, r = proportion_confint(count=fisher_positives, nobs=valid_tables, alpha=0.10, method='wilson') print(f\"Fisher positives: {fisher_positives/valid_tables:.3f} ± {(r - l) / 2:.3f}\") l, r = proportion_confint(count=chi2_positives, nobs=valid_tables, alpha=0.10, method='wilson') print(f\"Chi2 positives: {chi2_positives/valid_tables:.3f} ± {(r - l) / 2:.3f}\") if not shape == (2, 2): continue l, r = proportion_confint(count=chi2_yates_positives, nobs=valid_tables, alpha=0.10, method='wilson') print(f\"Chi2 Yates positives: {chi2_yates_positives/valid_tables:.3f} ± {(r - l) / 2:.3f}\") According to frequently encountered requirements in the literature regarding expected cell counts for chi-squared test application, a common rule is at least 5 (some requires 10) in all cells of 2x2 table, and 5 or more in 80% of cells in larger tables, but no cells with zero expected count. Furthermore, when the assumption for 2x2 table is not met, Yates’s correction is applied.\nNow, we will check the feasibility of these conditions for 2x2 tables first.\nCorrectness Code\rnp.random.seed(26) chi_squared_challenge(aa_test=True) If out of 969 valid 2x2 tables (w/o zero expected count) number of tables with less than:\r- 5 elements in any cell is 915\r- 10 elements in any cell is 969\rThen p-values are:\rFisher positives: 0.019 ± 0.007\rChi2 positives: 0.043 ± 0.011\rChi2 Yates positives: 0.011 ± 0.006\rIf out of 993 valid 2x2 tables (w/o zero expected count) number of tables with less than:\r- 5 elements in any cell is 566\r- 10 elements in any cell is 993\rThen p-values are:\rFisher positives: 0.024 ± 0.008\rChi2 positives: 0.050 ± 0.011\rChi2 Yates positives: 0.015 ± 0.006\rIf out of 1000 valid 2x2 tables (w/o zero expected count) number of tables with less than:\r- 5 elements in any cell is 178\r- 10 elements in any cell is 993\rThen p-values are:\rFisher positives: 0.032 ± 0.009\rChi2 positives: 0.052 ± 0.012\rChi2 Yates positives: 0.022 ± 0.008\rIf out of 1000 valid 2x2 tables (w/o zero expected count) number of tables with less than:\r- 5 elements in any cell is 27\r- 10 elements in any cell is 831\rThen p-values are:\rFisher positives: 0.033 ± 0.009\rChi2 positives: 0.049 ± 0.011\rChi2 Yates positives: 0.022 ± 0.008\rPower Code\rnp.random.seed(26) chi_squared_challenge(aa_test=False) If out of 969 valid 2x2 tables (w/o zero expected count) number of tables with less than:\r- 5 elements in any cell is 785\r- 10 elements in any cell is 969\rThen p-values are:\rFisher positives: 0.300 ± 0.024\rChi2 positives: 0.359 ± 0.025\rChi2 Yates positives: 0.265 ± 0.023\rIf out of 993 valid 2x2 tables (w/o zero expected count) number of tables with less than:\r- 5 elements in any cell is 373\r- 10 elements in any cell is 987\rThen p-values are:\rFisher positives: 0.325 ± 0.024\rChi2 positives: 0.370 ± 0.025\rChi2 Yates positives: 0.295 ± 0.024\rIf out of 1000 valid 2x2 tables (w/o zero expected count) number of tables with less than:\r- 5 elements in any cell is 90\r- 10 elements in any cell is 897\rThen p-values are:\rFisher positives: 0.334 ± 0.025\rChi2 positives: 0.363 ± 0.025\rChi2 Yates positives: 0.305 ± 0.024\rIf out of 1000 valid 2x2 tables (w/o zero expected count) number of tables with less than:\r- 5 elements in any cell is 9\r- 10 elements in any cell is 586\rThen p-values are:\rFisher positives: 0.351 ± 0.025\rChi2 positives: 0.387 ± 0.025\rChi2 Yates positives: 0.327 ± 0.024\rSurprise! In this example it’s shown there is no need for Yates nor for Fisher’s exact test at all! Chi-squared test doesn’t inflate the number of Type I errors and keep the power at least as high as it’s for the exact test regardless of the number of cells with low frequencies.\nJFYI: Some other exact tests might be applied instead of Fisher’s test, e.g. Boschloo’s test provides higher power but it’s a) much slower and b) yet worse than a plain chi-squared, you may prove it on your own as an exercise. Hint: there is a function boschloo_exact in scipy\nOkay, it’ clear with 2x2, but what if the table is getting bigger?\nCode\rnp.random.seed(26) chi_squared_challenge(shape=(2, 4), aa_test=False) If out of 969 valid 2x4 tables (w/o zero expected count) number of tables with less than:\r- 5 elements in any cell is 804\r- 10 elements in any cell is 969\rThen p-values are:\rFisher positives: 0.685 ± 0.025\rChi2 positives: 0.688 ± 0.024\rIf out of 993 valid 2x4 tables (w/o zero expected count) number of tables with less than:\r- 5 elements in any cell is 388\r- 10 elements in any cell is 993\rThen p-values are:\rFisher positives: 0.666 ± 0.025\rChi2 positives: 0.672 ± 0.024\rThe power values are not statistically distinguishable, so chi-squared is still the winner as it’s much simpler in calculations and for the data model that I specified it seems that it can handle small table sizes - it takes low values at least as good as Fisher’s test.\nMonte-Carlo Simulation Results Interpretation I’d like to make an extra note that Monte-Carlo simulations can provide valuable insights into the performance and behavior of statistical tests, but it’s essential to interpret their results with caution and awareness of their limitations.\nWhile simulations can mimic real-world scenarios, they are inherently limited by the assumptions and parameters used in their design. They may not capture the full complexity of real-world data and may not be generalizable to all situations. Therefore, it’s crucial to consider the specific context and limitations of the simulation when interpreting its results.\nSaying that I must admit that I don’t have an intention to prove that there is no need for exact tests in any experiment design, I’d rather invite you to challenge your data and your experiments set up specifics, as there is a chance that you will find that chi-squared test is all you need for contingency experiments.\nJustification for Fisher’s Exact over Chi-Squared Even when the chi-squared test appears to perform well in Monte-Carlo simulations, there are compelling theoretical and practical reasons to prefer Fisher’s Exact Test in specific situations. Understanding these justifications is crucial for making informed decisions about which test to apply.\nSparse Table: Chi-squared test relies on approximations that may not hold true when dealing with sparse contingency tables. Sample Size: Chi-squared test is based on the asymptotic distribution of the test statistic, which assumes that the sample size is large. Effect Size: Chi-squared may be less sensitive in detecting the small effect size, because the approximation may not be as accurate. So, once again: in order to guarantee that you don’t have a need for exact tests in your data model setting, you must consciously simulate your data distributions (especially when it comes to sparse tables, small sample sizes and small effect sizes) and then make a decision, the process that I presented here is based on the data my team is exposed to most and hopefully it might be easily simulated with Multinomial distribution.\nGeneral Pipeline Finally I’d like to offer you a full pipeline on how to organize contingency tests efficiently: when Fisher’s exact test shall be applied and when Chi-squared is just enough.\nAs you know, exact tests could take time and what I want to achieve is to have a control over the time that I allocate to the function execution.\nThere are a few ways to implement timeouts, my favourite one is leveraging multiprocessing capabilities, however it’s not always the case that you can run a subprocess under your main process in production, so another concise way to apply timeouts will be shown via func_timeout library.\nConcurrent Execution Simple decorator to pass the output from the subprocess into main process.\nCode\rfrom typing import Optional from functools import wraps from multiprocessing import Queue, Process def subprocess_output(procedure: object, queue: Optional[Queue]=None) -\u003e object: @wraps(procedure) def wrapper(*args, **kwargs): p_value = procedure(*args, **kwargs) queue.put(p_value) return p_value return wrapper def concurrent_test( method: object, table: list[list], name: str=\"NxM Fisher's exact test\", timeout: int=10, ) -\u003e float: \"\"\" Runs the given method in a separate process with a timeout. If the process takes longer than the timeout, it is terminated. The result is returned from the main process. Parameters ---------- method: object The method to be run in a separate process. table: list[list] Contingency matrix M x N name: str Process name timeout: int Time limit for subprocess execution Returns ------- p-value: float \"\"\" queue = Queue() procedure = subprocess_output(method, queue) p = Process( target=procedure, args=(table,), name=name ) p.start() p.join(timeout=timeout) p.terminate() if p.exitcode is not None: p_value = queue.get() return p_value Timeout Execution Handy function that is a good solution if a timeout is the only thing you want to get from a subprocess\nCode\r# pip install func-timeout from func_timeout import func_timeout, FunctionTimedOut def timeout_test( method: object, table: np.ndarray, timeout: int=10, ) -\u003e float: try: p_value = func_timeout(timeout, method, args=(table,)) except FunctionTimedOut: p_value = None return p_value By the way: there is no need for timeout when running scipy Fisher’s exact test, so it’s applied only to those methods analyzed in the chapter above.\nCode\r%%time fisher_exact(np.array([[10000, 4000], [12000, 5000]])) CPU times: total: 0 ns\rWall time: 14 ms\rSignificanceResult(statistic=1.0416666666666667, pvalue=0.10488212218194087)\rUniversal procedure Logic Code\rfrom scipy.stats import chi2_contingency, fisher_exact def _contingency_test(table: np.ndarray, criterion: str, timeout: int) -\u003e dict: \"\"\" Performs a test of independence of variables in a contingency table Parameters ---------- table: np.ndarray Contingency matrix M x N criterion: str Test to be performed timeout: int Time limit for Fisher's exact test Returns ------- dict: { \"method\": str, \"p-value\": float, \"error\": str (optional) } \"\"\" if criterion not in {\"chi-squared\", \"fisher-exact\", \"textbook\"}: raise ValueError( \"Incorrect type of criterion, \" \"should be one of the following: 'chi-squared', 'fisher-exact', 'textbook'\" ) # No timeout if \"fisher-exact\" criterion is set timeout = timeout + 10_000 * (criterion == \"fisher-exact\") result = dict.fromkeys([\"method\", \"p-value\"]) try: if criterion == \"textbook\" and table.shape == (2, 2) and (table \u003e= 10).all(): result[\"method\"] = \"2x2 Pearson's chi-squared test with Yates\" test = chi2_contingency(table, correction=True) result[\"p-value\"] = test.pvalue elif criterion != \"chi-squared\" and table.shape == (2, 2): result[\"method\"] = \"2x2 Fisher's exact test in Python\" test = fisher_exact(table) result[\"p-value\"] = test.pvalue elif criterion == \"chi-squared\" or (criterion == \"textbook\" and np.sum(table \u003e= 5) \u003e= np.size(table) * 0.80): result[\"method\"] = \"NxM Pearson's chi-squared test w/o Yates\" test = chi2_contingency(table, correction=False) result[\"p-value\"] = test.pvalue else: # try Exact fisher test if doesn't take too much if np.size(table) \u003e 10: name = \"NxM Fisher's exact test in R\" p_value = timeout_test( R_fisher_exact_test, table, timeout ) else: name = \"NxM Fisher's exact test in Python\" p_value = timeout_test( NxM_Fisher_exact_test, table, timeout ) result[\"method\"] = name if p_value: result[\"p-value\"] = p_value else: result[\"method\"] = \" \".join([ result[\"method\"], \"timed out.\", \"NxM Pearson's chi-squared test approximation applied\" ]) test = chi2_contingency(table, correction=False) result[\"p-value\"] = test.pvalue except Exception as error: result[\"error\"] = f\"{error}\" return result Here is a quick example of how it works with the identified table\nCode\rt = np.array([row[:2] for row in table[:5]]) _contingency_test(t, 'textbook', 5) {'method': \"NxM Pearson's chi-squared test w/o Yates\",\r'p-value': 0.00032439327665678783}\rInput validation Adding a validation is an important step to prevent end-users from inference the function in the wrong way\nCode\rdef _validate_input(table: list[list]) -\u003e np.array: try: array = np.array(table) except ValueError: raise ValueError( \"Contingency table's rows must be of equal length.\" ) try: array = array.astype(dtype=int) except ValueError: raise ValueError( \"All cells must contain integer numbers.\" ) if array.ndim != 2: raise ValueError( \"Contigency table must be a 2-dimensional array.\" ) if (array \u003c 0).any(): raise ValueError( \"All cells must contain non-negative numbers.\" ) if array.shape[0] == 2 and np.max(np.min(array, axis=1)) == 0: raise ValueError( \"There are cells with zero expected count. \" \"Expectations must contain only positive numbers.\" ) return array Put it all together Code\rdef general_contingency_test(table: list[list], criterion='textbook', timeout: int=10) -\u003e dict: \"\"\" Performs a test of independence of variables in a contingency table Parameters ---------- table: list[list] matrix M x N, where M is the number of compared groups and N is the set of measures timeout: int Time limit for Fisher's exact test, if the calculation takes longer chi-squared test is applied instead Returns ------- dict: { \"method\": str, \"p-value\": float, \"error\": str (optional) } \"\"\" return _contingency_test(_validate_input(table), criterion, timeout) Now when we have a general procedure, let’s take a look at a few examples of the inference\nCode\rgeneral_contingency_test(table, criterion='chi-squared') {'method': \"NxM Pearson's chi-squared test w/o Yates\",\r'p-value': 0.0020940807559433087}\rCode\rgeneral_contingency_test([[1, 2, 3, 5, 6, 100, 2000], [4, 5, 6, 7, 8, 150, 1000]], timeout=10) {'method': \"NxM Fisher's exact test in R timed out. NxM Pearson's chi-squared test approximation applied\",\r'p-value': 5.060441099877772e-17}\rThe logic wrapped into the library Good news for you, you don’t need to repeat all the code that was shared above as it’s already a part of the public Python package podlozhnyy_module that comes hande every time you have data analysis assignments at work.\nKey Features of the Library:\nAutomatic Test Selection: By default, the library automatically selects the most appropriate test based on textbook rules, considering factors such as sample size and expected cell frequencies. This intelligent selection process ensures the validity and accuracy of the results. Flexibility and Control: Users have the flexibility to override the automatic selection and force the library to apply a specific test if desired. This feature is particularly useful when researchers have prior knowledge or preferences regarding the test to be used. User-Friendly Interface: The library’s interface is designed to be intuitive and easy to use, enabling researchers to effortlessly perform contingency tests without extensive coding or technical expertise. # !pip install podlozhnyy-module==2.6-alpha import podlozhnyy_module as pm Library’s application is as simple as the following command\npm.contingency.general_contingency_test(table[:5], criterion='fisher-exact', timeout=1) {'method': \"NxM Fisher's exact test in R\", 'p-value': 0.0011288225617825118}\rpm.contingency.general_contingency_test(table[:3], criterion='fisher-exact', timeout=1) {'method': \"NxM Fisher's exact test in Python\",\r'p-value': 0.0008451539443552633}\rConclusion: A Unified Framework for Contingency Tests This notebook has explored various aspects of contingency tests, with a particular focus on Fisher’s Exact Test comparison to Chi-squared test. As a part of the journey we have contrasted the Python and R implementations of the Fisher’s test, highlighting their strengths and weaknesses in terms of performance, accuracy, and computational considerations.\nThe powerful framework of Monte-Carlo simulations is provided to enable the readers to simulate their data and ultimately apply proper testing techniques in their field providing the accurate guidance to the business.\npodlozhnyy_module library: a flexible solution\nThe code presented in this notebook has been thoughtfully integrated into the podlozhnyy_module library, offering a flexible and user-friendly solution for conducting contingency tests. This library empowers users to select the most appropriate test based on textbook rules or to override the default behavior and force the application of a specific test, such as Fisher’s Exact or the Chi-squared test.\n",
+  "wordCount" : "5054",
+  "inLanguage": "en",
+  "datePublished": "2024-12-01T00:00:00Z",
+  "dateModified": "2024-12-01T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Nikita Podlozhniy"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://npodlozhniy.github.io/posts/contingency-test/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Nikita Podlozhniy",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://npodlozhniy.github.io/favicons/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://npodlozhniy.github.io/" accesskey="h" title="Nikita Podlozhniy (Alt + H)">Nikita Podlozhniy</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                    <li>
+                        <a href="https://npodlozhniy.github.io/ru/" title="Russian"
+                            aria-label=":ru:">Ru</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://npodlozhniy.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://npodlozhniy.github.io/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://npodlozhniy.github.io/search" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://npodlozhniy.github.io/archives" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://npodlozhniy.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://npodlozhniy.github.io/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Mastering Homogeneity hypothesis testing
+    </h1>
+    <div class="post-meta"><span title='2024-12-01 00:00:00 +0000 UTC'>December 1, 2024</span>&nbsp;·&nbsp;24 min&nbsp;·&nbsp;Nikita Podlozhniy
+
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#contingency-tests-overview" aria-label="Contingency Tests Overview">Contingency Tests Overview</a></li>
+                <li>
+                    <a href="#background-fishers-exact-and-chi-squared" aria-label="Background: Fisher&amp;rsquo;s Exact and Chi-Squared">Background: Fisher&rsquo;s Exact and Chi-Squared</a><ul>
+                        
+                <li>
+                    <a href="#fishers-exact" aria-label="Fisher&amp;rsquo;s Exact">Fisher&rsquo;s Exact</a></li>
+                <li>
+                    <a href="#chi-squared" aria-label="Chi-Squared">Chi-Squared</a></li></ul>
+                </li>
+                <li>
+                    <a href="#fishers-exact-test-implementation" aria-label="Fisher&amp;rsquo;s Exact Test Implementation">Fisher&rsquo;s Exact Test Implementation</a><ul>
+                        
+                <li>
+                    <a href="#pythonic-fisher-nxm" aria-label="Pythonic Fisher NxM">Pythonic Fisher NxM</a></li>
+                <li>
+                    <a href="#r-fisher-nxm" aria-label="R Fisher NxM">R Fisher NxM</a></li>
+                <li>
+                    <a href="#algorithmic-differences-python-vs-r" aria-label="Algorithmic Differences: Python vs R">Algorithmic Differences: Python vs R</a></li>
+                <li>
+                    <a href="#performance-comparison" aria-label="Performance Comparison">Performance Comparison</a></li>
+                <li>
+                    <a href="#accuracy-comparison" aria-label="Accuracy Comparison">Accuracy Comparison</a></li>
+                <li>
+                    <a href="#performance-analysis-a-comparative-benchmark" aria-label="Performance Analysis: A Comparative Benchmark">Performance Analysis: A Comparative Benchmark</a><ul>
+                        
+                <li>
+                    <a href="#correctness" aria-label="Correctness">Correctness</a></li>
+                <li>
+                    <a href="#power" aria-label="Power">Power</a></li>
+                <li>
+                    <a href="#monte-carlo-simulation-results-interpretation" aria-label="Monte-Carlo Simulation Results Interpretation">Monte-Carlo Simulation Results Interpretation</a></li></ul>
+                </li>
+                <li>
+                    <a href="#justification-for-fishers-exact-over-chi-squared" aria-label="Justification for Fisher&amp;rsquo;s Exact over Chi-Squared">Justification for Fisher&rsquo;s Exact over Chi-Squared</a></li></ul>
+                </li>
+                <li>
+                    <a href="#general-pipeline" aria-label="General Pipeline">General Pipeline</a><ul>
+                        
+                <li>
+                    <a href="#concurrent-execution" aria-label="Concurrent Execution">Concurrent Execution</a></li>
+                <li>
+                    <a href="#timeout-execution" aria-label="Timeout Execution">Timeout Execution</a></li>
+                <li>
+                    <a href="#universal-procedure" aria-label="Universal procedure">Universal procedure</a><ul>
+                        
+                <li>
+                    <a href="#logic" aria-label="Logic">Logic</a></li>
+                <li>
+                    <a href="#input-validation" aria-label="Input validation">Input validation</a></li>
+                <li>
+                    <a href="#put-it-all-together" aria-label="Put it all together">Put it all together</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#the-logic-wrapped-into-the-library" aria-label="The logic wrapped into the library">The logic wrapped into the library</a></li>
+                <li>
+                    <a href="#conclusion-a-unified-framework-for-contingency-tests" aria-label="Conclusion: A Unified Framework for Contingency Tests">Conclusion: A Unified Framework for Contingency Tests</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="contingency-tests-overview">Contingency Tests Overview<a hidden class="anchor" aria-hidden="true" href="#contingency-tests-overview">#</a></h2>
+<p><strong>Intro</strong></p>
+<p>In the world of statistical analysis, contingency tests play a crucial role in examining the relationship between two categorical variables. These tests are essential tools for researchers across various disciplines, enabling them to determine whether there is a significant correlation between the variables of interest.</p>
+<p><strong>Real-world Relevance</strong></p>
+<p>To illustrate the practical significance of contingency tests, let&rsquo;s consider a real-world scenario:
+imagine a market research team is investigating the relationship between customer satisfaction (a few levels e.g. Satisfied, Neutral, Dissatisfied) and the type of product purchased (there are multiple products) from an online marketplace. They collect data from a limited sample of customers who recently made purchases building a contingency table. By applying a contingency test, such as Fisher&rsquo;s exact or Chi-squared test, researchers can determine whether customer satisfaction and the type of product purchased are connected.</p>
+<p><strong>Focus</strong></p>
+<p>This notebook embarks on a journey to explore the subtleties of Fisher&rsquo;s exact vs. Chi-squared tests application, delving into Fisher&rsquo;s implementation nuances, and performance characteristics. A comparative analysis of two implementations of the Fisher&rsquo;s exact test is covered: one crafted in pure Python and the other leveraging the statistical package of R through the <code>rpy2</code> library. Furthermore, we&rsquo;ll scrutinize the performance and accuracy of both approaches, comparing their results and dissecting their respective advantages.</p>
+<h2 id="background-fishers-exact-and-chi-squared">Background: Fisher&rsquo;s Exact and Chi-Squared<a hidden class="anchor" aria-hidden="true" href="#background-fishers-exact-and-chi-squared">#</a></h2>
+<p><strong>Contingency Tables and Statistical Independence</strong></p>
+<p>Contingency tables serve as the foundation for these tests, presenting the observed frequencies of different combinations of categories for the two or more variables. By analyzing the distribution of frequencies within the table, contingency tests help to assess whether the observed patterns are likely due to chance or reflect a genuine interconnection between the variables.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>table <span style="color:#f92672">=</span> [[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">24</span>, <span style="color:#ae81ff">5</span>], [<span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">7</span>], [<span style="color:#ae81ff">14</span>, <span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">7</span>], [<span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">14</span>, <span style="color:#ae81ff">8</span>], [<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">10</span>], [<span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">12</span>]]
+</span></span></code></pre></div></details>
+<h3 id="fishers-exact">Fisher&rsquo;s Exact<a hidden class="anchor" aria-hidden="true" href="#fishers-exact">#</a></h3>
+<p>Fisher&rsquo;s Exact Test, a non-parametric statistical test, plays a pivotal role in hypothesis testing for categorical data. This test is particularly valuable when dealing with small sample sizes, where the assumptions of the chi-squared test are violated.</p>
+<p><strong>Derivation of the Hypergeometric Distribution</strong></p>
+<p>The hypergeometric distribution arises from a scenario involving sampling without replacement from a finite population containing two types of objects: &ldquo;successes&rdquo; and &ldquo;failures.&rdquo; In the context of contingency tables, these objects correspond to the different categories of the two variables being analyzed.</p>
+<p>Consider a population of size N, containing K objects classified as &ldquo;successes&rdquo; and N-K objects classified as &ldquo;failures.&rdquo; We draw a sample of size n without replacement from this population. The hypergeometric distribution describes the probability of obtaining exactly k successes in the sample.</p>
+<p><strong>The Hypergeometric Distribution Formula</strong></p>
+<p>The probability mass function of the hypergeometric distribution is given by:</p>
+<p>$$P(X=k) = \frac{\binom{K}{k} \binom{N-K}{n-k}}{\binom{N}{n}}$$</p>
+<p>where:</p>
+<ul>
+<li>N: Total population size</li>
+<li>K: Number of successes in the population</li>
+<li>n: Sample size</li>
+<li>k: Number of successes in the sample</li>
+</ul>
+<p><strong>Fisher&rsquo;s Exact Test: Applying the Hypergeometric Distribution</strong></p>
+<p>Fisher&rsquo;s Exact Test leverages the hypergeometric distribution to calculate the exact probability of observing a given contingency table, or one more extreme, assuming the null hypothesis of independence between the variables. This exact probability is then used to assess the statistical significance of the observed association.</p>
+<h3 id="chi-squared">Chi-Squared<a hidden class="anchor" aria-hidden="true" href="#chi-squared">#</a></h3>
+<p>The Chi-squared test is another widely used method for analyzing contingency tables to determine whether there is a significant connection between categorical variables. It relies on a statistical approach based on the Chi-squared distribution.</p>
+<p><strong>Chi-Squared Statistic: Measuring the Difference</strong></p>
+<p>The Chi-squared test calculates a test statistic, denoted by $\chi^2$, which quantifies the difference between the observed frequencies in the contingency table and the frequencies expected under the null hypothesis of independence. The null hypothesis assumes that there is no association between the variables, meaning that the observed frequencies should be close to the expected frequencies.</p>
+<p><strong>Testing the Null Hypothesis</strong></p>
+<p>The calculated chi-squared statistic is then compared to the chi-squared distribution with degrees of freedom determined by the dimensions of the contingency table. If the table has $N \times M$ size then degrees of freedom = $(N-1)(M-1)$</p>
+<p><strong>Assumptions and Limitations</strong></p>
+<p>Both of these procedures, like any statistical test, operates under certain assumptions which are crucial for ensuring the validity of the test&rsquo;s results.
+Their common requirements are:</p>
+<ol>
+<li><strong>Categorical Data:</strong> The variables being analyzed must be categorical, meaning they can be divided into distinct categories or groups.</li>
+<li><strong>Independent Observations:</strong> The observations in the contingency table should be independent of each other. This means that the outcome of one observation should not influence the outcome of another observation.</li>
+</ol>
+<p>In addition each of them has a third extra requirement</p>
+<ul>
+<li>Fisher: <strong>Fixed Margins</strong></li>
+</ul>
+<blockquote>
+<p>The row and column totals in the contingency table are considered fixed. This implies that the sample sizes for each category are predetermined.</p>
+</blockquote>
+<ul>
+<li>Chi-squared: <strong>Sample sizes</strong></li>
+</ul>
+<blockquote>
+<p>The expected cell frequencies should be sufficiently large for the chi-squared approximation to be valid</p>
+</blockquote>
+<p>Apparently namely the third condition for each is the most challenging.</p>
+<p>The third assumption for Fisher is quite strict and is not usually satisfied in practice. There are other representatives of exact test&rsquo;s family that are free of this requirement like Boschloo&rsquo;s or Barnard&rsquo;s tests, although they are much more computationally expensive, as they require the nuisance parameters estimation and it&rsquo;s not feasible to implement them for the tables larger than 2x2. So the performance is the main issue of the exact tests and if it&rsquo;s the case then Chi-squared test is advised to be applied instead.</p>
+<p>For Chi-squared violations of the third assumption can lead to inaccurate results. In such cases, Fisher&rsquo;s exact test is often preferred due to its ability to handle small sample sizes and sparse tables where the chi-squared test&rsquo;s approximations may not hold true.</p>
+<h2 id="fishers-exact-test-implementation">Fisher&rsquo;s Exact Test Implementation<a hidden class="anchor" aria-hidden="true" href="#fishers-exact-test-implementation">#</a></h2>
+<h3 id="pythonic-fisher-nxm">Pythonic Fisher NxM<a hidden class="anchor" aria-hidden="true" href="#pythonic-fisher-nxm">#</a></h3>
+<p>As long as widely used python packages for statistics like <code>scipy</code> or <code>statsmodels</code> don&rsquo;t furnish Fisher&rsquo;s exact test for tables larger than 2x2, here is the author&rsquo;s pure Pythonic implementation for this procedure, to get more details follow the function documentation below.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> math
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_pvalue</span>(func: object, shape: tuple<span style="color:#f92672">=</span>(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">2</span>)) <span style="color:#f92672">-&gt;</span> str:
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;p-value: </span><span style="color:#e6db74">{</span>func([row[:shape[<span style="color:#ae81ff">1</span>]] <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> table[:shape[<span style="color:#ae81ff">0</span>]]])<span style="color:#e6db74">:</span><span style="color:#e6db74">.5f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">NxM_Fisher_exact_test</span>(table: list[list]) <span style="color:#f92672">-&gt;</span> float:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Performs Fisher&#39;s exact test for a contingency table of an arbitrary size.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Parameters
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    ----------
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    table: list[list]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        contigency matrix M x N
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Returns
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    -------
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    p-value: float
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    num_rows <span style="color:#f92672">=</span> len(table)
+</span></span><span style="display:flex;"><span>    num_cols <span style="color:#f92672">=</span> len(table[<span style="color:#ae81ff">0</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    row_sums <span style="color:#f92672">=</span> [sum(row) <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> table]
+</span></span><span style="display:flex;"><span>    col_sums <span style="color:#f92672">=</span> [sum(table[i][j] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(num_rows)) <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(num_cols)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    log_p_constant <span style="color:#f92672">=</span> (
+</span></span><span style="display:flex;"><span>        sum(math<span style="color:#f92672">.</span>lgamma(x <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> row_sums)
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">+</span> sum(math<span style="color:#f92672">.</span>lgamma(y <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">for</span> y <span style="color:#f92672">in</span> col_sums)
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">-</span> math<span style="color:#f92672">.</span>lgamma(sum(row_sums) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">calculate_log_probability</span>(matrix):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Calculates the log-probability of a contingency table n x m.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Fisher&#39;s statistic under the truthful null hypothesis has a
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        hypergeometric distribution of the numbers in the cells of the table.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Therefore the probability of the contingency table follows
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        hypergeometric probability mass function $C^K_k * C^N-K_n-k / C^N_n$
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        So, simplifying it&#39;s clear that the probability follows:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        the product of factorials of total row and total columns counts
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        divided by the total count factorial and factorials of each cell count.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        row_1! x..x row_n! x col_1! x..x col_m! / (cell_11! x..x cell_nm! x total!)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        1. As the gamma function satisfies: gamma(n + 1) = n!
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        and it&#39;s computationally more stable- it&#39;s used instead of factorials.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        2. Making the computations more stable I&#39;m switching from product to sum
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        using logarithmic probability.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> log_p_constant <span style="color:#f92672">-</span> sum(
+</span></span><span style="display:flex;"><span>                math<span style="color:#f92672">.</span>lgamma(cell <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> matrix <span style="color:#66d9ef">for</span> cell <span style="color:#f92672">in</span> row
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    log_p_obs <span style="color:#f92672">=</span> calculate_log_probability(table)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    p_value <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dfs</span>(matrix: list[list], row_id, col_id, tol<span style="color:#f92672">=</span><span style="color:#ae81ff">1e-10</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Recursive deep-first search function
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Generates all possible contingency tables and calculates their
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        log-probability adding up those, that are at least as extreme as
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        the observed contingency table, to the total p-value
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Args:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            matrix: A list of lists representing the contingency table
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            row_id: Row index up to which the table is already filled
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            col_id: Column index up to which the table is already filled
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            tol: Maximum absolute log-probability comparison error
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Returns:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            None
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">nonlocal</span> p_value
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Copy is necessary to make recursion working</span>
+</span></span><span style="display:flex;"><span>        table <span style="color:#f92672">=</span> [row<span style="color:#f92672">.</span>copy() <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> matrix]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Stopping condition - only the last row and column are left</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> row_id <span style="color:#f92672">==</span> num_rows <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">and</span> col_id <span style="color:#f92672">==</span> num_cols <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(row_id): <span style="color:#75715e"># fill last column</span>
+</span></span><span style="display:flex;"><span>                table[i][col_id] <span style="color:#f92672">=</span> row_sums[i] <span style="color:#f92672">-</span> sum(table[i][:col_id])
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(col_id): <span style="color:#75715e"># fill last row</span>
+</span></span><span style="display:flex;"><span>                table[row_id][j] <span style="color:#f92672">=</span> col_sums[j] <span style="color:#f92672">-</span> sum(table[i][j] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(row_id))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            bottom_right_cell <span style="color:#f92672">=</span> row_sums[row_id] <span style="color:#f92672">-</span> sum(table[row_id][:col_id])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> bottom_right_cell <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># Non-reliable table, all cells must be non-negative</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                table[row_id][col_id] <span style="color:#f92672">=</span> bottom_right_cell
+</span></span><span style="display:flex;"><span>                log_p <span style="color:#f92672">=</span> calculate_log_probability(table)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> log_p <span style="color:#f92672">&lt;=</span> log_p_obs <span style="color:#f92672">+</span> tol:
+</span></span><span style="display:flex;"><span>                    p_value <span style="color:#f92672">+=</span> math<span style="color:#f92672">.</span>exp(log_p)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Fill the table until the Stopping condition isn&#39;t met</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            remaining_row_sum <span style="color:#f92672">=</span> row_sums[row_id] <span style="color:#f92672">-</span> sum(table[row_id])
+</span></span><span style="display:flex;"><span>            remaining_col_sum <span style="color:#f92672">=</span> col_sums[col_id] <span style="color:#f92672">-</span> sum(table[i][col_id] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(num_rows))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> k <span style="color:#f92672">in</span> range(min(remaining_row_sum, remaining_col_sum) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                table[row_id][col_id] <span style="color:#f92672">=</span> k
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> row_id <span style="color:#f92672">==</span> num_rows <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">and</span> col_id <span style="color:#f92672">==</span> num_cols <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>:
+</span></span><span style="display:flex;"><span>                    dfs(table, row_id <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, col_id <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, tol<span style="color:#f92672">=</span>tol)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">elif</span> row_id <span style="color:#f92672">==</span> num_rows <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>:
+</span></span><span style="display:flex;"><span>                    dfs(table, <span style="color:#ae81ff">0</span>, col_id <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, tol<span style="color:#f92672">=</span>tol)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                    dfs(table, row_id <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, col_id, tol<span style="color:#f92672">=</span>tol)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    dfs(matrix<span style="color:#f92672">=</span>[[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">*</span> num_cols <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(num_rows)], row_id<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, col_id<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> p_value
+</span></span></code></pre></div></details>
+<p>While this exact test above is a precise solution, it does have limitations related to the computational intensity of the test, especially when dealing with large contingency tables. As the table size increases, the number of possible arrangements of data grows exponentially, making the calculations more time-consuming.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>_pvalue(NxM_Fisher_exact_test, shape<span style="color:#f92672">=</span>(<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">2</span>))
+</span></span></code></pre></div><pre><code>p-value: 0.00014
+</code></pre>
+<h3 id="r-fisher-nxm">R Fisher NxM<a hidden class="anchor" aria-hidden="true" href="#r-fisher-nxm">#</a></h3>
+<p>Another option that is to use <code>rpy</code> bridge from Python to R, this function works for an arbitrary shape of contingency table and unfortunately doesn&rsquo;t have alternatives in Python.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> rpy2.robjects.numpy2ri
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> rpy2.robjects.packages <span style="color:#f92672">import</span> importr
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">R_fisher_exact_test</span>(table: list[list]) <span style="color:#f92672">-&gt;</span> float:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Performs exact Fisher&#39;s test using R
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Parameters
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    ----------
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    table: list[list]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        contigency matrix M x N
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Returns
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    -------
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    p-value: float
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Enable automatic conversion between NumPy and R arrays</span>
+</span></span><span style="display:flex;"><span>    rpy2<span style="color:#f92672">.</span>robjects<span style="color:#f92672">.</span>numpy2ri<span style="color:#f92672">.</span>activate()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Import necessary R package</span>
+</span></span><span style="display:flex;"><span>    stats <span style="color:#f92672">=</span> importr(<span style="color:#e6db74">&#39;stats&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Perform Fisher&#39;s test using the R function with more memory to get p-value</span>
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> stats<span style="color:#f92672">.</span>fisher_test(np<span style="color:#f92672">.</span>array(table), workspace <span style="color:#f92672">=</span> <span style="color:#ae81ff">2e9</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Extract the p-value</span>
+</span></span><span style="display:flex;"><span>    p_value <span style="color:#f92672">=</span> result[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> p_value
+</span></span></code></pre></div></details>
+<p>Note that the <code>rpy2</code> package has native dependencies, what in particular means that, installed R accompanied by the corresponding libraries is required.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>_pvalue(R_fisher_exact_test, shape<span style="color:#f92672">=</span>(<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">2</span>))
+</span></span></code></pre></div><pre><code>p-value: 0.00014
+</code></pre>
+<h3 id="algorithmic-differences-python-vs-r">Algorithmic Differences: Python vs R<a hidden class="anchor" aria-hidden="true" href="#algorithmic-differences-python-vs-r">#</a></h3>
+<p>While both the Python and R implementations ultimately calculate the p-value for Fisher&rsquo;s Exact Test, they employ distinct algorithms under the hood, each with its own strengths and weaknesses. Understanding these differences is crucial for selecting the most appropriate implementation for a given scenario.</p>
+<p><strong>Python:</strong> utilizes a recursive algorithm to enumerate all possible contingency tables that could arise under the null hypothesis. This approach, while conceptually straightforward, can become computationally expensive.</p>
+<p><strong>R:</strong> in contrast, it leverages optimized algorithms and data structures that are specifically designed for efficient calculation of Fisher&rsquo;s Exact Test. These algorithms, often implemented in compiled languages, take advantage of advanced numerical techniques and data representations to minimize computational overhead.</p>
+<h3 id="performance-comparison">Performance Comparison<a hidden class="anchor" aria-hidden="true" href="#performance-comparison">#</a></h3>
+<p><strong>Trade-offs and Considerations:</strong></p>
+<p>The choice between the Python and R implementations depends on the specific needs of the analysis. For smaller tables, the Python implementation may suffice, offering ease of understanding and implementation. However, as the table size increases, the computational advantages of the R implementation become more pronounced.</p>
+<p>I suggest we generate random contingency tables with dimensions ranging from 2x2 to 5x5, representing a diverse range of scenarios encountered in real-world applications. For each table size, we will measure the execution time required by both the Python and R implementations to calculate the p-value.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+</span></span><span style="display:flex;"><span>_pvalue(NxM_Fisher_exact_test, shape<span style="color:#f92672">=</span>(<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">2</span>))
+</span></span><span style="display:flex;"><span>_pvalue(NxM_Fisher_exact_test, shape<span style="color:#f92672">=</span>(<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">2</span>))
+</span></span><span style="display:flex;"><span>_pvalue(NxM_Fisher_exact_test, shape<span style="color:#f92672">=</span>(<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">3</span>))
+</span></span></code></pre></div></details>
+<pre><code>p-value: 0.00014
+p-value: 0.00012
+p-value: 0.00085
+CPU times: user 745 ms, sys: 7.96 ms, total: 753 ms
+Wall time: 756 ms
+</code></pre>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+</span></span><span style="display:flex;"><span>_pvalue(R_fisher_exact_test, shape<span style="color:#f92672">=</span>(<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">2</span>))
+</span></span><span style="display:flex;"><span>_pvalue(R_fisher_exact_test, shape<span style="color:#f92672">=</span>(<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">2</span>))
+</span></span><span style="display:flex;"><span>_pvalue(R_fisher_exact_test, shape<span style="color:#f92672">=</span>(<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">3</span>))
+</span></span></code></pre></div></details>
+<pre><code>p-value: 0.00014
+p-value: 0.00012
+p-value: 0.00085
+CPU times: user 2.6 s, sys: 219 ms, total: 2.82 s
+Wall time: 2.82 s
+</code></pre>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+</span></span><span style="display:flex;"><span>_pvalue(R_fisher_exact_test, shape<span style="color:#f92672">=</span>(<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">3</span>))
+</span></span></code></pre></div></details>
+<pre><code>p-value: 0.00149
+CPU times: user 1.46 s, sys: 97 ms, total: 1.55 s
+Wall time: 1.88 s
+</code></pre>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+</span></span><span style="display:flex;"><span>_pvalue(NxM_Fisher_exact_test, shape<span style="color:#f92672">=</span>(<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">3</span>))
+</span></span></code></pre></div></details>
+<pre><code>p-value: 0.00149
+CPU times: user 8min, sys: 921 ms, total: 8min 1s
+Wall time: 8min 5s
+</code></pre>
+<p>For sizes more than 2 x 5 and 3 x 3, R package function can significantly outperform the Python counterpart, whereas with tables of less size pure Python function is shining.</p>
+<p>The results of the benchmarks revealed a clear trend: Python implementation is beaten in terms of execution time for larger tables. As the table dimensions increased, the performance gap between the two implementations is widened drastically. This observation aligns with the algorithmic differences discussed earlier, where the optimized algorithms and data structures employed by the R implementation proved to be more efficient.</p>
+<p>As a rule of thumb I propose to apply R if $N \times M &gt; 10$, otherwise Python is preferable and what is more - it doesn&rsquo;t have any dependencies on non-native packages</p>
+<h3 id="accuracy-comparison">Accuracy Comparison<a hidden class="anchor" aria-hidden="true" href="#accuracy-comparison">#</a></h3>
+<p>Along with the performance let&rsquo;s assure that the p-values generated by both methods are equivalent</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> scipy.stats <span style="color:#f92672">import</span> multinomial
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> statsmodels.stats.proportion <span style="color:#f92672">import</span> proportion_confint
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>P <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>arange(<span style="color:#ae81ff">.1</span>, <span style="color:#ae81ff">.35</span>, <span style="color:#ae81ff">.05</span>)
+</span></span><span style="display:flex;"><span>n <span style="color:#f92672">=</span> <span style="color:#ae81ff">40</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rv <span style="color:#f92672">=</span> multinomial(n, P)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>tol <span style="color:#f92672">=</span> <span style="color:#ae81ff">1e-5</span>
+</span></span><span style="display:flex;"><span>alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.05</span>
+</span></span><span style="display:flex;"><span>n_iterations <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> shape <span style="color:#f92672">in</span> [(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">2</span>), (<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">4</span>), (<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">3</span>)]:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    false_positives <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(n_iterations):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        contingency_table <span style="color:#f92672">=</span> rv<span style="color:#f92672">.</span>rvs(shape[<span style="color:#ae81ff">0</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        p_value_py <span style="color:#f92672">=</span> NxM_Fisher_exact_test([row[:shape[<span style="color:#ae81ff">1</span>]] <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> contingency_table])
+</span></span><span style="display:flex;"><span>        p_value_r <span style="color:#f92672">=</span> R_fisher_exact_test([row[:shape[<span style="color:#ae81ff">1</span>]] <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> contingency_table])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> abs(p_value_py <span style="color:#f92672">-</span> p_value_r) <span style="color:#f92672">&gt;</span> tol:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Different p-values! Python: </span><span style="color:#e6db74">{</span>p_value_py<span style="color:#e6db74">}</span><span style="color:#e6db74">, R: </span><span style="color:#e6db74">{</span>p_value_r<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> p_value_py <span style="color:#f92672">&lt;=</span> alpha:
+</span></span><span style="display:flex;"><span>            false_positives <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    l, r <span style="color:#f92672">=</span> proportion_confint(count<span style="color:#f92672">=</span>false_positives, nobs<span style="color:#f92672">=</span>n_iterations, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.10</span>, method<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;wilson&#39;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;shape: </span><span style="color:#e6db74">{</span>shape<span style="color:#e6db74">}</span><span style="color:#e6db74">, false positives: </span><span style="color:#e6db74">{</span>false_positives<span style="color:#f92672">/</span>n_iterations<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> ± </span><span style="color:#e6db74">{</span>(r <span style="color:#f92672">-</span> l) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span><span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div></details>
+<pre><code>shape: (2, 2), false positives: 0.020 ± 0.026
+shape: (2, 4), false positives: 0.030 ± 0.030
+shape: (3, 3), false positives: 0.030 ± 0.030
+</code></pre>
+<p>So, it&rsquo;s clear from multiple iterations for different tables and sizes that there is no a single case of different p-values, so the equivalence is practically evident. In addition I&rsquo;ve checked Type I error level, it&rsquo;s well below the bound of 5%, which means that ideologically the criterions are valid.</p>
+<h3 id="performance-analysis-a-comparative-benchmark">Performance Analysis: A Comparative Benchmark<a hidden class="anchor" aria-hidden="true" href="#performance-analysis-a-comparative-benchmark">#</a></h3>
+<p>As the textbooks say, Fisher&rsquo;s Exact Test stands out as a particularly versatile option when dealing with small sample sizes or sparse contingency tables. It provides accurate p-values, even when the assumptions of other commonly used test, such as the chi-squared test, might be violated. This benefit makes Fisher&rsquo;s Exact test an invaluable method when working with limited data or situations where the chi-squared test&rsquo;s approximation is not applicable.</p>
+<p>I offer you a procedure to challenge these statements, namely to call the power of the exact test out, when chi-squared assumptions are not satisfied. First we will check the correctness of these two methods and then the power.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">chi_squared_challenge</span>(
+</span></span><span style="display:flex;"><span>    shape: tuple <span style="color:#f92672">=</span> (<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">2</span>),
+</span></span><span style="display:flex;"><span>    n_iterations: int<span style="color:#f92672">=</span><span style="color:#ae81ff">1_000</span>,
+</span></span><span style="display:flex;"><span>    alpha: float<span style="color:#f92672">=</span><span style="color:#ae81ff">0.05</span>,
+</span></span><span style="display:flex;"><span>    aa_test: bool<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>) <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> len(rv<span style="color:#f92672">.</span>rvs()[<span style="color:#ae81ff">0</span>]) <span style="color:#f92672">-</span> shape[<span style="color:#ae81ff">1</span>]):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        fisher_positives <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        chi2_positives <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        chi2_yates_positives <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        zero_expected_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        less_than_5 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        less_than_10 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(n_iterations):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            contingency_table <span style="color:#f92672">=</span> rv<span style="color:#f92672">.</span>rvs(shape[<span style="color:#ae81ff">0</span>])[:, i:i<span style="color:#f92672">+</span>shape[<span style="color:#ae81ff">1</span>]]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> aa_test:
+</span></span><span style="display:flex;"><span>                contingency_table[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> contingency_table[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> np<span style="color:#f92672">.</span>min(contingency_table) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>                zero_expected_count <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            less_than_5 <span style="color:#f92672">+=</span> np<span style="color:#f92672">.</span>max(np<span style="color:#f92672">.</span>array(contingency_table) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span>            less_than_10 <span style="color:#f92672">+=</span> np<span style="color:#f92672">.</span>max(np<span style="color:#f92672">.</span>array(contingency_table) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> shape <span style="color:#f92672">==</span> (<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">2</span>):
+</span></span><span style="display:flex;"><span>                p_value_fisher <span style="color:#f92672">=</span> fisher_exact(contingency_table)<span style="color:#f92672">.</span>pvalue
+</span></span><span style="display:flex;"><span>                p_value_chi2_yates <span style="color:#f92672">=</span> chi2_contingency(contingency_table, correction<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)<span style="color:#f92672">.</span>pvalue
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> p_value_chi2_yates <span style="color:#f92672">&lt;=</span> alpha:
+</span></span><span style="display:flex;"><span>                    chi2_yates_positives <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                p_value_fisher <span style="color:#f92672">=</span> NxM_Fisher_exact_test(contingency_table)
+</span></span><span style="display:flex;"><span>            p_value_chi2 <span style="color:#f92672">=</span> chi2_contingency(contingency_table, correction<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)<span style="color:#f92672">.</span>pvalue
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> p_value_chi2 <span style="color:#f92672">&lt;=</span> alpha:
+</span></span><span style="display:flex;"><span>                chi2_positives <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> p_value_fisher <span style="color:#f92672">&lt;=</span> alpha:
+</span></span><span style="display:flex;"><span>                fisher_positives <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        valid_tables <span style="color:#f92672">=</span> n_iterations <span style="color:#f92672">-</span> zero_expected_count
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        print(
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">If out of </span><span style="color:#e6db74">{</span>valid_tables<span style="color:#e6db74">}</span><span style="color:#e6db74"> valid </span><span style="color:#e6db74">{</span>shape[<span style="color:#ae81ff">0</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">x</span><span style="color:#e6db74">{</span>shape[<span style="color:#ae81ff">1</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74"> tables &#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;(w/o zero expected count) number of tables with less than:&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74"> - 5 elements in any cell is </span><span style="color:#e6db74">{</span>less_than_5<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74"> - 10 elements in any cell is </span><span style="color:#e6db74">{</span>less_than_10<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74"> Then p-values are:&#34;</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        l, r <span style="color:#f92672">=</span> proportion_confint(count<span style="color:#f92672">=</span>fisher_positives, nobs<span style="color:#f92672">=</span>valid_tables, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.10</span>, method<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;wilson&#39;</span>)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Fisher positives: </span><span style="color:#e6db74">{</span>fisher_positives<span style="color:#f92672">/</span>valid_tables<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> ± </span><span style="color:#e6db74">{</span>(r <span style="color:#f92672">-</span> l) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span><span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        l, r <span style="color:#f92672">=</span> proportion_confint(count<span style="color:#f92672">=</span>chi2_positives, nobs<span style="color:#f92672">=</span>valid_tables, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.10</span>, method<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;wilson&#39;</span>)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Chi2 positives: </span><span style="color:#e6db74">{</span>chi2_positives<span style="color:#f92672">/</span>valid_tables<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> ± </span><span style="color:#e6db74">{</span>(r <span style="color:#f92672">-</span> l) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span><span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> shape <span style="color:#f92672">==</span> (<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">2</span>):
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        l, r <span style="color:#f92672">=</span> proportion_confint(count<span style="color:#f92672">=</span>chi2_yates_positives, nobs<span style="color:#f92672">=</span>valid_tables, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.10</span>, method<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;wilson&#39;</span>)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Chi2 Yates positives: </span><span style="color:#e6db74">{</span>chi2_yates_positives<span style="color:#f92672">/</span>valid_tables<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> ± </span><span style="color:#e6db74">{</span>(r <span style="color:#f92672">-</span> l) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span><span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div></details>
+<p>According to frequently encountered requirements in the literature regarding expected cell counts for chi-squared test application, a common rule is at least 5 (some requires 10) in all cells of 2x2 table, and 5 or more in 80% of cells in larger tables, but no cells with zero expected count. Furthermore, when the assumption for 2x2 table is not met, Yates&rsquo;s correction is applied.</p>
+<p>Now, we will check the feasibility of these conditions for 2x2 tables first.</p>
+<h4 id="correctness">Correctness<a hidden class="anchor" aria-hidden="true" href="#correctness">#</a></h4>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">26</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>chi_squared_challenge(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span></code></pre></div></details>
+<pre><code>If out of 969 valid 2x2 tables (w/o zero expected count) number of tables with less than:
+ - 5 elements in any cell is 915
+ - 10 elements in any cell is 969
+ Then p-values are:
+Fisher positives: 0.019 ± 0.007
+Chi2 positives: 0.043 ± 0.011
+Chi2 Yates positives: 0.011 ± 0.006
+
+If out of 993 valid 2x2 tables (w/o zero expected count) number of tables with less than:
+ - 5 elements in any cell is 566
+ - 10 elements in any cell is 993
+ Then p-values are:
+Fisher positives: 0.024 ± 0.008
+Chi2 positives: 0.050 ± 0.011
+Chi2 Yates positives: 0.015 ± 0.006
+
+If out of 1000 valid 2x2 tables (w/o zero expected count) number of tables with less than:
+ - 5 elements in any cell is 178
+ - 10 elements in any cell is 993
+ Then p-values are:
+Fisher positives: 0.032 ± 0.009
+Chi2 positives: 0.052 ± 0.012
+Chi2 Yates positives: 0.022 ± 0.008
+
+If out of 1000 valid 2x2 tables (w/o zero expected count) number of tables with less than:
+ - 5 elements in any cell is 27
+ - 10 elements in any cell is 831
+ Then p-values are:
+Fisher positives: 0.033 ± 0.009
+Chi2 positives: 0.049 ± 0.011
+Chi2 Yates positives: 0.022 ± 0.008
+</code></pre>
+<h4 id="power">Power<a hidden class="anchor" aria-hidden="true" href="#power">#</a></h4>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">26</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>chi_squared_challenge(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span></code></pre></div></details>
+<pre><code>If out of 969 valid 2x2 tables (w/o zero expected count) number of tables with less than:
+ - 5 elements in any cell is 785
+ - 10 elements in any cell is 969
+ Then p-values are:
+Fisher positives: 0.300 ± 0.024
+Chi2 positives: 0.359 ± 0.025
+Chi2 Yates positives: 0.265 ± 0.023
+
+If out of 993 valid 2x2 tables (w/o zero expected count) number of tables with less than:
+ - 5 elements in any cell is 373
+ - 10 elements in any cell is 987
+ Then p-values are:
+Fisher positives: 0.325 ± 0.024
+Chi2 positives: 0.370 ± 0.025
+Chi2 Yates positives: 0.295 ± 0.024
+
+If out of 1000 valid 2x2 tables (w/o zero expected count) number of tables with less than:
+ - 5 elements in any cell is 90
+ - 10 elements in any cell is 897
+ Then p-values are:
+Fisher positives: 0.334 ± 0.025
+Chi2 positives: 0.363 ± 0.025
+Chi2 Yates positives: 0.305 ± 0.024
+
+If out of 1000 valid 2x2 tables (w/o zero expected count) number of tables with less than:
+ - 5 elements in any cell is 9
+ - 10 elements in any cell is 586
+ Then p-values are:
+Fisher positives: 0.351 ± 0.025
+Chi2 positives: 0.387 ± 0.025
+Chi2 Yates positives: 0.327 ± 0.024
+</code></pre>
+<p>Surprise! In this example it&rsquo;s shown there is no need for Yates nor for Fisher&rsquo;s exact test at all! Chi-squared test doesn&rsquo;t inflate the number of Type I errors and keep the power at least as high as it&rsquo;s for the exact test regardless of the number of cells with low frequencies.</p>
+<p>JFYI: Some other exact tests might be applied instead of Fisher&rsquo;s test, e.g. Boschloo&rsquo;s test provides higher power but it&rsquo;s a) much slower and b) yet worse than a plain chi-squared, you may prove it on your own as an exercise. Hint: there is a function <code>boschloo_exact</code> in <code>scipy</code></p>
+<p>Okay, it&rsquo; clear with 2x2, but what if the table is getting bigger?</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">26</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>chi_squared_challenge(shape<span style="color:#f92672">=</span>(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">4</span>), aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span></code></pre></div></details>
+<pre><code>If out of 969 valid 2x4 tables (w/o zero expected count) number of tables with less than:
+ - 5 elements in any cell is 804
+ - 10 elements in any cell is 969
+ Then p-values are:
+Fisher positives: 0.685 ± 0.025
+Chi2 positives: 0.688 ± 0.024
+
+If out of 993 valid 2x4 tables (w/o zero expected count) number of tables with less than:
+ - 5 elements in any cell is 388
+ - 10 elements in any cell is 993
+ Then p-values are:
+Fisher positives: 0.666 ± 0.025
+Chi2 positives: 0.672 ± 0.024
+</code></pre>
+<p>The power values are not statistically distinguishable, so chi-squared is still the winner as it&rsquo;s much simpler in calculations and for the data model that I specified it seems that it can handle small table sizes - it takes low values at least as good as Fisher&rsquo;s test.</p>
+<h4 id="monte-carlo-simulation-results-interpretation">Monte-Carlo Simulation Results Interpretation<a hidden class="anchor" aria-hidden="true" href="#monte-carlo-simulation-results-interpretation">#</a></h4>
+<p>I&rsquo;d like to make an extra note that Monte-Carlo simulations can provide valuable insights into the performance and behavior of statistical tests, but it&rsquo;s essential to interpret their results with caution and awareness of their limitations.</p>
+<p>While simulations can mimic real-world scenarios, they are inherently limited by the assumptions and parameters used in their design. They may not capture the full complexity of real-world data and may not be generalizable to all situations. Therefore, it&rsquo;s crucial to consider the specific context and limitations of the simulation when interpreting its results.</p>
+<p>Saying that I must admit that I don&rsquo;t have an intention to prove that there is no need for exact tests in any experiment design, I&rsquo;d rather invite you to challenge your data and your experiments set up specifics, as there is a chance that you will find that chi-squared test is all you need for contingency experiments.</p>
+<h3 id="justification-for-fishers-exact-over-chi-squared">Justification for Fisher&rsquo;s Exact over Chi-Squared<a hidden class="anchor" aria-hidden="true" href="#justification-for-fishers-exact-over-chi-squared">#</a></h3>
+<p>Even when the chi-squared test appears to perform well in Monte-Carlo simulations, there are compelling theoretical and practical reasons to prefer Fisher&rsquo;s Exact Test in specific situations. Understanding these justifications is crucial for making informed decisions about which test to apply.</p>
+<ol>
+<li>Sparse Table: Chi-squared test relies on approximations that may not hold true when dealing with sparse contingency tables.</li>
+<li>Sample Size: Chi-squared test is based on the asymptotic distribution of the test statistic, which assumes that the sample size is large.</li>
+<li>Effect Size: Chi-squared may be less sensitive in detecting the small effect size, because the approximation may not be as accurate.</li>
+</ol>
+<p>So, once again: in order to guarantee that you don&rsquo;t have a need for exact tests in your data model setting, you must consciously simulate your data distributions (especially when it comes to sparse tables, small sample sizes and small effect sizes) and then make a decision, the process that I presented here is based on the data my team is exposed to most and hopefully it might be easily simulated with Multinomial distribution.</p>
+<h2 id="general-pipeline">General Pipeline<a hidden class="anchor" aria-hidden="true" href="#general-pipeline">#</a></h2>
+<p>Finally I&rsquo;d like to offer you a full pipeline on how to organize contingency tests efficiently: when Fisher&rsquo;s exact test shall be applied and when Chi-squared is just enough.</p>
+<p>As you know, exact tests could take time and what I want to achieve is to have a control over the time that I allocate to the function execution.</p>
+<p>There are a few ways to implement timeouts, my favourite one is leveraging <code>multiprocessing</code> capabilities, however it&rsquo;s not always the case that you can run a subprocess under your main process in production, so another concise way to apply timeouts will be shown via <code>func_timeout</code> library.</p>
+<h3 id="concurrent-execution">Concurrent Execution<a hidden class="anchor" aria-hidden="true" href="#concurrent-execution">#</a></h3>
+<p>Simple decorator to pass the output from the subprocess into main process.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> typing <span style="color:#f92672">import</span> Optional
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> functools <span style="color:#f92672">import</span> wraps
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> multiprocessing <span style="color:#f92672">import</span> Queue, Process
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">subprocess_output</span>(procedure: object, queue: Optional[Queue]<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>) <span style="color:#f92672">-&gt;</span> object:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@wraps</span>(procedure)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">wrapper</span>(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        p_value <span style="color:#f92672">=</span> procedure(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)
+</span></span><span style="display:flex;"><span>        queue<span style="color:#f92672">.</span>put(p_value)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> p_value
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> wrapper
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">concurrent_test</span>(
+</span></span><span style="display:flex;"><span>    method: object,
+</span></span><span style="display:flex;"><span>    table: list[list],
+</span></span><span style="display:flex;"><span>    name: str<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;NxM Fisher&#39;s exact test&#34;</span>,
+</span></span><span style="display:flex;"><span>    timeout: int<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>,
+</span></span><span style="display:flex;"><span>) <span style="color:#f92672">-&gt;</span> float:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Runs the given method in a separate process with a timeout.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    If the process takes longer than the timeout, it is terminated.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    The result is returned from the main process.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Parameters
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    ----------
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    method: object
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        The method to be run in a separate process.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    table: list[list]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Contingency matrix M x N
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    name: str
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Process name
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    timeout: int
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Time limit for subprocess execution
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Returns
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    -------
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    p-value: float
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    queue <span style="color:#f92672">=</span> Queue()
+</span></span><span style="display:flex;"><span>    procedure <span style="color:#f92672">=</span> subprocess_output(method, queue)
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> Process(
+</span></span><span style="display:flex;"><span>        target<span style="color:#f92672">=</span>procedure,
+</span></span><span style="display:flex;"><span>        args<span style="color:#f92672">=</span>(table,),
+</span></span><span style="display:flex;"><span>        name<span style="color:#f92672">=</span>name
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>start()
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>join(timeout<span style="color:#f92672">=</span>timeout)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>terminate()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> p<span style="color:#f92672">.</span>exitcode <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>        p_value <span style="color:#f92672">=</span> queue<span style="color:#f92672">.</span>get()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> p_value
+</span></span></code></pre></div></details>
+<h3 id="timeout-execution">Timeout Execution<a hidden class="anchor" aria-hidden="true" href="#timeout-execution">#</a></h3>
+<p>Handy function that is a good solution if a timeout is the only thing you want to get from a subprocess</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># pip install func-timeout</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> func_timeout <span style="color:#f92672">import</span> func_timeout, FunctionTimedOut
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">timeout_test</span>(
+</span></span><span style="display:flex;"><span>    method: object,
+</span></span><span style="display:flex;"><span>    table: np<span style="color:#f92672">.</span>ndarray,
+</span></span><span style="display:flex;"><span>    timeout: int<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>,
+</span></span><span style="display:flex;"><span>) <span style="color:#f92672">-&gt;</span> float:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        p_value <span style="color:#f92672">=</span> func_timeout(timeout, method, args<span style="color:#f92672">=</span>(table,))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> FunctionTimedOut:
+</span></span><span style="display:flex;"><span>        p_value <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> p_value
+</span></span></code></pre></div></details>
+<p>By the way: there is no need for timeout when running <code>scipy</code> Fisher&rsquo;s exact test, so it&rsquo;s applied only to those methods analyzed in the chapter above.</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+</span></span><span style="display:flex;"><span>fisher_exact(np<span style="color:#f92672">.</span>array([[<span style="color:#ae81ff">10000</span>, <span style="color:#ae81ff">4000</span>], [<span style="color:#ae81ff">12000</span>, <span style="color:#ae81ff">5000</span>]]))
+</span></span></code></pre></div></details>
+<pre><code>CPU times: total: 0 ns
+Wall time: 14 ms
+
+SignificanceResult(statistic=1.0416666666666667, pvalue=0.10488212218194087)
+</code></pre>
+<h3 id="universal-procedure">Universal procedure<a hidden class="anchor" aria-hidden="true" href="#universal-procedure">#</a></h3>
+<h4 id="logic">Logic<a hidden class="anchor" aria-hidden="true" href="#logic">#</a></h4>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> scipy.stats <span style="color:#f92672">import</span> chi2_contingency, fisher_exact
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_contingency_test</span>(table: np<span style="color:#f92672">.</span>ndarray, criterion: str, timeout: int) <span style="color:#f92672">-&gt;</span> dict:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Performs a test of independence of variables in a contingency table
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Parameters
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    ----------
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    table: np.ndarray
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Contingency matrix M x N
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    criterion: str
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Test to be performed
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    timeout: int
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Time limit for Fisher&#39;s exact test
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Returns
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    -------
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    dict: {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;method&#34;: str,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;p-value&#34;: float,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;error&#34;: str (optional)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> criterion <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> {<span style="color:#e6db74">&#34;chi-squared&#34;</span>, <span style="color:#e6db74">&#34;fisher-exact&#34;</span>, <span style="color:#e6db74">&#34;textbook&#34;</span>}:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;Incorrect type of criterion, &#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;should be one of the following: &#39;chi-squared&#39;, &#39;fisher-exact&#39;, &#39;textbook&#39;&#34;</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># No timeout if &#34;fisher-exact&#34; criterion is set</span>
+</span></span><span style="display:flex;"><span>    timeout <span style="color:#f92672">=</span> timeout <span style="color:#f92672">+</span> <span style="color:#ae81ff">10_000</span> <span style="color:#f92672">*</span> (criterion <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;fisher-exact&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> dict<span style="color:#f92672">.</span>fromkeys([<span style="color:#e6db74">&#34;method&#34;</span>, <span style="color:#e6db74">&#34;p-value&#34;</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> criterion <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;textbook&#34;</span> <span style="color:#f92672">and</span> table<span style="color:#f92672">.</span>shape <span style="color:#f92672">==</span> (<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">2</span>) <span style="color:#f92672">and</span> (table <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">10</span>)<span style="color:#f92672">.</span>all():
+</span></span><span style="display:flex;"><span>            result[<span style="color:#e6db74">&#34;method&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;2x2 Pearson&#39;s chi-squared test with Yates&#34;</span>
+</span></span><span style="display:flex;"><span>            test <span style="color:#f92672">=</span> chi2_contingency(table, correction<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>            result[<span style="color:#e6db74">&#34;p-value&#34;</span>] <span style="color:#f92672">=</span> test<span style="color:#f92672">.</span>pvalue
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> criterion <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;chi-squared&#34;</span> <span style="color:#f92672">and</span> table<span style="color:#f92672">.</span>shape <span style="color:#f92672">==</span> (<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">2</span>):
+</span></span><span style="display:flex;"><span>            result[<span style="color:#e6db74">&#34;method&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;2x2 Fisher&#39;s exact test in Python&#34;</span>
+</span></span><span style="display:flex;"><span>            test <span style="color:#f92672">=</span> fisher_exact(table)
+</span></span><span style="display:flex;"><span>            result[<span style="color:#e6db74">&#34;p-value&#34;</span>] <span style="color:#f92672">=</span> test<span style="color:#f92672">.</span>pvalue
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> criterion <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;chi-squared&#34;</span> <span style="color:#f92672">or</span> (criterion <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;textbook&#34;</span> <span style="color:#f92672">and</span> np<span style="color:#f92672">.</span>sum(table <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">5</span>) <span style="color:#f92672">&gt;=</span> np<span style="color:#f92672">.</span>size(table) <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.80</span>):
+</span></span><span style="display:flex;"><span>            result[<span style="color:#e6db74">&#34;method&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;NxM Pearson&#39;s chi-squared test w/o Yates&#34;</span>
+</span></span><span style="display:flex;"><span>            test <span style="color:#f92672">=</span> chi2_contingency(table, correction<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>            result[<span style="color:#e6db74">&#34;p-value&#34;</span>] <span style="color:#f92672">=</span> test<span style="color:#f92672">.</span>pvalue
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>: <span style="color:#75715e"># try Exact fisher test if doesn&#39;t take too much</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> np<span style="color:#f92672">.</span>size(table) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">10</span>:
+</span></span><span style="display:flex;"><span>                name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;NxM Fisher&#39;s exact test in R&#34;</span>
+</span></span><span style="display:flex;"><span>                p_value <span style="color:#f92672">=</span> timeout_test(
+</span></span><span style="display:flex;"><span>                    R_fisher_exact_test, table, timeout
+</span></span><span style="display:flex;"><span>                )
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;NxM Fisher&#39;s exact test in Python&#34;</span>
+</span></span><span style="display:flex;"><span>                p_value <span style="color:#f92672">=</span> timeout_test(
+</span></span><span style="display:flex;"><span>                    NxM_Fisher_exact_test, table, timeout
+</span></span><span style="display:flex;"><span>                )
+</span></span><span style="display:flex;"><span>            result[<span style="color:#e6db74">&#34;method&#34;</span>] <span style="color:#f92672">=</span> name
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> p_value:
+</span></span><span style="display:flex;"><span>                result[<span style="color:#e6db74">&#34;p-value&#34;</span>] <span style="color:#f92672">=</span> p_value
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                result[<span style="color:#e6db74">&#34;method&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34; &#34;</span><span style="color:#f92672">.</span>join([
+</span></span><span style="display:flex;"><span>                    result[<span style="color:#e6db74">&#34;method&#34;</span>],
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;timed out.&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;NxM Pearson&#39;s chi-squared test approximation applied&#34;</span>
+</span></span><span style="display:flex;"><span>                ])
+</span></span><span style="display:flex;"><span>                test <span style="color:#f92672">=</span> chi2_contingency(table, correction<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>                result[<span style="color:#e6db74">&#34;p-value&#34;</span>] <span style="color:#f92672">=</span> test<span style="color:#f92672">.</span>pvalue
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> error:
+</span></span><span style="display:flex;"><span>        result[<span style="color:#e6db74">&#34;error&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>error<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> result
+</span></span></code></pre></div></details>
+<p>Here is a quick example of how it works with the identified table</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>t <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([row[:<span style="color:#ae81ff">2</span>] <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> table[:<span style="color:#ae81ff">5</span>]])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>_contingency_test(t, <span style="color:#e6db74">&#39;textbook&#39;</span>, <span style="color:#ae81ff">5</span>)
+</span></span></code></pre></div></details>
+<pre><code>{'method': &quot;NxM Pearson's chi-squared test w/o Yates&quot;,
+ 'p-value': 0.00032439327665678783}
+</code></pre>
+<h4 id="input-validation">Input validation<a hidden class="anchor" aria-hidden="true" href="#input-validation">#</a></h4>
+<p>Adding a validation is an important step to prevent end-users from inference the function in the wrong way</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_validate_input</span>(table: list[list]) <span style="color:#f92672">-&gt;</span> np<span style="color:#f92672">.</span>array:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        array <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array(table)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">ValueError</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;Contingency table&#39;s rows must be of equal length.&#34;</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        array <span style="color:#f92672">=</span> array<span style="color:#f92672">.</span>astype(dtype<span style="color:#f92672">=</span>int)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">ValueError</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;All cells must contain integer numbers.&#34;</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> array<span style="color:#f92672">.</span>ndim <span style="color:#f92672">!=</span> <span style="color:#ae81ff">2</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;Contigency table must be a 2-dimensional array.&#34;</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (array <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>)<span style="color:#f92672">.</span>any():
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;All cells must contain non-negative numbers.&#34;</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> array<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">and</span> np<span style="color:#f92672">.</span>max(np<span style="color:#f92672">.</span>min(array, axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;There are cells with zero expected count. &#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;Expectations must contain only positive numbers.&#34;</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> array
+</span></span></code></pre></div></details>
+<h4 id="put-it-all-together">Put it all together<a hidden class="anchor" aria-hidden="true" href="#put-it-all-together">#</a></h4>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">general_contingency_test</span>(table: list[list], criterion<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;textbook&#39;</span>, timeout: int<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>) <span style="color:#f92672">-&gt;</span> dict:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Performs a test of independence of variables in a contingency table
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Parameters
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    ----------
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    table: list[list]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        matrix M x N,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        where M is the number of compared groups and N is the set of measures
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    timeout: int
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Time limit for Fisher&#39;s exact test,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        if the calculation takes longer chi-squared test is applied instead
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Returns
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    -------
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    dict: {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;method&#34;: str,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;p-value&#34;: float,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;error&#34;: str (optional)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> _contingency_test(_validate_input(table), criterion, timeout)
+</span></span></code></pre></div></details>
+<p>Now when we have a general procedure, let&rsquo;s take a look at a few examples of the inference</p>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>general_contingency_test(table, criterion<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;chi-squared&#39;</span>)
+</span></span></code></pre></div></details>
+<pre><code>{'method': &quot;NxM Pearson's chi-squared test w/o Yates&quot;,
+ 'p-value': 0.0020940807559433087}
+</code></pre>
+<details>
+<summary>Code</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>general_contingency_test([[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">2000</span>], [<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">150</span>, <span style="color:#ae81ff">1000</span>]], timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>)
+</span></span></code></pre></div></details>
+<pre><code>{'method': &quot;NxM Fisher's exact test in R timed out. NxM Pearson's chi-squared test approximation applied&quot;,
+ 'p-value': 5.060441099877772e-17}
+</code></pre>
+<h2 id="the-logic-wrapped-into-the-library">The logic wrapped into the library<a hidden class="anchor" aria-hidden="true" href="#the-logic-wrapped-into-the-library">#</a></h2>
+<p>Good news for you, you don&rsquo;t need to repeat all the code that was shared above as it&rsquo;s already a part of the public Python package <code>podlozhnyy_module</code> that comes hande every time you have data analysis assignments at work.</p>
+<p><strong>Key Features of the Library:</strong></p>
+<ul>
+<li><strong>Automatic Test Selection:</strong> By default, the library automatically selects the most appropriate test based on textbook rules, considering factors such as sample size and expected cell frequencies. This intelligent selection process ensures the validity and accuracy of the results.</li>
+<li><strong>Flexibility and Control:</strong> Users have the flexibility to override the automatic selection and force the library to apply a specific test if desired. This feature is particularly useful when researchers have prior knowledge or preferences regarding the test to be used.</li>
+<li><strong>User-Friendly Interface:</strong> The library&rsquo;s interface is designed to be intuitive and easy to use, enabling researchers to effortlessly perform contingency tests without extensive coding or technical expertise.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># !pip install podlozhnyy-module==2.6-alpha</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> podlozhnyy_module <span style="color:#66d9ef">as</span> pm
+</span></span></code></pre></div><p>Library&rsquo;s application is as simple as the following command</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>pm<span style="color:#f92672">.</span>contingency<span style="color:#f92672">.</span>general_contingency_test(table[:<span style="color:#ae81ff">5</span>], criterion<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;fisher-exact&#39;</span>, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span></code></pre></div><pre><code>{'method': &quot;NxM Fisher's exact test in R&quot;, 'p-value': 0.0011288225617825118}
+</code></pre>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>pm<span style="color:#f92672">.</span>contingency<span style="color:#f92672">.</span>general_contingency_test(table[:<span style="color:#ae81ff">3</span>], criterion<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;fisher-exact&#39;</span>, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span></code></pre></div><pre><code>{'method': &quot;NxM Fisher's exact test in Python&quot;,
+ 'p-value': 0.0008451539443552633}
+</code></pre>
+<h2 id="conclusion-a-unified-framework-for-contingency-tests">Conclusion: A Unified Framework for Contingency Tests<a hidden class="anchor" aria-hidden="true" href="#conclusion-a-unified-framework-for-contingency-tests">#</a></h2>
+<p>This notebook has explored various aspects of contingency tests, with a particular focus on Fisher&rsquo;s Exact Test comparison to Chi-squared test. As a part of the journey we have contrasted the Python and R implementations of the Fisher&rsquo;s test, highlighting their strengths and weaknesses in terms of performance, accuracy, and computational considerations.</p>
+<p>The powerful framework of Monte-Carlo simulations is provided to enable the readers to simulate their data and ultimately apply proper testing techniques in their field providing the accurate guidance to the business.</p>
+<p><strong>podlozhnyy_module</strong> library: a flexible solution</p>
+<p>The code presented in this notebook has been thoughtfully integrated into the <code>podlozhnyy_module</code> library, offering a flexible and user-friendly solution for conducting contingency tests. This library empowers users to select the most appropriate test based on textbook rules or to override the default behavior and force the application of a specific test, such as Fisher&rsquo;s Exact or the Chi-squared test.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Mastering Homogeneity hypothesis testing on twitter"
+        href="https://twitter.com/intent/tweet/?text=Mastering%20Homogeneity%20hypothesis%20testing&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fcontingency-test%2f&amp;hashtags=">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Mastering Homogeneity hypothesis testing on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fcontingency-test%2f&amp;title=Mastering%20Homogeneity%20hypothesis%20testing&amp;summary=Mastering%20Homogeneity%20hypothesis%20testing&amp;source=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fcontingency-test%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Mastering Homogeneity hypothesis testing on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fcontingency-test%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Mastering Homogeneity hypothesis testing on telegram"
+        href="https://telegram.me/share/url?text=Mastering%20Homogeneity%20hypothesis%20testing&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fcontingency-test%2f">
+        <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+        </svg>
+    </a>
+</div>
+
+  </footer><div id="disqus_thread"></div>
+<script>
+	
+    var disqus_config = function () {
+    this.page.url = 'https:\/\/npodlozhniy.github.io\/posts\/contingency-test\/';  
+    this.page.identifier = ''; 
+	this.language = document.documentElement.lang; 
+	};
+ 
+    (function() { 
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-npodlozhniy-github-io-2.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+	
+    document.addEventListener('theme-change', function(e) { 
+		if (document.readyState == 'complete') {
+			DISQUS.reset({ reload: true, config: disqus_config });
+		}
+	});
+
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+
+		
+		const event = new Event('theme-change');
+		document.dispatchEvent(event)
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
