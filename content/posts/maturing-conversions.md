@@ -1,5 +1,5 @@
 ---
-title: "Maturing conversions in AB-experiment"
+title: "Maturing Conversions in AB-experiment"
 summary: "Why you need to be patient and when cohort-wise approach is a flaw"
 author: "Nikita Podlozhniy"
 date: "2024-08-20"

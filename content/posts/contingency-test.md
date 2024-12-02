@@ -1,6 +1,6 @@
 ---
-title: "Mastering Homogeneity hypothesis testing"
-summary: "Why Fisher's Exact test is the relic of the past and Chi-squared is the only one you need"
+title: "Mastering Homogeneity Hypothesis testing"
+summary: "Why Fisher's Exact test is the relic of the past and Chi-squared is all the way"
 author: "Nikita Podlozhniy"
 date: "2024-12-01"
 format:
