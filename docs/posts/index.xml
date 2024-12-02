@@ -8,16 +8,16 @@
     <language>en</language>
     <lastBuildDate>Sun, 01 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Mastering Homogeneity hypothesis testing</title>
+      <title>Mastering Homogeneity Hypothesis testing</title>
       <link>https://npodlozhniy.github.io/posts/contingency-test/</link>
       <pubDate>Sun, 01 Dec 2024 00:00:00 +0000</pubDate>
       
       <guid>https://npodlozhniy.github.io/posts/contingency-test/</guid>
-      <description>Why Fisher&amp;rsquo;s Exact test is the relic of the past and Chi-squared is the only one you need</description>
+      <description>Why Fisher&amp;rsquo;s Exact test is the relic of the past and Chi-squared is all the way</description>
     </item>
     
     <item>
-      <title>Maturing conversions in AB-experiment</title>
+      <title>Maturing Conversions in AB-experiment</title>
       <link>https://npodlozhniy.github.io/posts/maturing-conversions/</link>
       <pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate>
       
