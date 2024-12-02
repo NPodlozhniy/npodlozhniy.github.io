@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://npodlozhniy.github.io/posts/maturing-conversions/</loc>
-    <lastmod>2024-08-20T00:00:00+00:00</lastmod>
+    <loc>https://npodlozhniy.github.io/posts/contingency-test/</loc>
+    <lastmod>2024-12-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://npodlozhniy.github.io/</loc>
-    <lastmod>2024-08-20T00:00:00+00:00</lastmod>
+    <lastmod>2024-12-01T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="ru"
@@ -19,6 +19,9 @@
                 />
   </url><url>
     <loc>https://npodlozhniy.github.io/posts/</loc>
+    <lastmod>2024-12-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://npodlozhniy.github.io/posts/maturing-conversions/</loc>
     <lastmod>2024-08-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://npodlozhniy.github.io/posts/dunnett-correction/</loc>

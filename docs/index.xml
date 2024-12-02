@@ -6,7 +6,16 @@
     <description>Recent content on Nikita Podlozhniy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 20 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 01 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mastering Homogeneity hypothesis testing</title>
+      <link>https://npodlozhniy.github.io/posts/contingency-test/</link>
+      <pubDate>Sun, 01 Dec 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://npodlozhniy.github.io/posts/contingency-test/</guid>
+      <description>Why Fisher&amp;rsquo;s Exact test is the relic of the past and Chi-squared is the only one you need</description>
+    </item>
+    
     <item>
       <title>Maturing conversions in AB-experiment</title>
       <link>https://npodlozhniy.github.io/posts/maturing-conversions/</link>
