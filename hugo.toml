@@ -68,8 +68,11 @@ math = true
 
   [languages.en]
   languageName = ":en:"
-  languageAltTitle = "English"
   weight = 10
+
+  [languages.en.params]
+  languageAltTitle = "English"
+
   [languages.en.menu]
 
     [[languages.en.menu.main]]
@@ -98,9 +101,9 @@ math = true
 
   [languages.ru]
   languageName = ":ru:"
-  languageAltTitle = "Russian"
   weight = 1
   title = "Подложный Никита"
+
   [languages.ru.menu]
 
 	[[languages.ru.menu.main]]
@@ -127,14 +130,16 @@ math = true
 	url = "archives"
 	weight = 4
 
+  [languages.ru.params]
+  languageAltTitle = "Russian"
 
-  [languages.ru.profileMode]
+  [languages.ru.params.profileMode]
   enabled = true
   title = "Подложный Никита"
   imageUrl = "https://avatars.githubusercontent.com/NPodlozhniy"
   subtitle = "Опытный аналитик данных"
 
-    [[languages.ru.profileMode.buttons]]
+    [[languages.ru.params.profileMode.buttons]]
     name = "Скачать Резюме"
     url = "PodlozhnyiNikitaCV.pdf"
 

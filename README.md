@@ -23,7 +23,9 @@
  - Make comments availabile
  - Make comments theme consistent
  - Add favicon
+ - Fix search engine
 
 #### To Do
- - Fix search engine (still unclear, works locally)
+
  - Fix surname misspelling in domain name
+ - Improve :ru: language support
