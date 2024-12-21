@@ -41,7 +41,7 @@ math = true
   favicon32x32 = "/favicons/favicon-32x32.png"
   apple_touch_icon = "/favicons/apple-touch-icon.png"
   # if failed to find a valid digest in the 'integrity' attribute for resource bug
-  # disableFingerprinting = true
+  disableFingerprinting = true
 
   [params.profileMode]
   enabled = true
