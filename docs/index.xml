@@ -6,7 +6,16 @@
     <description>Recent content on Nikita Podlozhniy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 01 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 25 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Sequential Testing Guide</title>
+      <link>https://npodlozhniy.github.io/posts/sequential-testing/</link>
+      <pubDate>Wed, 25 Dec 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://npodlozhniy.github.io/posts/sequential-testing/</guid>
+      <description>How GST is often misinterpreted and why its genuine version is way better than AVI?</description>
+    </item>
+    
     <item>
       <title>Mastering Homogeneity Hypothesis testing</title>
       <link>https://npodlozhniy.github.io/posts/contingency-test/</link>
@@ -42,6 +51,15 @@
       <guid>https://npodlozhniy.github.io/posts/feedback-analysis/</guid>
       <description>Background Every company has always taken pride in providing excellent customer service, therefore it&amp;rsquo;s crucial as part of ongoing improvements for product to collect and analyse feedback after each customer interaction on support channels
 A top-notch analyst in Hi-Tech industry should be in capable of handle at least base feedback analysis quickly and efficiently and going through this article you will be introduced with the necessary concepts and eventually given the base guide on how to unlock the true power of text data</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://npodlozhniy.github.io/posts/sequential-testing/readme/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://npodlozhniy.github.io/posts/sequential-testing/readme/</guid>
+      <description>As long as according to the discussion callout blocks for Jupyter Notebooks are not supported, they are rendered manually with emojis and the callouts&amp;rsquo; text has undergone minor changes.</description>
     </item>
     
     
