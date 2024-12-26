@@ -65,6 +65,8 @@ library(ldbounds)
 ldBounds(t=seq(1/4, 1, 1/4), iuse=3, phi=1, alpha=0.05, sides=1)$upper.bounds
 ```
 
+	[1] 2.241403 2.125078 2.018644 1.925452
+
 ### Python File
 
 The code above may be rewritten into a simple `.py` file as follows, you are to use created `stats` package as a plain Python package thereafter.
@@ -590,6 +592,8 @@ print(f"false positives: {fpr/n_iterations:.3f} ± {(r - l) / 2:.3f} is signific
 ```
 
 </details>
+
+	false positives: 0.070 ± 0.001 is significantly higher than 0.05
 
 So, as was said above, it doesn't control FPR as it should according to Group Sequential Testing problem design and hence this myth of the direct application of alpha spending function have to be dispelled: it doesn't work this way and further you will see that it's not much better than custom ad-hoc corrections.
 
