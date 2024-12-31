@@ -107,10 +107,8 @@ If R is not your cup of tea, or simply there is no option to run it within the s
 
 ## GST in Python
 
-There is quite popular incorrect implementation powered by Zalando [`expan`](https://github.com/zalando/expan/blob/master/expan/core/early_stopping.py)
-
-It works without probability integration and mistakenly leverage alpha spending function as a critical value at each step, it's common misunderstanding about alpha-spending function approach, there are number of implementations that do it the exact same wrong way, and even world's leading publication for data science, according to their own definition, makes the same mistakes, for instance: [Understanding of Group Sequential Testing published in Towards Data Science](https://towardsdatascience.com/understanding-group-sequential-testing-befb35cec07a)
-
+There is quite popular yet inaccurate implementation powered by Zalando [`expan`](https://github.com/zalando/expan/blob/master/expan/core/early_stopping.py).
+It works without probability integration and mistakenly leverage alpha spending function as a critical value at each step, it's common misunderstanding about alpha-spending function approach, there are number of implementations that do it in exact same way, and even world's leading publication for data science, according to their own definition, sometimes makes the same mistake, for instance: [Understanding of Group Sequential Testing published in Towards Data Science](https://towardsdatascience.com/understanding-group-sequential-testing-befb35cec07a) is good post for beginners, though alpha spending function's application is misleading.
 As it will shown below that approach is statistically incorrect and so it's highly recommended to avoid it.
 
 Instead I propose you to apply the new library [`seqabpy`](https://github.com/NPodlozhniy/seqabpy) that is powerful and accurate and what is more important implemented according to the original papers [Interim analysis:
@@ -469,7 +467,7 @@ figure.show()
 
 ## Expan Flaw
 
-Remember I promised to show, that `expan` way to determine boundaries is wrong, so here is a quick proof: the code is taken without changes from their GitHub: [zalando/expan/early_stopping](https://github.com/zalando/expan/blob/master/expan/core/early_stopping.py)
+It's kind of a hot take, remember I promised to provide evidence that `expan` way to determine boundaries is inaccurate, so here is a quick proof: the code is taken with no changes from their GitHub: [zalando/expan/early_stopping](https://github.com/zalando/expan/blob/master/expan/core/early_stopping.py)
 
 <details>
 <summary>Code</summary>
@@ -595,11 +593,11 @@ print(f"false positives: {fpr/n_iterations:.3f} ± {(r - l) / 2:.3f} is signific
 
 	false positives: 0.070 ± 0.001 is significantly higher than 0.05
 
-So, as was said above, it doesn't control FPR as it should according to Group Sequential Testing problem design and hence this myth of the direct application of alpha spending function have to be dispelled: it doesn't work this way and further you will see that it's not much better than custom ad-hoc corrections.
+So, as it was said above, it doesn't control FPR as it should according to Group Sequential Testing problem design and hence this myth of the direct application of alpha spending function have to be dispelled: it doesn't work this way and further you will see that it's not way better than custom ad-hoc corrections.
 
 > **⚠️ Warning**
 >
-> Please, do not use `expan` for sequential testing as their implementation is wrong.
+> Please, do not use `expan` for sequential testing as it inflates Type I error rate.
 
 ## Monte Carlo
 
