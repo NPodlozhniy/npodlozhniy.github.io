@@ -5,6 +5,8 @@ theme = "PaperMod"
 publishDir = "docs"
 paginate = 3
 
+# for proper website indexing
+enableRobotsTXT = true
 googleAnalytics = "G-ESWD18X008"
 
 # configure Hugo’s markdown renderer to allow raw HTML
