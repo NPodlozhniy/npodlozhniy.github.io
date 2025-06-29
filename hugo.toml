@@ -5,6 +5,11 @@ theme = "PaperMod"
 publishDir = "docs"
 paginate = 3
 
+# English is the main language and rendered at the root (default settings)
+# not under subdirectories like other languages (currently RU only)
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false
+
 # for proper website indexing
 enableRobotsTXT = true
 googleAnalytics = "G-ESWD18X008"
