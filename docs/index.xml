@@ -64,15 +64,6 @@ Tech stack for this guide consists of
 duckdb and pandas packages for data processing Facebook&amp;rsquo;s prophet for data exploration and forecasting plotly for data visualization Codeimport duckdb as db import pandas as pd import numpy as np orders = pd.read_csv(&amp;#39;orders_data.csv&amp;#39;) orders.sample() Created Date Country City Restaurant ID Restaurant Name Order State Cancel Reason Cuisine Platform Products in Order Order Value € (Gross) Delivery Fee Delivery Time Order ID 44255 10.</description>
     </item>
     
-    <item>
-      <title></title>
-      <link>https://npodlozhniy.github.io/posts/sequential-testing/readme/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://npodlozhniy.github.io/posts/sequential-testing/readme/</guid>
-      <description>As long as according to the discussion callout blocks for Jupyter Notebooks are not supported, they are rendered manually with emojis and the callouts&amp;rsquo; text has undergone minor changes.</description>
-    </item>
-    
     
     
   </channel>
