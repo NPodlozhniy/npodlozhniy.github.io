@@ -3,7 +3,8 @@ languageCode = "en-gb"
 title = "Nikita Podlozhniy"
 theme = "PaperMod"
 publishDir = "docs"
-paginate = 3
+[pagination]
+  pagerSize = 3
 
 # English is the main language and rendered at the root (default settings)
 # not under subdirectories like other languages (currently RU only)
@@ -70,6 +71,17 @@ math = true
   name = "github"
   title = "GitHub"
   url = "https://github.com/NPodlozhniy"
+
+# compatibility: provide .Site.Params.Social to satisfy themes that no longer expose .Site.Social
+[[params.Social]]
+name = "linkedin"
+title = "LinkedIn"
+url = "https://www.linkedin.com/in/niki4-inc/"
+
+[[params.Social]]
+name = "github"
+title = "GitHub"
+url = "https://github.com/NPodlozhniy"
 
 [languages]
 
@@ -153,3 +165,8 @@ math = true
 
 [outputs]
 home = ["HTML", "RSS", "JSON"]
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+  social = "social"
