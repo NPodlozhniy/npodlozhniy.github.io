@@ -1,24 +1,4 @@
----
-title: "Bayesian A/B Testing — PyMC examples, HDI, and Safe Stopping"
-author: "Nikita Podlozhniy"
-summary: "Practical guide: PyMC examples, hierarchical models, loss functions, HDI, and safe Bayesian stopping rules."
-date: "2025-11-29"
-format:
-    hugo-md:
-jupyter: python3
-execute:
-    enabled: true
-    cache: true
-tags:
-    - bayesian
-    - ab-testing
-    - pymc
-    - sequential-testing
-categories:
-    - posts
-language: en
-draft: false
----
+
 
 **Intro**
 
