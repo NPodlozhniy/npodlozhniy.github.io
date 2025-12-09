@@ -30,8 +30,6 @@
  - Fix surname misspelling in domain name
  - Improve :ru: language support
 
-####
-
-Note! 
+#### Note! 
   1. don't use \text in TeX formulas, it's not rendered properly by katex
   2. Always name your `.md` file just as the folder with notebook, otherwise charts won't be shown right

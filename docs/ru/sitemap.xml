@@ -14,6 +14,18 @@
                 href="https://npodlozhniy.github.io/ru/categories/"
                 />
   </url><url>
+    <loc>https://npodlozhniy.github.io/ru/social/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://npodlozhniy.github.io/social/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ru"
+                href="https://npodlozhniy.github.io/ru/social/"
+                />
+  </url><url>
     <loc>https://npodlozhniy.github.io/ru/tags/</loc>
     <xhtml:link
                 rel="alternate"

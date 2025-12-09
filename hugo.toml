@@ -3,8 +3,7 @@ languageCode = "en-gb"
 title = "Nikita Podlozhniy"
 theme = "PaperMod"
 publishDir = "docs"
-[pagination]
-  pagerSize = 3
+paginate = 3
 
 # English is the main language and rendered at the root (default settings)
 # not under subdirectories like other languages (currently RU only)

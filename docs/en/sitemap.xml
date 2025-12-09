@@ -2,8 +2,33 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://npodlozhniy.github.io/tags/ab-testing/</loc>
+    <lastmod>2025-11-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://npodlozhniy.github.io/posts/bayesian-test/</loc>
+    <lastmod>2025-11-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://npodlozhniy.github.io/tags/bayesian-inference/</loc>
+    <lastmod>2025-11-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://npodlozhniy.github.io/categories/</loc>
+    <lastmod>2025-11-30T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ru"
+                href="https://npodlozhniy.github.io/ru/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://npodlozhniy.github.io/categories/"
+                />
+  </url><url>
+    <loc>https://npodlozhniy.github.io/tags/monte-carlo/</loc>
+    <lastmod>2025-11-30T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://npodlozhniy.github.io/</loc>
-    <lastmod>2024-12-25T00:00:00+00:00</lastmod>
+    <lastmod>2025-11-30T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="ru"
@@ -15,8 +40,30 @@
                 href="https://npodlozhniy.github.io/"
                 />
   </url><url>
+    <loc>https://npodlozhniy.github.io/categories/posts/</loc>
+    <lastmod>2025-11-30T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://npodlozhniy.github.io/posts/</loc>
-    <lastmod>2024-12-25T00:00:00+00:00</lastmod>
+    <lastmod>2025-11-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://npodlozhniy.github.io/tags/pymc/</loc>
+    <lastmod>2025-11-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://npodlozhniy.github.io/tags/sequential-testing/</loc>
+    <lastmod>2025-11-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://npodlozhniy.github.io/tags/</loc>
+    <lastmod>2025-11-30T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ru"
+                href="https://npodlozhniy.github.io/ru/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://npodlozhniy.github.io/tags/"
+                />
   </url><url>
     <loc>https://npodlozhniy.github.io/posts/sequential-testing/</loc>
     <lastmod>2024-12-25T00:00:00+00:00</lastmod>
@@ -48,18 +95,6 @@
                 href="https://npodlozhniy.github.io/archives/"
                 />
   </url><url>
-    <loc>https://npodlozhniy.github.io/categories/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="ru"
-                href="https://npodlozhniy.github.io/ru/categories/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://npodlozhniy.github.io/categories/"
-                />
-  </url><url>
     <loc>https://npodlozhniy.github.io/search/</loc>
     <xhtml:link
                 rel="alternate"
@@ -72,16 +107,16 @@
                 href="https://npodlozhniy.github.io/search/"
                 />
   </url><url>
-    <loc>https://npodlozhniy.github.io/tags/</loc>
+    <loc>https://npodlozhniy.github.io/social/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="ru"
-                href="https://npodlozhniy.github.io/ru/tags/"
+                href="https://npodlozhniy.github.io/ru/social/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://npodlozhniy.github.io/tags/"
+                href="https://npodlozhniy.github.io/social/"
                 />
   </url>
 </urlset>
