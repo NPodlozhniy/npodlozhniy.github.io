@@ -30,8 +30,6 @@ categories:
 <script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
 
 
-# Bayesian A/B Testing - Practice
-
 This interactive notebook demonstrates a concise, pragmatic approach to Bayesian A/B testing using PyMC and analytic Beta-Binomial formulas.
 
 What you'll find here:
@@ -47,7 +45,7 @@ TL;DR: Posterior summaries like the Probability of Superiority (PoS) are fantast
 
 Let's kick things off with the basics: two variants, A and B, and a binary outcome (conversion: yes/no). Our goal? Use Markov Chains to sample the success probabilities and figure out if A is actually beating B.
 
-### Step 1: Set up imports
+### Set up imports
 
 Grab PyMC along with must have DS and BI libraries.
 
@@ -70,7 +68,7 @@ from scipy import stats as sts
 
 </details>
 
-### Step 2: Simulate observed data
+### Simulate observed data
 
 Generate sample data: two variants with known conversion rates. In practice, these would be your real observed counts from the experiment.
 
@@ -96,7 +94,7 @@ print(
 
 Quick sanity check: plug-in estimates (observed proportions). These will be compared with posterior estimates below.
 
-### Step 3: Define the Bayesian model
+### Define the Bayesian model
 
 We treat success probabilities as independent random variables. Since we don't know much yet, we use a uniform prior (weakly informative - go to for proportions). The observed data (Bernoulli trials) are the likelihood. We also track *deterministic* difference \$= A - B \$ , - because that's what we actually care about!
 
@@ -112,7 +110,7 @@ with pm.Model() as my_model:
     delta = pm.Deterministic("delta", A_prior - B_prior)
 ```
 
-### Step 4: Sample from the posterior
+### Sample from the posterior
 
 PyMC unleashes the "No-U-Turn Sampler" by default to draw samples from the joint posterior. The `tune` parameter controls burn-in iterations (discarded); `draws` are the kept samples used for inference.
 
@@ -121,7 +119,7 @@ with my_model:
     idata = pm.sample(draws=5000, tune=1000, cores=-1)
 ```
 
-### Step 5: Visualize the posteriors
+### Visualize the posteriors
 
 Plot those posterior distributions of each variant and their difference. The vertical black line shows the true (generating) difference; the red line marks zero (no difference). If the posterior difference doesn't touch zero, you're onto something.
 
@@ -479,7 +477,7 @@ $$ P(\lambda_B > \lambda_A) = \int_{p_B > p_A} P(p_A, p_B | \text{Data}) \, dp_A
 
 The formula is the result of applying a well-known mathematical identity that allows the cumulative probability of one Beta variable being less than another Beta variable to be expressed as a finite sum of terms involving the Beta function, rather than requiring complex numerical integration. This is why this formula is computationally efficient and preferred for exact Bayesian A/B calculations.
 
-### Rule of three: when no successes are observed
+### Rule of three: when no successes are observed 💡
 
 The rule of three is used to provide a simple way of stating an approximate 95% confidence interval in the special case that no successes have been observed - $(0, 3/n)$, alternatively by symmetry, in case of only successes \$(1 - 3/n, 1) \$.
 
@@ -864,7 +862,7 @@ def HDI(success: int, trials: int, alpha: float, p: float, effect_size: float) -
 
 </details>
 
-#### Correctness
+Correctness
 
 ``` python
 monte_carlo(bayesian_stop_rule=OLF, peeks=1, aa_test=True)
@@ -894,7 +892,7 @@ monte_carlo(bayesian_stop_rule=HDI, peeks=10, aa_test=True)
 {"model_id":"9f64a18492b04c9a89a896b63ecf0b6a","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 
-#### Power
+Power
 
 ``` python
 monte_carlo(bayesian_stop_rule=HDI, peeks=5, aa_test=False)
@@ -924,7 +922,7 @@ This table breaks down three common criteria used in Bayesian A/B testing, highl
 | **Expected Loss (EL)**               | Measures the average **Cost or Regret** of selecting the inferior variant.                                                  | **High Robustness.** Requires the posterior distribution to be **tight enough** that the potential loss (regret) is small, preventing premature stopping.                   |
 | **HDI Width**                        | Measures the **Precision** or **Uncertainty** of the posterior distribution (e.g., the width of the 95% credible interval). | **High Robustness.** Forces the test to continue until the uncertainty is **low** (the HDI is narrow), regardless of the posterior mean, ensuring adequate data collection. |
 
-## Conclusions & Practical Recommendations
+## 📝 Conclusions & Practical Recommendations
 
 -   Use the posterior (and PoS) to *interpret* results, but prefer decision-theoretic stopping when making business choices: stop when the expected loss of choosing the sub-optimal variant is below a tolerated threshold.
 -   . Combine HDI (precision) with PoS (direction) for a conservative, safe stopping rule - but higher density HDI thresholds require larger samples.
