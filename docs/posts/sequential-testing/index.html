@@ -47,17 +47,20 @@
 
 <script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-ESWD18X008', { 'anonymize_ip': false });
-}
-</script>
-<meta property="og:title" content="Sequential Testing Guide" />
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-ESWD18X008');
+        }
+      </script><meta property="og:title" content="Sequential Testing Guide" />
 <meta property="og:description" content="How GST is often misinterpreted and why its genuine version is way better than AVI?" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://npodlozhniy.github.io/posts/sequential-testing/" /><meta property="article:section" content="posts" />
@@ -197,7 +200,7 @@ if (!doNotTrack) {
     <h1 class="post-title">
       Sequential Testing Guide
     </h1>
-    <div class="post-meta"><span title='2024-12-25 00:00:00 +0000 UTC'>December 25, 2024</span>&nbsp;·&nbsp;23 min&nbsp;·&nbsp;Nikita Podlozhniy
+    <div class="post-meta">&lt;span title=&#39;2024-12-25 00:00:00 &#43;0000 UTC&#39;&gt;December 25, 2024&lt;/span&gt;&amp;nbsp;·&amp;nbsp;23 min&amp;nbsp;·&amp;nbsp;Nikita Podlozhniy
 
 </div>
   </header> <div class="toc">
@@ -295,11 +298,11 @@ if (!doNotTrack) {
 Both options are available for example within Google Colab environment.</p>
 <p>Here is an instance of <code>rpy2</code> package inference within Colab Notebook, when you run R code from the Python interpreter using an extension.</p>
 <h3 id="ipython-notebook">iPython Notebook<a hidden class="anchor" aria-hidden="true" href="#ipython-notebook">#</a></h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%</span>load_ext rpy2<span style="color:#f92672">.</span>ipython
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>R
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%</span>load_ext rpy2<span style="color:#f92672">.</span>ipython
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>R
 </span></span><span style="display:flex;"><span>R<span style="color:#f92672">.</span>version<span style="color:#f92672">.</span>string
 </span></span><span style="display:flex;"><span>install<span style="color:#f92672">.</span>packages(<span style="color:#e6db74">&#34;ldbounds&#34;</span>)
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>R
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>R
 </span></span><span style="display:flex;"><span>library(ldbounds)
 </span></span><span style="display:flex;"><span>ldBounds(t<span style="color:#f92672">=</span>seq(<span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">4</span>), iuse<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>, phi<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.05</span>, sides<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)<span style="color:#960050;background-color:#1e0010">$</span>upper<span style="color:#f92672">.</span>bounds
 </span></span></code></pre></div><pre><code>[1] 2.241403 2.125078 2.018644 1.925452
@@ -312,7 +315,7 @@ Both options are available for example within Google Colab environment.</p>
 </blockquote>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> rpy2.robjects.packages <span style="color:#66d9ef">as</span> rpackages
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> rpy2.robjects.packages <span style="color:#66d9ef">as</span> rpackages
 </span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> rpy2.robjects.vectors <span style="color:#f92672">import</span> StrVector
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>utils <span style="color:#f92672">=</span> rpackages<span style="color:#f92672">.</span>importr(<span style="color:#e6db74">&#39;utils&#39;</span>)
@@ -342,18 +345,18 @@ As it will shown below that approach is statistically incorrect and so it&rsquo;
 The alpha spending function approach by K. K. Gordon Lan and David L. DeMets (1983)</a> and further related publications, you may find them all mentioned in Reference lines of the methods&rsquo; docstrings, let&rsquo;s take a look at the functionality</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> scipy.stats <span style="color:#f92672">import</span> norm
 </span></span></code></pre></div></details>
 <p><code>seabpy</code> provides Group Sequential Testing in a separate module - <code>gatsby</code> which name is an anagram of <strong>G</strong>roup <strong>S</strong>equential <strong>AB T</strong>esting in <strong>PY</strong>thon and below it&rsquo;s shown why <code>gatsby</code> is often referred as «The Great Gatsby»</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!pip install seqabpy</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!pip install seqabpy</span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> seqabpy <span style="color:#f92672">import</span> gatsby
 </span></span></code></pre></div><h3 id="lan-demets">Lan-DeMets<a hidden class="anchor" aria-hidden="true" href="#lan-demets">#</a></h3>
 <p><code>calculate_sequential_bounds</code> function implements rigorous approach to calculate confidence bounds in one-sided GST.
 In addition to upper bounds, if <code>beta</code> is provided it calculates lower bounds to unlock the option of stopping the test for futility, maintaining provided Type II error rate. The algorithm is taken from the article <a href="https://www.tandfonline.com/doi/abs/10.1080/03610929808832161">Group sequential designs using both type I and type II error probability spending functions by Chang MN, Hwang I, Shih WJ. (1998)</a></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>calculate_sequential_bounds(np<span style="color:#f92672">.</span>linspace(<span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">10</span>), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.05</span>, beta<span style="color:#f92672">=</span><span style="color:#ae81ff">0.2</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>calculate_sequential_bounds(np<span style="color:#f92672">.</span>linspace(<span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">10</span>), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.05</span>, beta<span style="color:#f92672">=</span><span style="color:#ae81ff">0.2</span>)
 </span></span></code></pre></div><pre><code>Sequential bounds algorithm to stop for futility converged to 0.00064 tolerance in 8 iterations using O'Brien-Fleming spending function.
 
 (array([-3.02102866, -1.41478896, -0.59632535, -0.05664366,  0.35069266,
@@ -363,7 +366,7 @@ In addition to upper bounds, if <code>beta</code> is provided it calculates lowe
 </code></pre>
 <p><code>ldBounds</code> function returns the exact same numbers as R package and tailored to have similar interface, in both input and output.</p>
 <p>As a subtle benefit it supports more spending functions, take a look at the docstring to know more details.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>ldBounds(t<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>linspace(<span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">4</span>), iuse<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>, phi<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>ldBounds(t<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>linspace(<span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">4</span>), iuse<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>, phi<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
 </span></span></code></pre></div><pre><code>{'time.points': array([0.25, 0.5 , 0.75, 1.  ]),
  'alpha.spending': array([0.0125, 0.0125, 0.0125, 0.0125]),
  'overall.alpha': 0.05,
@@ -371,7 +374,7 @@ In addition to upper bounds, if <code>beta</code> is provided it calculates lowe
  'nominal.alpha': array([0.0125    , 0.01678835, 0.02175894, 0.02708151])}
 </code></pre>
 <p>In case of calculation of upper bounds only the algorithm is faster, given that these boundaries shall be defined and fixed offline prior to the experiment start, it&rsquo;s totally sensible performance, when in addition lower aka futility bounds are computed it takes more time</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
 </span></span><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>ldBounds(t<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>linspace(<span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">10</span>), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.1</span>)
 </span></span></code></pre></div><pre><code>CPU times: total: 7.73 s
 Wall time: 7.75 s
@@ -388,7 +391,7 @@ Wall time: 7.75 s
         5.97833696e-02, 7.02156613e-02])}
 </code></pre>
 <p>An example of less popular Haybittle-Peto spending function usage</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>ldBounds(t<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>linspace(<span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">4</span>), iuse<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>ldBounds(t<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>linspace(<span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">4</span>), iuse<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>)
 </span></span></code></pre></div><pre><code>{'time.points': array([0.25, 0.5 , 0.75, 1.  ]),
  'alpha.spending': array([0.0013499, 0.       , 0.       , 0.0486501]),
  'overall.alpha': 0.05,
@@ -400,7 +403,7 @@ Wall time: 7.75 s
 <p>In particular it&rsquo;s perfect to handle a few changed peeking points when the total number of peeking remains the same, and it works in a best possible way with under- and oversampling, in the latter case the procedure is not fully correct though as we will see in the simulations part.</p>
 <p>The idea of implementation is taken from <a href="https://link.springer.com/book/10.1007/978-3-319-32562-0">Group Sequential and Confirmatory Adaptive Designs in Clinical Trials by G. Wassmer and W. Brannath (2016)</a></p>
 <p>Here are a few examples, that shows how different peeking strategy affects the bounds:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>ldBounds(t<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">1.0</span>]), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.025</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>ldBounds(t<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">1.0</span>]), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.025</span>)
 </span></span></code></pre></div><pre><code>{'time.points': array([0.3, 0.6, 1. ]),
  'alpha.spending': array([4.27257874e-05, 3.76533752e-03, 2.11919367e-02]),
  'overall.alpha': 0.02499999999999991,
@@ -411,34 +414,34 @@ Wall time: 7.75 s
 <li>in case of under-sampling the last upper bound is lower what reflects that all the rest of alpha volume is spent at this point</li>
 <li>in case of over-sampling the last upper bound is higher, what helps to control Type I error rate, after the expected sample size is reached</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">0.8</span>]), expected<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">1</span>]), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.025</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">0.8</span>]), expected<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">1</span>]), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.025</span>)
 </span></span></code></pre></div><pre><code>array([3.92857254, 2.669972  , 1.96890411])
 </code></pre>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">1.2</span>]), expected<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">1</span>]), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.025</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">1.2</span>]), expected<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">1</span>]), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.025</span>)
 </span></span></code></pre></div><pre><code>array([3.92857254, 2.669972  , 1.98949242])
 </code></pre>
 <p>Under- and over- sampling may also happen in a more natural way, when a few peeking points are added or removed</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>ldBounds(t<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">0.8</span>, <span style="color:#ae81ff">1.0</span>]), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.025</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>ldBounds(t<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">0.8</span>, <span style="color:#ae81ff">1.0</span>]), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.025</span>)
 </span></span></code></pre></div><pre><code>{'time.points': array([0.3, 0.6, 0.8, 1. ]),
  'alpha.spending': array([4.27257874e-05, 3.76533752e-03, 8.40372704e-03, 1.27882097e-02]),
  'overall.alpha': 0.02499999999999991,
  'upper.bounds': array([3.92857254, 2.669972  , 2.28886308, 2.03074404]),
  'nominal.alpha': array([4.27257874e-05, 3.79287858e-03, 1.10436544e-02, 2.11404831e-02])}
 </code></pre>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">0.8</span>]), expected<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">0.8</span>, <span style="color:#ae81ff">1</span>]), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.025</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">0.8</span>]), expected<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">0.8</span>, <span style="color:#ae81ff">1</span>]), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.025</span>)
 </span></span></code></pre></div><pre><code>array([3.92857254, 2.669972  , 2.15083427])
 </code></pre>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1.2</span>]), expected<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">1</span>]), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.025</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1.2</span>]), expected<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">1</span>]), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.025</span>)
 </span></span></code></pre></div><pre><code>array([3.92857254, 2.669972  , 1.98102292, 2.0375539 ])
 </code></pre>
 <p><code>GST</code> also supports <code>int</code> as an input, if peeking point are distributed uniformly it&rsquo;s what you should use in sake of convenience</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>GST(<span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">7</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>GST(<span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">7</span>)
 </span></span></code></pre></div><pre><code>array([5.05481268, 3.48557771, 2.78550934, 2.38021304, 2.1113425 ,
        1.9168349 , 1.76778516])
 </code></pre>
 <p>While the method comes handy in most of scenarios, it doesn&rsquo;t support all the possible deviations: the beginning of the expected and actual peeking strategies must be the same: so it&rsquo;s either over- or under- sampling or the change in peeking points when their number remains equal</p>
 <p>Needless to say that the application of <code>GST</code> and other functions mentioned above apparently is not limited to one-sided hypotheses, in order to test two-sided alternative: just set $\alpha$ to half of the value, like <code>0.025</code> if you want to challenge two-sided hypothesis at <code>0.95</code> confidence level, and define lower bounds symmetrically about zero, so they would be the same in absolute values, but negative.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">0.9</span>, <span style="color:#ae81ff">1.2</span>]), expected<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">0.8</span>, <span style="color:#ae81ff">1</span>]), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.025</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">0.9</span>, <span style="color:#ae81ff">1.2</span>]), expected<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.3</span>, <span style="color:#ae81ff">0.6</span>, <span style="color:#ae81ff">0.8</span>, <span style="color:#ae81ff">1</span>]), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.025</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># the following will not work</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># gatsby.GST(actual=np.array([0.3, 0.6]), expected=np.array([0.8, 1]))</span>
@@ -451,26 +454,26 @@ Wall time: 7.75 s
 <h1 id="always-valid-inference">Always Valid Inference<a hidden class="anchor" aria-hidden="true" href="#always-valid-inference">#</a></h1>
 <p>While AVI is becoming increasingly popular in the field, bypassing GST, it&rsquo;s worth noting that there are currently no widely adopted, comprehensive Python or R packages that focus solely on this approach.</p>
 <p>There is one recent package <code>savvi</code> appeared this year, but it&rsquo;s still in <code>v0..</code> version and have not been yet fully acknowledged by the community. What is more it focuses only on the publications of Lindon et al. from <a href="https://openreview.net/pdf?id=a4zg0jiuVi">2022</a> and <a href="https://arxiv.org/pdf/2210.08589">2024</a>, while there are other notable authors like <a href="https://arxiv.org/pdf/1905.10493">Zhao et al.</a> and <a href="https://arxiv.org/abs/1810.08240">Howard et al.</a> whose approach will be challenged in addition to Lindon&rsquo;s work</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> seqabpy <span style="color:#f92672">import</span> gavi
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> seqabpy <span style="color:#f92672">import</span> gavi
 </span></span></code></pre></div><p><code>seqabpy</code> provides Always Valid Inference functionality in <code>gavi</code> module where as of now, <code>AlwaysValidInference</code> is a main class that implements confidence intervals valid at any point.
 While intervals and namely their continuous comparison to the current z-score provides the apparatus that is just enough for practical decisions, <code>p-values</code> are to be released later as well, to complete experiment analysis picture.</p>
 <p><code>AlwaysValidInference</code> an array of sample sizes when the peeking happens along with the metric variance and the result point difference.
 Multiple supported properties comprise different algorithms (the detailed description may be found in each docsrting) that return a boolean array indicating whether the null hypothesis is rejected in favour of one- or two- sided alternative for each size.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>avi <span style="color:#f92672">=</span> gavi<span style="color:#f92672">.</span>AlwaysValidInference(size<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>arange(<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">10</span>), sigma2<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, estimate<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>avi <span style="color:#f92672">=</span> gavi<span style="color:#f92672">.</span>AlwaysValidInference(size<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>arange(<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">10</span>), sigma2<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, estimate<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
 </span></span></code></pre></div><p><code>GAVI</code> is the method proposed by Howard et al. and widely adopted in tech by Eppo</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>avi<span style="color:#f92672">.</span>GAVI(<span style="color:#ae81ff">50</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>avi<span style="color:#f92672">.</span>GAVI(<span style="color:#ae81ff">50</span>)
 </span></span></code></pre></div><pre><code>array([False,  True,  True,  True,  True,  True,  True,  True,  True])
 </code></pre>
 <p><code>mSPRT</code> is the approach proposed by M. Lindon in his article and is leveraged by Netflix</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>avi<span style="color:#f92672">.</span>mSPRT(<span style="color:#ae81ff">0.08</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>avi<span style="color:#f92672">.</span>mSPRT(<span style="color:#ae81ff">0.08</span>)
 </span></span></code></pre></div><pre><code>array([False, False,  True,  True,  True,  True,  True,  True,  True])
 </code></pre>
 <p><code>StatSig_SPRT</code> is the variation proposed by Zhao et al. and as it comes from the name used currently by StatSig</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>avi<span style="color:#f92672">.</span>StatSig_SPRT()
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>avi<span style="color:#f92672">.</span>StatSig_SPRT()
 </span></span></code></pre></div><pre><code>array([False,  True,  True,  True,  True,  True,  True,  True,  True])
 </code></pre>
 <p>The last and, this time, indeed least heavily criticized <code>statsig_alpha_corrected_v1</code> approach, which was their first attempt to furnish their platform with a sequential testing framework. It&rsquo;s mainly added for the reference to show how sequential testing must not work like</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>avi<span style="color:#f92672">.</span>statsig_alpha_corrected_v1(<span style="color:#ae81ff">100</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>avi<span style="color:#f92672">.</span>statsig_alpha_corrected_v1(<span style="color:#ae81ff">100</span>)
 </span></span></code></pre></div><pre><code>array([False, False, False,  True,  True,  True,  True,  True,  True])
 </code></pre>
 <h1 id="simulations">Simulations<a hidden class="anchor" aria-hidden="true" href="#simulations">#</a></h1>
@@ -478,7 +481,7 @@ Multiple supported properties comprise different algorithms (the detailed descri
 <p>We will measure False and True positive rates for two kinds of the target metric: a continuous variable and a conversion. Furthermore we will learn how tolerant are different methods to under- and over- sampling.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Global simulation settings</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Global simulation settings</span>
 </span></span><span style="display:flex;"><span>N <span style="color:#f92672">=</span> <span style="color:#ae81ff">500</span>
 </span></span><span style="display:flex;"><span>alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.05</span>
 </span></span><span style="display:flex;"><span>n_iterations <span style="color:#f92672">=</span> <span style="color:#ae81ff">100_000</span>
@@ -511,7 +514,7 @@ Multiple supported properties comprise different algorithms (the detailed descri
 For demonstration purposes I suggest using Kim-DeMets spending function with different values of the power $\phi$: the higher $\phi$ the more strict the function is at the beginning of the experiment.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gst_linear <span style="color:#f92672">=</span> gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, expected<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, iuse<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>, phi<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, alpha<span style="color:#f92672">=</span>alpha)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gst_linear <span style="color:#f92672">=</span> gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, expected<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, iuse<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>, phi<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, alpha<span style="color:#f92672">=</span>alpha)
 </span></span><span style="display:flex;"><span>gst_quadratic <span style="color:#f92672">=</span> gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, expected<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, iuse<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>, phi<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>, alpha<span style="color:#f92672">=</span>alpha)
 </span></span><span style="display:flex;"><span>gst_cubic <span style="color:#f92672">=</span> gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, expected<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, iuse<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>, phi<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>, alpha<span style="color:#f92672">=</span>alpha)
 </span></span></code></pre></div></details>
@@ -522,7 +525,7 @@ For demonstration purposes I suggest using Kim-DeMets spending function with dif
 </blockquote>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly.express <span style="color:#66d9ef">as</span> px
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly.express <span style="color:#66d9ef">as</span> px
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly.graph_objs <span style="color:#66d9ef">as</span> go
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">hex2rgba</span>(hex, alpha):
@@ -594,7 +597,7 @@ For demonstration purposes I suggest using Kim-DeMets spending function with dif
 <p>It&rsquo;s kind of a hot take, remember I promised to provide evidence that <code>expan</code> way to determine boundaries is inaccurate, so here is a quick proof: the code is taken with no changes from their GitHub: <a href="https://github.com/zalando/expan/blob/master/expan/core/early_stopping.py">zalando/expan/early_stopping</a></p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> statsmodels.stats.proportion <span style="color:#f92672">import</span> proportion_confint
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> statsmodels.stats.proportion <span style="color:#f92672">import</span> proportion_confint
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sample_size</span>(x):
@@ -719,7 +722,7 @@ For demonstration purposes I suggest using Kim-DeMets spending function with dif
 <h2 id="monte-carlo">Monte Carlo<a hidden class="anchor" aria-hidden="true" href="#monte-carlo">#</a></h2>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> collections <span style="color:#f92672">import</span> defaultdict
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> collections <span style="color:#f92672">import</span> defaultdict
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">monte_carlo</span>(
@@ -865,7 +868,7 @@ For demonstration purposes I suggest using Kim-DeMets spending function with dif
 We calculate bounds for 10 intermittent analyses scenario, in addition considering over- and under- sampling designs.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gst_linear_undersampled <span style="color:#f92672">=</span> gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, expected<span style="color:#f92672">=</span><span style="color:#ae81ff">14</span>, iuse<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>, phi<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, alpha<span style="color:#f92672">=</span>alpha)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gst_linear_undersampled <span style="color:#f92672">=</span> gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, expected<span style="color:#f92672">=</span><span style="color:#ae81ff">14</span>, iuse<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>, phi<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, alpha<span style="color:#f92672">=</span>alpha)
 </span></span><span style="display:flex;"><span>gst_quadratic_undersampled <span style="color:#f92672">=</span> gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, expected<span style="color:#f92672">=</span><span style="color:#ae81ff">14</span>, iuse<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>, phi<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>, alpha<span style="color:#f92672">=</span>alpha)
 </span></span><span style="display:flex;"><span>gst_cubic_undersampled <span style="color:#f92672">=</span> gatsby<span style="color:#f92672">.</span>GST(actual<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, expected<span style="color:#f92672">=</span><span style="color:#ae81ff">14</span>, iuse<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>, phi<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>, alpha<span style="color:#f92672">=</span>alpha)
 </span></span><span style="display:flex;"><span>
@@ -876,7 +879,7 @@ We calculate bounds for 10 intermittent analyses scenario, in addition consideri
 <h4 id="false-positives">False Positives<a hidden class="anchor" aria-hidden="true" href="#false-positives">#</a></h4>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
 </span></span><span style="display:flex;"><span>df
 </span></span></code></pre></div></details>
 <div>
@@ -894,60 +897,60 @@ We calculate bounds for 10 intermittent analyses scenario, in addition consideri
 </code></pre>
 <p></style></p>
 <table>
-<thead>
-<tr>
-<th></th>
-<th>PositiveRate</th>
-<th>SampleSize</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>No_Seq</td>
-<td>0.051</td>
-<td>500</td>
-</tr>
-<tr>
-<td>GAVI</td>
-<td>0.018</td>
-<td>221</td>
-</tr>
-<tr>
-<td>mSPRT</td>
-<td>0.048</td>
-<td>38</td>
-</tr>
-<tr>
-<td>StatSig_SPRT</td>
-<td>0.026</td>
-<td>43</td>
-</tr>
-<tr>
-<td>StatSig_v1</td>
-<td>0.074</td>
-<td>421</td>
-</tr>
-<tr>
-<td>GST_linear</td>
-<td>0.051</td>
-<td>300</td>
-</tr>
-<tr>
-<td>GST_quadratic</td>
-<td>0.050</td>
-<td>400</td>
-</tr>
-<tr>
-<td>GST_cubic</td>
-<td>0.051</td>
-<td>400</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th></th>
+          <th>PositiveRate</th>
+          <th>SampleSize</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>No_Seq</td>
+          <td>0.051</td>
+          <td>500</td>
+      </tr>
+      <tr>
+          <td>GAVI</td>
+          <td>0.018</td>
+          <td>221</td>
+      </tr>
+      <tr>
+          <td>mSPRT</td>
+          <td>0.048</td>
+          <td>38</td>
+      </tr>
+      <tr>
+          <td>StatSig_SPRT</td>
+          <td>0.026</td>
+          <td>43</td>
+      </tr>
+      <tr>
+          <td>StatSig_v1</td>
+          <td>0.074</td>
+          <td>421</td>
+      </tr>
+      <tr>
+          <td>GST_linear</td>
+          <td>0.051</td>
+          <td>300</td>
+      </tr>
+      <tr>
+          <td>GST_quadratic</td>
+          <td>0.050</td>
+          <td>400</td>
+      </tr>
+      <tr>
+          <td>GST_cubic</td>
+          <td>0.051</td>
+          <td>400</td>
+      </tr>
+  </tbody>
 </table>
 </div>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_positive_rate(df, aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_positive_rate(df, aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
 </span></span></code></pre></div></details>
 
 
@@ -959,7 +962,7 @@ We calculate bounds for 10 intermittent analyses scenario, in addition consideri
 <p>As it immediately comes clear: StatSig v1 correction was a flaw, all the other methods are targeting $\alpha$ as needed, however out of AVI it&rsquo;s only mSPRT that gives high enough level, the rest of them make fewer false positives what usually is a sign of lower statistical power, we will see it later.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;undersampled&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;undersampled&#34;</span>)
 </span></span></code></pre></div></details>
 <div>
 <style scoped>
@@ -976,60 +979,60 @@ We calculate bounds for 10 intermittent analyses scenario, in addition consideri
 </code></pre>
 <p></style></p>
 <table>
-<thead>
-<tr>
-<th></th>
-<th>PositiveRate</th>
-<th>SampleSize</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>No_Seq</td>
-<td>0.050</td>
-<td>500</td>
-</tr>
-<tr>
-<td>GAVI</td>
-<td>0.014</td>
-<td>253</td>
-</tr>
-<tr>
-<td>mSPRT</td>
-<td>0.043</td>
-<td>38</td>
-</tr>
-<tr>
-<td>StatSig_SPRT</td>
-<td>0.026</td>
-<td>41</td>
-</tr>
-<tr>
-<td>StatSig_v1</td>
-<td>0.015</td>
-<td>451</td>
-</tr>
-<tr>
-<td>GST_linear</td>
-<td>0.047</td>
-<td>350</td>
-</tr>
-<tr>
-<td>GST_quadratic</td>
-<td>0.046</td>
-<td>500</td>
-</tr>
-<tr>
-<td>GST_cubic</td>
-<td>0.045</td>
-<td>500</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th></th>
+          <th>PositiveRate</th>
+          <th>SampleSize</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>No_Seq</td>
+          <td>0.050</td>
+          <td>500</td>
+      </tr>
+      <tr>
+          <td>GAVI</td>
+          <td>0.014</td>
+          <td>253</td>
+      </tr>
+      <tr>
+          <td>mSPRT</td>
+          <td>0.043</td>
+          <td>38</td>
+      </tr>
+      <tr>
+          <td>StatSig_SPRT</td>
+          <td>0.026</td>
+          <td>41</td>
+      </tr>
+      <tr>
+          <td>StatSig_v1</td>
+          <td>0.015</td>
+          <td>451</td>
+      </tr>
+      <tr>
+          <td>GST_linear</td>
+          <td>0.047</td>
+          <td>350</td>
+      </tr>
+      <tr>
+          <td>GST_quadratic</td>
+          <td>0.046</td>
+          <td>500</td>
+      </tr>
+      <tr>
+          <td>GST_cubic</td>
+          <td>0.045</td>
+          <td>500</td>
+      </tr>
+  </tbody>
 </table>
 </div>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;oversampled&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;oversampled&#34;</span>)
 </span></span><span style="display:flex;"><span>df
 </span></span></code></pre></div></details>
 <div>
@@ -1047,60 +1050,60 @@ We calculate bounds for 10 intermittent analyses scenario, in addition consideri
 </code></pre>
 <p></style></p>
 <table>
-<thead>
-<tr>
-<th></th>
-<th>PositiveRate</th>
-<th>SampleSize</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>No_Seq</td>
-<td>0.051</td>
-<td>500</td>
-</tr>
-<tr>
-<td>GAVI</td>
-<td>0.021</td>
-<td>189</td>
-</tr>
-<tr>
-<td>mSPRT</td>
-<td>0.046</td>
-<td>35</td>
-</tr>
-<tr>
-<td>StatSig_SPRT</td>
-<td>0.027</td>
-<td>36</td>
-</tr>
-<tr>
-<td>StatSig_v1</td>
-<td>0.187</td>
-<td>378</td>
-</tr>
-<tr>
-<td>GST_linear</td>
-<td>0.065</td>
-<td>250</td>
-</tr>
-<tr>
-<td>GST_quadratic</td>
-<td>0.072</td>
-<td>300</td>
-</tr>
-<tr>
-<td>GST_cubic</td>
-<td>0.077</td>
-<td>350</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th></th>
+          <th>PositiveRate</th>
+          <th>SampleSize</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>No_Seq</td>
+          <td>0.051</td>
+          <td>500</td>
+      </tr>
+      <tr>
+          <td>GAVI</td>
+          <td>0.021</td>
+          <td>189</td>
+      </tr>
+      <tr>
+          <td>mSPRT</td>
+          <td>0.046</td>
+          <td>35</td>
+      </tr>
+      <tr>
+          <td>StatSig_SPRT</td>
+          <td>0.027</td>
+          <td>36</td>
+      </tr>
+      <tr>
+          <td>StatSig_v1</td>
+          <td>0.187</td>
+          <td>378</td>
+      </tr>
+      <tr>
+          <td>GST_linear</td>
+          <td>0.065</td>
+          <td>250</td>
+      </tr>
+      <tr>
+          <td>GST_quadratic</td>
+          <td>0.072</td>
+          <td>300</td>
+      </tr>
+      <tr>
+          <td>GST_cubic</td>
+          <td>0.077</td>
+          <td>350</td>
+      </tr>
+  </tbody>
 </table>
 </div>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_positive_rate(df, aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;oversampled&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_positive_rate(df, aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;oversampled&#34;</span>)
 </span></span></code></pre></div></details>
 
 
@@ -1118,7 +1121,7 @@ We calculate bounds for 10 intermittent analyses scenario, in addition consideri
 <p>It&rsquo;s time to compare the power of different methods, I&rsquo;m not going to consider StatSig Alpha corrected version anymore as it&rsquo;s not a valid procedure</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
 </span></span><span style="display:flex;"><span>df
 </span></span></code></pre></div></details>
 <div>
@@ -1136,55 +1139,55 @@ We calculate bounds for 10 intermittent analyses scenario, in addition consideri
 </code></pre>
 <p></style></p>
 <table>
-<thead>
-<tr>
-<th></th>
-<th>PositiveRate</th>
-<th>SampleSize</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>No_Seq</td>
-<td>0.474</td>
-<td>500</td>
-</tr>
-<tr>
-<td>GAVI</td>
-<td>0.222</td>
-<td>285</td>
-</tr>
-<tr>
-<td>mSPRT</td>
-<td>0.268</td>
-<td>202</td>
-</tr>
-<tr>
-<td>StatSig_SPRT</td>
-<td>0.188</td>
-<td>230</td>
-</tr>
-<tr>
-<td>GST_linear</td>
-<td>0.409</td>
-<td>300</td>
-</tr>
-<tr>
-<td>GST_quadratic</td>
-<td>0.445</td>
-<td>350</td>
-</tr>
-<tr>
-<td>GST_cubic</td>
-<td>0.459</td>
-<td>400</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th></th>
+          <th>PositiveRate</th>
+          <th>SampleSize</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>No_Seq</td>
+          <td>0.474</td>
+          <td>500</td>
+      </tr>
+      <tr>
+          <td>GAVI</td>
+          <td>0.222</td>
+          <td>285</td>
+      </tr>
+      <tr>
+          <td>mSPRT</td>
+          <td>0.268</td>
+          <td>202</td>
+      </tr>
+      <tr>
+          <td>StatSig_SPRT</td>
+          <td>0.188</td>
+          <td>230</td>
+      </tr>
+      <tr>
+          <td>GST_linear</td>
+          <td>0.409</td>
+          <td>300</td>
+      </tr>
+      <tr>
+          <td>GST_quadratic</td>
+          <td>0.445</td>
+          <td>350</td>
+      </tr>
+      <tr>
+          <td>GST_cubic</td>
+          <td>0.459</td>
+          <td>400</td>
+      </tr>
+  </tbody>
 </table>
 </div>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_positive_rate(df, aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_positive_rate(df, aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
 </span></span></code></pre></div></details>
 
 
@@ -1195,7 +1198,7 @@ We calculate bounds for 10 intermittent analyses scenario, in addition consideri
 </script>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;undersampled&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;undersampled&#34;</span>)
 </span></span><span style="display:flex;"><span>df
 </span></span></code></pre></div></details>
 <div>
@@ -1213,55 +1216,55 @@ We calculate bounds for 10 intermittent analyses scenario, in addition consideri
 </code></pre>
 <p></style></p>
 <table>
-<thead>
-<tr>
-<th></th>
-<th>PositiveRate</th>
-<th>SampleSize</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>No_Seq</td>
-<td>0.478</td>
-<td>500</td>
-</tr>
-<tr>
-<td>GAVI</td>
-<td>0.211</td>
-<td>306</td>
-</tr>
-<tr>
-<td>mSPRT</td>
-<td>0.253</td>
-<td>210</td>
-</tr>
-<tr>
-<td>StatSig_SPRT</td>
-<td>0.190</td>
-<td>233</td>
-</tr>
-<tr>
-<td>GST_linear</td>
-<td>0.425</td>
-<td>350</td>
-</tr>
-<tr>
-<td>GST_quadratic</td>
-<td>0.449</td>
-<td>450</td>
-</tr>
-<tr>
-<td>GST_cubic</td>
-<td>0.455</td>
-<td>500</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th></th>
+          <th>PositiveRate</th>
+          <th>SampleSize</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>No_Seq</td>
+          <td>0.478</td>
+          <td>500</td>
+      </tr>
+      <tr>
+          <td>GAVI</td>
+          <td>0.211</td>
+          <td>306</td>
+      </tr>
+      <tr>
+          <td>mSPRT</td>
+          <td>0.253</td>
+          <td>210</td>
+      </tr>
+      <tr>
+          <td>StatSig_SPRT</td>
+          <td>0.190</td>
+          <td>233</td>
+      </tr>
+      <tr>
+          <td>GST_linear</td>
+          <td>0.425</td>
+          <td>350</td>
+      </tr>
+      <tr>
+          <td>GST_quadratic</td>
+          <td>0.449</td>
+          <td>450</td>
+      </tr>
+      <tr>
+          <td>GST_cubic</td>
+          <td>0.455</td>
+          <td>500</td>
+      </tr>
+  </tbody>
 </table>
 </div>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_positive_rate(df, aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;undersampled&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_positive_rate(df, aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;undersampled&#34;</span>)
 </span></span></code></pre></div></details>
 
 
@@ -1272,7 +1275,7 @@ We calculate bounds for 10 intermittent analyses scenario, in addition consideri
 </script>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;oversampled&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;oversampled&#34;</span>)
 </span></span></code></pre></div></details>
 <div>
 <style scoped>
@@ -1289,50 +1292,50 @@ We calculate bounds for 10 intermittent analyses scenario, in addition consideri
 </code></pre>
 <p></style></p>
 <table>
-<thead>
-<tr>
-<th></th>
-<th>PositiveRate</th>
-<th>SampleSize</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>No_Seq</td>
-<td>0.476</td>
-<td>500</td>
-</tr>
-<tr>
-<td>GAVI</td>
-<td>0.236</td>
-<td>268</td>
-</tr>
-<tr>
-<td>mSPRT</td>
-<td>0.263</td>
-<td>208</td>
-</tr>
-<tr>
-<td>StatSig_SPRT</td>
-<td>0.190</td>
-<td>233</td>
-</tr>
-<tr>
-<td>GST_linear</td>
-<td>0.443</td>
-<td>300</td>
-</tr>
-<tr>
-<td>GST_quadratic</td>
-<td>0.496</td>
-<td>300</td>
-</tr>
-<tr>
-<td>GST_cubic</td>
-<td>0.519</td>
-<td>350</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th></th>
+          <th>PositiveRate</th>
+          <th>SampleSize</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>No_Seq</td>
+          <td>0.476</td>
+          <td>500</td>
+      </tr>
+      <tr>
+          <td>GAVI</td>
+          <td>0.236</td>
+          <td>268</td>
+      </tr>
+      <tr>
+          <td>mSPRT</td>
+          <td>0.263</td>
+          <td>208</td>
+      </tr>
+      <tr>
+          <td>StatSig_SPRT</td>
+          <td>0.190</td>
+          <td>233</td>
+      </tr>
+      <tr>
+          <td>GST_linear</td>
+          <td>0.443</td>
+          <td>300</td>
+      </tr>
+      <tr>
+          <td>GST_quadratic</td>
+          <td>0.496</td>
+          <td>300</td>
+      </tr>
+      <tr>
+          <td>GST_cubic</td>
+          <td>0.519</td>
+          <td>350</td>
+      </tr>
+  </tbody>
 </table>
 </div>
 <p>So, as it comes from bar chart and tables:</p>
@@ -1346,7 +1349,7 @@ We calculate bounds for 10 intermittent analyses scenario, in addition consideri
 <h4 id="false-positives-1">False Positives<a hidden class="anchor" aria-hidden="true" href="#false-positives-1">#</a></h4>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, metric<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;choice&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, metric<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;choice&#34;</span>)
 </span></span><span style="display:flex;"><span>df
 </span></span></code></pre></div></details>
 <div>
@@ -1364,60 +1367,60 @@ We calculate bounds for 10 intermittent analyses scenario, in addition consideri
 </code></pre>
 <p></style></p>
 <table>
-<thead>
-<tr>
-<th></th>
-<th>PositiveRate</th>
-<th>SampleSize</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>No_Seq</td>
-<td>0.050</td>
-<td>4500</td>
-</tr>
-<tr>
-<td>GAVI</td>
-<td>0.018</td>
-<td>1913</td>
-</tr>
-<tr>
-<td>mSPRT</td>
-<td>0.072</td>
-<td>88</td>
-</tr>
-<tr>
-<td>StatSig_SPRT</td>
-<td>0.044</td>
-<td>60</td>
-</tr>
-<tr>
-<td>StatSig_v1</td>
-<td>0.074</td>
-<td>3796</td>
-</tr>
-<tr>
-<td>GST_linear</td>
-<td>0.050</td>
-<td>2700</td>
-</tr>
-<tr>
-<td>GST_quadratic</td>
-<td>0.049</td>
-<td>3600</td>
-</tr>
-<tr>
-<td>GST_cubic</td>
-<td>0.049</td>
-<td>3600</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th></th>
+          <th>PositiveRate</th>
+          <th>SampleSize</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>No_Seq</td>
+          <td>0.050</td>
+          <td>4500</td>
+      </tr>
+      <tr>
+          <td>GAVI</td>
+          <td>0.018</td>
+          <td>1913</td>
+      </tr>
+      <tr>
+          <td>mSPRT</td>
+          <td>0.072</td>
+          <td>88</td>
+      </tr>
+      <tr>
+          <td>StatSig_SPRT</td>
+          <td>0.044</td>
+          <td>60</td>
+      </tr>
+      <tr>
+          <td>StatSig_v1</td>
+          <td>0.074</td>
+          <td>3796</td>
+      </tr>
+      <tr>
+          <td>GST_linear</td>
+          <td>0.050</td>
+          <td>2700</td>
+      </tr>
+      <tr>
+          <td>GST_quadratic</td>
+          <td>0.049</td>
+          <td>3600</td>
+      </tr>
+      <tr>
+          <td>GST_cubic</td>
+          <td>0.049</td>
+          <td>3600</td>
+      </tr>
+  </tbody>
 </table>
 </div>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_positive_rate(df, aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ratio&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_positive_rate(df, aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ratio&#34;</span>)
 </span></span></code></pre></div></details>
 
 
@@ -1430,7 +1433,7 @@ We calculate bounds for 10 intermittent analyses scenario, in addition consideri
 Alternatively, you may use <code>sequential_p_value</code> function from <code>gavi</code> module of <code>seqabpy</code>, it&rsquo;s a valid procedure following the algorithm defined by M. Lindon and A. Malek in <a href="https://openreview.net/pdf?id=a4zg0jiuVi">Anytime-Valid Inference For Multinomial Count Data (2022)</a>, could be a little less powerful though than <code>savvi</code> implementation that follows even more recent articles.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>expected_probs <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0.5</span>, <span style="color:#ae81ff">0.5</span>]
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>expected_probs <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0.5</span>, <span style="color:#ae81ff">0.5</span>]
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># it&#39;s an asymptotic algorithm, so only numerators are compared</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># assuming the denominators of convesrion are similar like in fair A/B test</span>
@@ -1442,7 +1445,7 @@ Alternatively, you may use <code>sequential_p_value</code> function from <code>g
 </code></pre>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, metric<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;choice&#34;</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;oversampled&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, metric<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;choice&#34;</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;oversampled&#34;</span>)
 </span></span><span style="display:flex;"><span>df
 </span></span></code></pre></div></details>
 <div>
@@ -1460,60 +1463,60 @@ Alternatively, you may use <code>sequential_p_value</code> function from <code>g
 </code></pre>
 <p></style></p>
 <table>
-<thead>
-<tr>
-<th></th>
-<th>PositiveRate</th>
-<th>SampleSize</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>No_Seq</td>
-<td>0.051</td>
-<td>4500</td>
-</tr>
-<tr>
-<td>GAVI</td>
-<td>0.022</td>
-<td>1620</td>
-</tr>
-<tr>
-<td>mSPRT</td>
-<td>0.069</td>
-<td>85</td>
-</tr>
-<tr>
-<td>StatSig_SPRT</td>
-<td>0.045</td>
-<td>61</td>
-</tr>
-<tr>
-<td>StatSig_v1</td>
-<td>0.189</td>
-<td>3377</td>
-</tr>
-<tr>
-<td>GST_linear</td>
-<td>0.064</td>
-<td>2250</td>
-</tr>
-<tr>
-<td>GST_quadratic</td>
-<td>0.072</td>
-<td>2700</td>
-</tr>
-<tr>
-<td>GST_cubic</td>
-<td>0.076</td>
-<td>3150</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th></th>
+          <th>PositiveRate</th>
+          <th>SampleSize</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>No_Seq</td>
+          <td>0.051</td>
+          <td>4500</td>
+      </tr>
+      <tr>
+          <td>GAVI</td>
+          <td>0.022</td>
+          <td>1620</td>
+      </tr>
+      <tr>
+          <td>mSPRT</td>
+          <td>0.069</td>
+          <td>85</td>
+      </tr>
+      <tr>
+          <td>StatSig_SPRT</td>
+          <td>0.045</td>
+          <td>61</td>
+      </tr>
+      <tr>
+          <td>StatSig_v1</td>
+          <td>0.189</td>
+          <td>3377</td>
+      </tr>
+      <tr>
+          <td>GST_linear</td>
+          <td>0.064</td>
+          <td>2250</td>
+      </tr>
+      <tr>
+          <td>GST_quadratic</td>
+          <td>0.072</td>
+          <td>2700</td>
+      </tr>
+      <tr>
+          <td>GST_cubic</td>
+          <td>0.076</td>
+          <td>3150</td>
+      </tr>
+  </tbody>
 </table>
 </div>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_positive_rate(df, aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;oversampled ratio&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_positive_rate(df, aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;oversampled ratio&#34;</span>)
 </span></span></code></pre></div></details>
 
 
@@ -1527,7 +1530,7 @@ Alternatively, you may use <code>sequential_p_value</code> function from <code>g
 <p>Let&rsquo;s take a brief look at the power comparison for a couple different effect sizes</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, metric<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;choice&#34;</span>, effect_size<span style="color:#f92672">=</span><span style="color:#ae81ff">0.10</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, metric<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;choice&#34;</span>, effect_size<span style="color:#f92672">=</span><span style="color:#ae81ff">0.10</span>)
 </span></span><span style="display:flex;"><span>df
 </span></span></code></pre></div></details>
 <div>
@@ -1545,55 +1548,55 @@ Alternatively, you may use <code>sequential_p_value</code> function from <code>g
 </code></pre>
 <p></style></p>
 <table>
-<thead>
-<tr>
-<th></th>
-<th>PositiveRate</th>
-<th>SampleSize</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>No_Seq</td>
-<td>0.480</td>
-<td>4500</td>
-</tr>
-<tr>
-<td>GAVI</td>
-<td>0.240</td>
-<td>2482</td>
-</tr>
-<tr>
-<td>mSPRT</td>
-<td>0.310</td>
-<td>1441</td>
-</tr>
-<tr>
-<td>StatSig_SPRT</td>
-<td>0.226</td>
-<td>1702</td>
-</tr>
-<tr>
-<td>GST_linear</td>
-<td>0.420</td>
-<td>2700</td>
-</tr>
-<tr>
-<td>GST_quadratic</td>
-<td>0.449</td>
-<td>3150</td>
-</tr>
-<tr>
-<td>GST_cubic</td>
-<td>0.460</td>
-<td>3600</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th></th>
+          <th>PositiveRate</th>
+          <th>SampleSize</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>No_Seq</td>
+          <td>0.480</td>
+          <td>4500</td>
+      </tr>
+      <tr>
+          <td>GAVI</td>
+          <td>0.240</td>
+          <td>2482</td>
+      </tr>
+      <tr>
+          <td>mSPRT</td>
+          <td>0.310</td>
+          <td>1441</td>
+      </tr>
+      <tr>
+          <td>StatSig_SPRT</td>
+          <td>0.226</td>
+          <td>1702</td>
+      </tr>
+      <tr>
+          <td>GST_linear</td>
+          <td>0.420</td>
+          <td>2700</td>
+      </tr>
+      <tr>
+          <td>GST_quadratic</td>
+          <td>0.449</td>
+          <td>3150</td>
+      </tr>
+      <tr>
+          <td>GST_cubic</td>
+          <td>0.460</td>
+          <td>3600</td>
+      </tr>
+  </tbody>
 </table>
 </div>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_positive_rate(df, aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ratio&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_positive_rate(df, aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ratio&#34;</span>)
 </span></span></code></pre></div></details>
 
 
@@ -1604,7 +1607,7 @@ Alternatively, you may use <code>sequential_p_value</code> function from <code>g
 </script>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, metric<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;choice&#34;</span>, effect_size<span style="color:#f92672">=</span><span style="color:#ae81ff">0.2</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, metric<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;choice&#34;</span>, effect_size<span style="color:#f92672">=</span><span style="color:#ae81ff">0.2</span>)
 </span></span><span style="display:flex;"><span>df
 </span></span></code></pre></div></details>
 <div>
@@ -1622,55 +1625,55 @@ Alternatively, you may use <code>sequential_p_value</code> function from <code>g
 </code></pre>
 <p></style></p>
 <table>
-<thead>
-<tr>
-<th></th>
-<th>PositiveRate</th>
-<th>SampleSize</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>No_Seq</td>
-<td>0.930</td>
-<td>4500</td>
-</tr>
-<tr>
-<td>GAVI</td>
-<td>0.767</td>
-<td>2127</td>
-</tr>
-<tr>
-<td>mSPRT</td>
-<td>0.796</td>
-<td>1593</td>
-</tr>
-<tr>
-<td>StatSig_SPRT</td>
-<td>0.718</td>
-<td>1923</td>
-</tr>
-<tr>
-<td>GST_linear</td>
-<td>0.898</td>
-<td>2250</td>
-</tr>
-<tr>
-<td>GST_quadratic</td>
-<td>0.915</td>
-<td>2250</td>
-</tr>
-<tr>
-<td>GST_cubic</td>
-<td>0.921</td>
-<td>2700</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th></th>
+          <th>PositiveRate</th>
+          <th>SampleSize</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>No_Seq</td>
+          <td>0.930</td>
+          <td>4500</td>
+      </tr>
+      <tr>
+          <td>GAVI</td>
+          <td>0.767</td>
+          <td>2127</td>
+      </tr>
+      <tr>
+          <td>mSPRT</td>
+          <td>0.796</td>
+          <td>1593</td>
+      </tr>
+      <tr>
+          <td>StatSig_SPRT</td>
+          <td>0.718</td>
+          <td>1923</td>
+      </tr>
+      <tr>
+          <td>GST_linear</td>
+          <td>0.898</td>
+          <td>2250</td>
+      </tr>
+      <tr>
+          <td>GST_quadratic</td>
+          <td>0.915</td>
+          <td>2250</td>
+      </tr>
+      <tr>
+          <td>GST_cubic</td>
+          <td>0.921</td>
+          <td>2700</td>
+      </tr>
+  </tbody>
 </table>
 </div>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_positive_rate(df, aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;strong effect&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_positive_rate(df, aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, sampling<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;strong effect&#34;</span>)
 </span></span></code></pre></div></details>
 
 
@@ -1771,7 +1774,7 @@ Alternatively, you may use <code>sequential_p_value</code> function from <code>g
     </main>
     
 <footer class="footer">
-    <span>&copy; 2025 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
+    <span>&copy; 2026 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
     <span>
         Powered by
         <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &

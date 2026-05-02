@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CUPED: Reducing Metric Variance with Pre-Experiment Data | Nikita Podlozhniy</title>
+<meta name="keywords" content="ab-testing, cuped, variance-reduction, statistics">
+<meta name="description" content="How CUPED uses pre-experiment covariates to cut metric variance and boost AB test sensitivity — with a rigorous proof of what works and what silently breaks">
+<meta name="author" content="Nikita Podlozhniy">
+<link rel="canonical" href="https://npodlozhniy.github.io/posts/cuped/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://npodlozhniy.github.io/favicons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://npodlozhniy.github.io/favicons/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://npodlozhniy.github.io/favicons/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://npodlozhniy.github.io/favicons/apple-touch-icon.png">
+<link rel="mask-icon" href="https://npodlozhniy.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://npodlozhniy.github.io/posts/cuped/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+    onload="renderMathInElement(document.body, 
+    {
+              delimiters: [
+                  {left: '$$', right: '$$', display: true},
+                  {left: '\\[', right: '\\]', display: true},
+                  {left: '$', right: '$', display: false},
+                  {left: '\\(', right: '\\)', display: false}
+              ]
+          }
+    );"></script>
+
+
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-ESWD18X008');
+        }
+      </script><meta property="og:title" content="CUPED: Reducing Metric Variance with Pre-Experiment Data" />
+<meta property="og:description" content="How CUPED uses pre-experiment covariates to cut metric variance and boost AB test sensitivity — with a rigorous proof of what works and what silently breaks" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://npodlozhniy.github.io/posts/cuped/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2026-03-15T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-03-15T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="CUPED: Reducing Metric Variance with Pre-Experiment Data"/>
+<meta name="twitter:description" content="How CUPED uses pre-experiment covariates to cut metric variance and boost AB test sensitivity — with a rigorous proof of what works and what silently breaks"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://npodlozhniy.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CUPED: Reducing Metric Variance with Pre-Experiment Data",
+      "item": "https://npodlozhniy.github.io/posts/cuped/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CUPED: Reducing Metric Variance with Pre-Experiment Data",
+  "name": "CUPED: Reducing Metric Variance with Pre-Experiment Data",
+  "description": "How CUPED uses pre-experiment covariates to cut metric variance and boost AB test sensitivity — with a rigorous proof of what works and what silently breaks",
+  "keywords": [
+    "ab-testing", "cuped", "variance-reduction", "statistics"
+  ],
+  "articleBody": "Background We at HomeBuddy run AB tests on conversion metrics and engagement signals whose natural variance is high. High variance means we need more users to detect the same effect — or equivalently, we might miss a real improvement because the noise drowns it out.\nCUPED (Controlled-experiment Using Pre-Experiment Data) is a variance-reduction technique introduced by Microsoft Research that exploits the correlation between a user’s pre-experiment behavior and their in-experiment metric. By subtracting a scaled version of the pre-experiment covariate from the metric, CUPED can cut variance by 50–90%, effectively doubling or tripling test sensitivity with no additional traffic.\nPrerequisites Python 3.11.4 with NumPy, SciPy, pandas, and statsmodels.\nTheory Let $Y$ be the in-experiment metric and $X$ a covariate unaffected by the treatment (e.g. the same metric measured before the experiment began). Define the CUPED-adjusted metric:\n$$ Y_{\\text{CUPED}} = Y - \\theta(X - \\mathbb{E}X) $$\nComputing the moments:\n$$ \\mathbb{E}[Y_{\\text{CUPED}}] = \\mathbb{E}[Y] - \\theta \\underbrace{\\mathbb{E}[X - \\mathbb{E}X]}_{=,0} = \\mathbb{E}[Y] $$\n$$ \\mathbb{D}[Y_{\\text{CUPED}}] = \\mathbb{D}[Y] + \\theta^2 \\mathbb{D}[X] - 2\\theta,\\text{cov}(Y, X) $$\nThe expectation is preserved. The variance can be reduced by choosing $\\theta$ to minimise $\\mathbb{D}[Y_{\\text{CUPED}}]$:\n$$ \\frac{\\partial}{\\partial \\theta}\\mathbb{D}[Y_{\\text{CUPED}}] = 2\\theta\\mathbb{D}[X] - 2,\\text{cov}(Y, X) = 0 \\implies \\theta^* = \\frac{\\text{cov}(Y, X)}{\\mathbb{D}[X]} $$\nSubstituting back:\n$$ \\mathbb{D}[Y_{\\text{CUPED}}] = \\mathbb{D}[Y]\\left(1 - \\rho^2_{XY}\\right) $$\nwhere $\\rho_{XY}$ is the Pearson correlation between $X$ and $Y$. If $\\rho = 0.9$, variance drops by 81%. If $\\rho = 0$, CUPED provides no benefit (and should not be applied).\nKey constraints:\nThe covariate $X$ must not be affected by the treatment — pre-experiment data is ideal. $\\theta$ must be estimated on the combined sample (test + control), not on each group separately. For a two-sample test, $\\mathbb{E}X$ must be the pooled mean — not the per-group mean. Synthetic data generation with correlated past/future metrics\rdef lognorm(): return sts.lognorm(s=1, loc=100) def generate_samples(distribution, n_users=100, n_days=1, seed=0): \"\"\" Generate a dataset with historical (past) and experimental (future) periods. Past and future metrics are correlated: future = past + small noise. \"\"\" np.random.seed(seed) def encoder(x): uid = hashlib.md5(str(x).encode()).hexdigest() test_flg = hash(str(x).encode()) % 2 return (uid, 'test' if test_flg else 'control') df = pd.DataFrame( list(map( encoder, np.array([[u] * (2 * n_days) for u in range(2 * n_users)]).ravel() )), columns=['user_id', 'group'], ) df['date'] = pd.to_datetime( [datetime.date.today() - datetime.timedelta(days=x) for x in range(2 * n_days)] * 2 * n_users ) df['history'] = np.where( df['date'] \u003e pd.Timestamp(datetime.date.today() - datetime.timedelta(days=n_days)), 'future', 'past' ) future_metric = distribution.rvs(size=n_days * n_users * 2) past_metric = future_metric + sts.norm.rvs(loc=0, scale=1, size=len(future_metric)) df = df.sort_values(by=['date', 'user_id'], ascending=True) df['metric'] = np.hstack((past_metric, future_metric)) return df.reset_index(drop=True) rv = lognorm() EV = rv.mean() # true population mean ≈ 101.6 df = generate_samples(rv) user_level = df.groupby(['group', 'history', 'user_id'])[['metric']].mean().reset_index() print(f'Shape: {df.shape}, EV ≈ {EV:.2f}') user_level.sample(3) T-Test Utilities Two test procedures are needed: a one-sample T-test (used when comparing a single group against a known mean) and Welch’s T-test (for two independent groups with potentially unequal variances).\nOne-sample and Welch T-test implementations\rdef one_samp_t_test(X, mu0, alpha=0.05): mu = np.mean(X) - mu0 sigma = np.sqrt(np.var(X, ddof=1) / len(X)) t = mu / sigma T = sts.t(df=len(X) - 1) return {'pvalue': 2 * min(T.sf(t), T.cdf(t))} def welch_t_test(X, Y, alpha=0.05): vx = np.var(X, ddof=1) / len(X) vy = np.var(Y, ddof=1) / len(Y) mu = np.mean(X) - np.mean(Y) sigma = np.sqrt(vx + vy) t = mu / sigma nu = int((vx + vy)**2 / (vx**2 / (len(X) - 1) + vy**2 / (len(Y) - 1))) T = sts.t(df=nu) return {'pvalue': 2 * min(T.sf(t), T.cdf(t))} Two-Sample CUPED In a standard AB test with test group $T$ and control group $C$, define:\n$$ T_{\\text{CUPED}} = T - \\theta A, \\quad C_{\\text{CUPED}} = C - \\theta B $$\nwhere $A$ and $B$ are pre-experiment covariates for test and control respectively, with $\\mathbb{E}A = \\mathbb{E}B$ (they’re drawn from the same pre-experiment distribution).\nThe optimal $\\theta$ for variance minimisation of the difference $T_{\\text{CUPED}} - C_{\\text{CUPED}}$:\n$$ \\theta^* = \\frac{\\text{cov}(T, A) + \\text{cov}(C, B)}{\\mathbb{D}[A] + \\mathbb{D}[B]} $$\nThe resulting variance reduction:\n$$ \\mathbb{D}[T_{\\text{CUPED}} - C_{\\text{CUPED}}] = \\left(1 - \\rho^2\\right)\\mathbb{D}[T - C], \\quad \\rho = \\text{corr}(T - C,; A - B) $$\nTwo-sample CUPED implementation\rdef two_samples_cuped(test_target, control_target, test_cov, control_cov): theta = ( np.cov(test_target, test_cov)[0, 1] + np.cov(control_target, control_cov)[0, 1] ) / (np.var(test_cov) + np.var(control_cov)) return test_target - theta * test_cov, control_target - theta * control_cov def apply_two_samples_cuped(user_df, cuped, ids='user_id', date='history', metric='metric'): data = user_df.sort_values(by=[date, ids], ascending=True) ft = data[(data.group == 'test') \u0026 (data.history == 'future')][metric].values fc = data[(data.group == 'control') \u0026 (data.history == 'future')][metric].values pt = data[(data.group == 'test') \u0026 (data.history == 'past')][metric].values pc = data[(data.group == 'control') \u0026 (data.history == 'past')][metric].values data = data.copy() data['cuped_metric'] = np.nan tc, cc = cuped(ft, fc, pt, pc) data.loc[(data.group == 'test') \u0026 (data.history == 'future'), 'cuped_metric'] = tc data.loc[(data.group == 'control') \u0026 (data.history == 'future'), 'cuped_metric'] = cc return data.dropna().reset_index(drop=True) df_cuped = apply_two_samples_cuped(user_level, two_samples_cuped) orig_var = df_cuped['metric'].var() cuped_var = df_cuped['cuped_metric'].var() print(f'Original variance: {orig_var:.2f}') print(f'CUPED variance: {cuped_var:.2f}') print(f'Reduction factor: {orig_var / cuped_var:.1f}×') Correctness: AA Test Before measuring power gains, we verify the criterion is properly calibrated: in an AA test (no real effect), the false-positive rate should stay at $\\alpha$.\nWe also check a common mistake — subtracting the per-group mean of the covariate instead of the pooled mean. This breaks the equal-expectation assumption and inflates FPR dramatically.\nAA test: correct vs incorrect demeaning\rdef two_samples_cuped_demeaned(test_target, control_target, test_cov, control_cov): \"\"\"Correct: subtract the POOLED covariate mean.\"\"\" theta = ( np.cov(test_target, test_cov)[0, 1] + np.cov(control_target, control_cov)[0, 1] ) / (np.var(test_cov) + np.var(control_cov)) pooled_mean = np.hstack((test_cov, control_cov)).mean() return (test_target - theta * (test_cov - pooled_mean), control_target - theta * (control_cov - pooled_mean)) def two_samples_cuped_incorrect(test_target, control_target, test_cov, control_cov): \"\"\"Incorrect: subtract per-group mean — inflates FPR.\"\"\" theta = ( np.cov(test_target, test_cov)[0, 1] + np.cov(control_target, control_cov)[0, 1] ) / (np.var(test_cov) + np.var(control_cov)) return (test_target - theta * (test_cov - test_cov.mean()), control_target - theta * (control_cov - control_cov.mean())) def simulate(procedure, n_tests=500, alpha=0.05, mode='AA'): n_err = 0 for i in range(n_tests): d = generate_samples(lognorm(), seed=8 * i) ul = d.groupby(['group', 'history', 'user_id'])[['metric']].mean().reset_index() if mode == 'AB': ul['metric'] = ul.apply( lambda r: 1.01 * r.metric if r.group == 'test' and r.history == 'future' else r.metric, axis=1) dc = ul.pipe(apply_two_samples_cuped, cuped=procedure) p = welch_t_test( dc.loc[dc.group == 'test', 'cuped_metric'], dc.loc[dc.group == 'control', 'cuped_metric'], )['pvalue'] if p \u003c alpha: n_err += 1 lo, hi = proportion_confint(n_err, n_tests, alpha=0.05, method='wilson') return f'{n_err / n_tests:.3f} 95% CI [{lo:.3f}, {hi:.3f}]' print('AA FPR — correct (pooled mean): ', simulate(two_samples_cuped_demeaned)) print('AA FPR — correct (no demeaning): ', simulate(two_samples_cuped)) print('AA FPR — incorrect (per-group): ', simulate(two_samples_cuped_incorrect)) The incorrect per-group demeaning blows up the FPR to ~40% — a catastrophic failure that would be hard to detect without a simulation like this. Both the no-demeaning and pooled-demeaning variants maintain FPR ≈ 5%.\nPower Improvement Now let’s measure the power gain under a 1% true effect.\nPower comparison: no CUPED vs CUPED\rdef no_cuped(test_target, control_target, test_cov, control_cov): return test_target, control_target print('Power (1% effect) — no CUPED: ', simulate(no_cuped, mode='AB')) print('Power (1% effect) — CUPED: ', simulate(two_samples_cuped, mode='AB')) Conclusion CUPED is one of the most cost-effective variance-reduction techniques available:\nNo extra traffic — it uses data you already have (pre-experiment history). Large gains — if pre/post correlation is high ($\\rho \\approx 0.9$), variance drops ~81%. Unbiased — the expected value of the metric is preserved exactly. Easy to implement — requires only three statistics per group: covariance, variance of covariate, and means. Critical implementation detail: $\\theta$ must be estimated from both groups combined, and the covariate mean subtracted must be the pooled pre-experiment mean — not per-group. Subtracting per-group means silently inflates the false-positive rate from 5% to ~40%.\nAlternatives when pre-experiment data is unavailable or CUPED gains are small:\nStratification — randomise within strata rather than fully at random, reducing imbalance. Prediction subtraction — generalises CUPED from a single covariate to a full regression model; useful when many pre-experiment features are available. References Deng, A. et al. (2013). Improving the Sensitivity of Online Controlled Experiments by Utilizing Pre-Experiment Data — the original CUPED paper. Booking.com: How CUPED increases power of online experiments Avito: Variance reduction methods — Part 1, Part 2 Variance reduction techniques — conference talk ",
+  "wordCount" : "1335",
+  "inLanguage": "en",
+  "datePublished": "2026-03-15T00:00:00Z",
+  "dateModified": "2026-03-15T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Nikita Podlozhniy"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://npodlozhniy.github.io/posts/cuped/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Nikita Podlozhniy",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://npodlozhniy.github.io/favicons/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://npodlozhniy.github.io/" accesskey="h" title="Nikita Podlozhniy (Alt + H)">Nikita Podlozhniy</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                    <li>
+                        <a href="https://npodlozhniy.github.io/ru/" title="Russian"
+                            aria-label=":ru:">Ru</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://npodlozhniy.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://npodlozhniy.github.io/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://npodlozhniy.github.io/search" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://npodlozhniy.github.io/archives" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://npodlozhniy.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://npodlozhniy.github.io/posts/">Posts</a></div>
+    <h1 class="post-title">
+      CUPED: Reducing Metric Variance with Pre-Experiment Data
+    </h1>
+    <div class="post-meta">&lt;span title=&#39;2026-03-15 00:00:00 &#43;0000 UTC&#39;&gt;March 15, 2026&lt;/span&gt;&amp;nbsp;·&amp;nbsp;7 min&amp;nbsp;·&amp;nbsp;Nikita Podlozhniy
+
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#background" aria-label="Background">Background</a><ul>
+                        
+                <li>
+                    <a href="#prerequisites" aria-label="Prerequisites">Prerequisites</a></li></ul>
+                </li>
+                <li>
+                    <a href="#theory" aria-label="Theory">Theory</a></li>
+                <li>
+                    <a href="#t-test-utilities" aria-label="T-Test Utilities">T-Test Utilities</a></li>
+                <li>
+                    <a href="#two-sample-cuped" aria-label="Two-Sample CUPED">Two-Sample CUPED</a></li>
+                <li>
+                    <a href="#correctness-aa-test" aria-label="Correctness: AA Test">Correctness: AA Test</a></li>
+                <li>
+                    <a href="#power-improvement" aria-label="Power Improvement">Power Improvement</a></li>
+                <li>
+                    <a href="#conclusion" aria-label="Conclusion">Conclusion</a></li>
+                <li>
+                    <a href="#references" aria-label="References">References</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="background">Background<a hidden class="anchor" aria-hidden="true" href="#background">#</a></h2>
+<p>We at HomeBuddy run AB tests on conversion metrics and engagement signals whose natural variance is high.
+High variance means we need more users to detect the same effect &mdash; or equivalently, we might miss a real improvement because the noise drowns it out.</p>
+<p><strong>CUPED</strong> (Controlled-experiment Using Pre-Experiment Data) is a variance-reduction technique introduced by Microsoft Research that exploits the correlation between a user&rsquo;s pre-experiment behavior and their in-experiment metric.
+By subtracting a scaled version of the pre-experiment covariate from the metric, CUPED can cut variance by 50&ndash;90%, effectively doubling or tripling test sensitivity with no additional traffic.</p>
+<h3 id="prerequisites">Prerequisites<a hidden class="anchor" aria-hidden="true" href="#prerequisites">#</a></h3>
+<p>Python 3.11.4 with NumPy, SciPy, pandas, and statsmodels.</p>
+<h2 id="theory">Theory<a hidden class="anchor" aria-hidden="true" href="#theory">#</a></h2>
+<p>Let $Y$ be the in-experiment metric and $X$ a covariate unaffected by the treatment (e.g. the same metric measured before the experiment began).
+Define the CUPED-adjusted metric:</p>
+<p>$$ Y_{\text{CUPED}} = Y - \theta(X - \mathbb{E}X) $$</p>
+<p>Computing the moments:</p>
+<p>$$ \mathbb{E}[Y_{\text{CUPED}}] = \mathbb{E}[Y] - \theta \underbrace{\mathbb{E}[X - \mathbb{E}X]}_{=,0} = \mathbb{E}[Y] $$</p>
+<p>$$ \mathbb{D}[Y_{\text{CUPED}}] = \mathbb{D}[Y] + \theta^2 \mathbb{D}[X] - 2\theta,\text{cov}(Y, X) $$</p>
+<p>The expectation is preserved. The variance can be reduced by choosing $\theta$ to minimise $\mathbb{D}[Y_{\text{CUPED}}]$:</p>
+<p>$$ \frac{\partial}{\partial \theta}\mathbb{D}[Y_{\text{CUPED}}] = 2\theta\mathbb{D}[X] - 2,\text{cov}(Y, X) = 0 \implies \theta^* = \frac{\text{cov}(Y, X)}{\mathbb{D}[X]} $$</p>
+<p>Substituting back:</p>
+<p>$$ \mathbb{D}[Y_{\text{CUPED}}] = \mathbb{D}[Y]\left(1 - \rho^2_{XY}\right) $$</p>
+<p>where $\rho_{XY}$ is the Pearson correlation between $X$ and $Y$.
+If $\rho = 0.9$, variance drops by 81%. If $\rho = 0$, CUPED provides no benefit (and should not be applied).</p>
+<p><strong>Key constraints:</strong></p>
+<ol>
+<li>The covariate $X$ must not be affected by the treatment &mdash; pre-experiment data is ideal.</li>
+<li>$\theta$ must be estimated <strong>on the combined sample</strong> (test + control), not on each group separately.</li>
+<li>For a two-sample test, $\mathbb{E}X$ must be the pooled mean &mdash; not the per-group mean.</li>
+</ol>
+<details class="code-fold">
+<summary>Synthetic data generation with correlated past/future metrics</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">lognorm</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> sts<span style="color:#f92672">.</span>lognorm(s<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, loc<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_samples</span>(distribution, n_users<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span>, n_days<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, seed<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Generate a dataset with historical (past) and experimental (future) periods.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Past and future metrics are correlated: future = past + small noise.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(seed)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encoder</span>(x):
+</span></span><span style="display:flex;"><span>        uid <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>md5(str(x)<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>hexdigest()
+</span></span><span style="display:flex;"><span>        test_flg <span style="color:#f92672">=</span> hash(str(x)<span style="color:#f92672">.</span>encode()) <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> (uid, <span style="color:#e6db74">&#39;test&#39;</span> <span style="color:#66d9ef">if</span> test_flg <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#39;control&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(
+</span></span><span style="display:flex;"><span>        list(map(
+</span></span><span style="display:flex;"><span>            encoder,
+</span></span><span style="display:flex;"><span>            np<span style="color:#f92672">.</span>array([[u] <span style="color:#f92672">*</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> n_days) <span style="color:#66d9ef">for</span> u <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> n_users)])<span style="color:#f92672">.</span>ravel()
+</span></span><span style="display:flex;"><span>        )),
+</span></span><span style="display:flex;"><span>        columns<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;user_id&#39;</span>, <span style="color:#e6db74">&#39;group&#39;</span>],
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    df[<span style="color:#e6db74">&#39;date&#39;</span>] <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>to_datetime(
+</span></span><span style="display:flex;"><span>        [datetime<span style="color:#f92672">.</span>date<span style="color:#f92672">.</span>today() <span style="color:#f92672">-</span> datetime<span style="color:#f92672">.</span>timedelta(days<span style="color:#f92672">=</span>x) <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> n_days)] <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> n_users
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    df[<span style="color:#e6db74">&#39;history&#39;</span>] <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>where(
+</span></span><span style="display:flex;"><span>        df[<span style="color:#e6db74">&#39;date&#39;</span>] <span style="color:#f92672">&gt;</span> pd<span style="color:#f92672">.</span>Timestamp(datetime<span style="color:#f92672">.</span>date<span style="color:#f92672">.</span>today() <span style="color:#f92672">-</span> datetime<span style="color:#f92672">.</span>timedelta(days<span style="color:#f92672">=</span>n_days)),
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;future&#39;</span>, <span style="color:#e6db74">&#39;past&#39;</span>
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    future_metric <span style="color:#f92672">=</span> distribution<span style="color:#f92672">.</span>rvs(size<span style="color:#f92672">=</span>n_days <span style="color:#f92672">*</span> n_users <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>    past_metric <span style="color:#f92672">=</span> future_metric <span style="color:#f92672">+</span> sts<span style="color:#f92672">.</span>norm<span style="color:#f92672">.</span>rvs(loc<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, scale<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, size<span style="color:#f92672">=</span>len(future_metric))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    df <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>sort_values(by<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;date&#39;</span>, <span style="color:#e6db74">&#39;user_id&#39;</span>], ascending<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>    df[<span style="color:#e6db74">&#39;metric&#39;</span>] <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>hstack((past_metric, future_metric))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> df<span style="color:#f92672">.</span>reset_index(drop<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rv <span style="color:#f92672">=</span> lognorm()
+</span></span><span style="display:flex;"><span>EV <span style="color:#f92672">=</span> rv<span style="color:#f92672">.</span>mean()  <span style="color:#75715e"># true population mean ≈ 101.6</span>
+</span></span><span style="display:flex;"><span>df <span style="color:#f92672">=</span> generate_samples(rv)
+</span></span><span style="display:flex;"><span>user_level <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;group&#39;</span>, <span style="color:#e6db74">&#39;history&#39;</span>, <span style="color:#e6db74">&#39;user_id&#39;</span>])[[<span style="color:#e6db74">&#39;metric&#39;</span>]]<span style="color:#f92672">.</span>mean()<span style="color:#f92672">.</span>reset_index()
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Shape: </span><span style="color:#e6db74">{</span>df<span style="color:#f92672">.</span>shape<span style="color:#e6db74">}</span><span style="color:#e6db74">, EV ≈ </span><span style="color:#e6db74">{</span>EV<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>user_level<span style="color:#f92672">.</span>sample(<span style="color:#ae81ff">3</span>)
+</span></span></code></pre></div></details>
+<h2 id="t-test-utilities">T-Test Utilities<a hidden class="anchor" aria-hidden="true" href="#t-test-utilities">#</a></h2>
+<p>Two test procedures are needed: a <strong>one-sample T-test</strong> (used when comparing a single group against a known mean) and <strong>Welch&rsquo;s T-test</strong> (for two independent groups with potentially unequal variances).</p>
+<details class="code-fold">
+<summary>One-sample and Welch T-test implementations</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">one_samp_t_test</span>(X, mu0, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.05</span>):
+</span></span><span style="display:flex;"><span>    mu <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>mean(X) <span style="color:#f92672">-</span> mu0
+</span></span><span style="display:flex;"><span>    sigma <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>sqrt(np<span style="color:#f92672">.</span>var(X, ddof<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> len(X))
+</span></span><span style="display:flex;"><span>    t <span style="color:#f92672">=</span> mu <span style="color:#f92672">/</span> sigma
+</span></span><span style="display:flex;"><span>    T <span style="color:#f92672">=</span> sts<span style="color:#f92672">.</span>t(df<span style="color:#f92672">=</span>len(X) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {<span style="color:#e6db74">&#39;pvalue&#39;</span>: <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> min(T<span style="color:#f92672">.</span>sf(t), T<span style="color:#f92672">.</span>cdf(t))}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">welch_t_test</span>(X, Y, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.05</span>):
+</span></span><span style="display:flex;"><span>    vx <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>var(X, ddof<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> len(X)
+</span></span><span style="display:flex;"><span>    vy <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>var(Y, ddof<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> len(Y)
+</span></span><span style="display:flex;"><span>    mu <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>mean(X) <span style="color:#f92672">-</span> np<span style="color:#f92672">.</span>mean(Y)
+</span></span><span style="display:flex;"><span>    sigma <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>sqrt(vx <span style="color:#f92672">+</span> vy)
+</span></span><span style="display:flex;"><span>    t <span style="color:#f92672">=</span> mu <span style="color:#f92672">/</span> sigma
+</span></span><span style="display:flex;"><span>    nu <span style="color:#f92672">=</span> int((vx <span style="color:#f92672">+</span> vy)<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">/</span> (vx<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">/</span> (len(X) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> vy<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">/</span> (len(Y) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)))
+</span></span><span style="display:flex;"><span>    T <span style="color:#f92672">=</span> sts<span style="color:#f92672">.</span>t(df<span style="color:#f92672">=</span>nu)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {<span style="color:#e6db74">&#39;pvalue&#39;</span>: <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> min(T<span style="color:#f92672">.</span>sf(t), T<span style="color:#f92672">.</span>cdf(t))}
+</span></span></code></pre></div></details>
+<h2 id="two-sample-cuped">Two-Sample CUPED<a hidden class="anchor" aria-hidden="true" href="#two-sample-cuped">#</a></h2>
+<p>In a standard AB test with test group $T$ and control group $C$, define:</p>
+<p>$$ T_{\text{CUPED}} = T - \theta A, \quad C_{\text{CUPED}} = C - \theta B $$</p>
+<p>where $A$ and $B$ are pre-experiment covariates for test and control respectively, with $\mathbb{E}A = \mathbb{E}B$ (they&rsquo;re drawn from the same pre-experiment distribution).</p>
+<p>The optimal $\theta$ for variance minimisation of the difference $T_{\text{CUPED}} - C_{\text{CUPED}}$:</p>
+<p>$$ \theta^* = \frac{\text{cov}(T, A) + \text{cov}(C, B)}{\mathbb{D}[A] + \mathbb{D}[B]} $$</p>
+<p>The resulting variance reduction:</p>
+<p>$$ \mathbb{D}[T_{\text{CUPED}} - C_{\text{CUPED}}] = \left(1 - \rho^2\right)\mathbb{D}[T - C], \quad \rho = \text{corr}(T - C,; A - B) $$</p>
+<details class="code-fold">
+<summary>Two-sample CUPED implementation</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">two_samples_cuped</span>(test_target, control_target, test_cov, control_cov):
+</span></span><span style="display:flex;"><span>    theta <span style="color:#f92672">=</span> (
+</span></span><span style="display:flex;"><span>        np<span style="color:#f92672">.</span>cov(test_target, test_cov)[<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> np<span style="color:#f92672">.</span>cov(control_target, control_cov)[<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>    ) <span style="color:#f92672">/</span> (np<span style="color:#f92672">.</span>var(test_cov) <span style="color:#f92672">+</span> np<span style="color:#f92672">.</span>var(control_cov))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> test_target <span style="color:#f92672">-</span> theta <span style="color:#f92672">*</span> test_cov, control_target <span style="color:#f92672">-</span> theta <span style="color:#f92672">*</span> control_cov
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">apply_two_samples_cuped</span>(user_df, cuped, ids<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;user_id&#39;</span>, date<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;history&#39;</span>, metric<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;metric&#39;</span>):
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> user_df<span style="color:#f92672">.</span>sort_values(by<span style="color:#f92672">=</span>[date, ids], ascending<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>    ft <span style="color:#f92672">=</span> data[(data<span style="color:#f92672">.</span>group <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;test&#39;</span>)    <span style="color:#f92672">&amp;</span> (data<span style="color:#f92672">.</span>history <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;future&#39;</span>)][metric]<span style="color:#f92672">.</span>values
+</span></span><span style="display:flex;"><span>    fc <span style="color:#f92672">=</span> data[(data<span style="color:#f92672">.</span>group <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;control&#39;</span>) <span style="color:#f92672">&amp;</span> (data<span style="color:#f92672">.</span>history <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;future&#39;</span>)][metric]<span style="color:#f92672">.</span>values
+</span></span><span style="display:flex;"><span>    pt <span style="color:#f92672">=</span> data[(data<span style="color:#f92672">.</span>group <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;test&#39;</span>)    <span style="color:#f92672">&amp;</span> (data<span style="color:#f92672">.</span>history <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;past&#39;</span>)][metric]<span style="color:#f92672">.</span>values
+</span></span><span style="display:flex;"><span>    pc <span style="color:#f92672">=</span> data[(data<span style="color:#f92672">.</span>group <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;control&#39;</span>) <span style="color:#f92672">&amp;</span> (data<span style="color:#f92672">.</span>history <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;past&#39;</span>)][metric]<span style="color:#f92672">.</span>values
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> data<span style="color:#f92672">.</span>copy()
+</span></span><span style="display:flex;"><span>    data[<span style="color:#e6db74">&#39;cuped_metric&#39;</span>] <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>nan
+</span></span><span style="display:flex;"><span>    tc, cc <span style="color:#f92672">=</span> cuped(ft, fc, pt, pc)
+</span></span><span style="display:flex;"><span>    data<span style="color:#f92672">.</span>loc[(data<span style="color:#f92672">.</span>group <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;test&#39;</span>)    <span style="color:#f92672">&amp;</span> (data<span style="color:#f92672">.</span>history <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;future&#39;</span>), <span style="color:#e6db74">&#39;cuped_metric&#39;</span>] <span style="color:#f92672">=</span> tc
+</span></span><span style="display:flex;"><span>    data<span style="color:#f92672">.</span>loc[(data<span style="color:#f92672">.</span>group <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;control&#39;</span>) <span style="color:#f92672">&amp;</span> (data<span style="color:#f92672">.</span>history <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;future&#39;</span>), <span style="color:#e6db74">&#39;cuped_metric&#39;</span>] <span style="color:#f92672">=</span> cc
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> data<span style="color:#f92672">.</span>dropna()<span style="color:#f92672">.</span>reset_index(drop<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df_cuped <span style="color:#f92672">=</span> apply_two_samples_cuped(user_level, two_samples_cuped)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>orig_var  <span style="color:#f92672">=</span> df_cuped[<span style="color:#e6db74">&#39;metric&#39;</span>]<span style="color:#f92672">.</span>var()
+</span></span><span style="display:flex;"><span>cuped_var <span style="color:#f92672">=</span> df_cuped[<span style="color:#e6db74">&#39;cuped_metric&#39;</span>]<span style="color:#f92672">.</span>var()
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Original variance:  </span><span style="color:#e6db74">{</span>orig_var<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;CUPED variance:     </span><span style="color:#e6db74">{</span>cuped_var<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Reduction factor:   </span><span style="color:#e6db74">{</span>orig_var <span style="color:#f92672">/</span> cuped_var<span style="color:#e6db74">:</span><span style="color:#e6db74">.1f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">×&#39;</span>)
+</span></span></code></pre></div></details>
+<h2 id="correctness-aa-test">Correctness: AA Test<a hidden class="anchor" aria-hidden="true" href="#correctness-aa-test">#</a></h2>
+<p>Before measuring power gains, we verify the criterion is properly calibrated: in an AA test (no real effect), the false-positive rate should stay at $\alpha$.</p>
+<p>We also check a common mistake &mdash; subtracting the <strong>per-group</strong> mean of the covariate instead of the <strong>pooled</strong> mean. This breaks the equal-expectation assumption and inflates FPR dramatically.</p>
+<details class="code-fold">
+<summary>AA test: correct vs incorrect demeaning</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">two_samples_cuped_demeaned</span>(test_target, control_target, test_cov, control_cov):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Correct: subtract the POOLED covariate mean.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    theta <span style="color:#f92672">=</span> (
+</span></span><span style="display:flex;"><span>        np<span style="color:#f92672">.</span>cov(test_target, test_cov)[<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> np<span style="color:#f92672">.</span>cov(control_target, control_cov)[<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>    ) <span style="color:#f92672">/</span> (np<span style="color:#f92672">.</span>var(test_cov) <span style="color:#f92672">+</span> np<span style="color:#f92672">.</span>var(control_cov))
+</span></span><span style="display:flex;"><span>    pooled_mean <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>hstack((test_cov, control_cov))<span style="color:#f92672">.</span>mean()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (test_target <span style="color:#f92672">-</span> theta <span style="color:#f92672">*</span> (test_cov <span style="color:#f92672">-</span> pooled_mean),
+</span></span><span style="display:flex;"><span>            control_target <span style="color:#f92672">-</span> theta <span style="color:#f92672">*</span> (control_cov <span style="color:#f92672">-</span> pooled_mean))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">two_samples_cuped_incorrect</span>(test_target, control_target, test_cov, control_cov):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Incorrect: subtract per-group mean — inflates FPR.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    theta <span style="color:#f92672">=</span> (
+</span></span><span style="display:flex;"><span>        np<span style="color:#f92672">.</span>cov(test_target, test_cov)[<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> np<span style="color:#f92672">.</span>cov(control_target, control_cov)[<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>    ) <span style="color:#f92672">/</span> (np<span style="color:#f92672">.</span>var(test_cov) <span style="color:#f92672">+</span> np<span style="color:#f92672">.</span>var(control_cov))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (test_target <span style="color:#f92672">-</span> theta <span style="color:#f92672">*</span> (test_cov <span style="color:#f92672">-</span> test_cov<span style="color:#f92672">.</span>mean()),
+</span></span><span style="display:flex;"><span>            control_target <span style="color:#f92672">-</span> theta <span style="color:#f92672">*</span> (control_cov <span style="color:#f92672">-</span> control_cov<span style="color:#f92672">.</span>mean()))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">simulate</span>(procedure, n_tests<span style="color:#f92672">=</span><span style="color:#ae81ff">500</span>, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.05</span>, mode<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;AA&#39;</span>):
+</span></span><span style="display:flex;"><span>    n_err <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(n_tests):
+</span></span><span style="display:flex;"><span>        d <span style="color:#f92672">=</span> generate_samples(lognorm(), seed<span style="color:#f92672">=</span><span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> i)
+</span></span><span style="display:flex;"><span>        ul <span style="color:#f92672">=</span> d<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;group&#39;</span>, <span style="color:#e6db74">&#39;history&#39;</span>, <span style="color:#e6db74">&#39;user_id&#39;</span>])[[<span style="color:#e6db74">&#39;metric&#39;</span>]]<span style="color:#f92672">.</span>mean()<span style="color:#f92672">.</span>reset_index()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> mode <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;AB&#39;</span>:
+</span></span><span style="display:flex;"><span>            ul[<span style="color:#e6db74">&#39;metric&#39;</span>] <span style="color:#f92672">=</span> ul<span style="color:#f92672">.</span>apply(
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">lambda</span> r: <span style="color:#ae81ff">1.01</span> <span style="color:#f92672">*</span> r<span style="color:#f92672">.</span>metric <span style="color:#66d9ef">if</span> r<span style="color:#f92672">.</span>group <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;test&#39;</span> <span style="color:#f92672">and</span> r<span style="color:#f92672">.</span>history <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;future&#39;</span> <span style="color:#66d9ef">else</span> r<span style="color:#f92672">.</span>metric,
+</span></span><span style="display:flex;"><span>                axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        dc <span style="color:#f92672">=</span> ul<span style="color:#f92672">.</span>pipe(apply_two_samples_cuped, cuped<span style="color:#f92672">=</span>procedure)
+</span></span><span style="display:flex;"><span>        p <span style="color:#f92672">=</span> welch_t_test(
+</span></span><span style="display:flex;"><span>            dc<span style="color:#f92672">.</span>loc[dc<span style="color:#f92672">.</span>group <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;test&#39;</span>,    <span style="color:#e6db74">&#39;cuped_metric&#39;</span>],
+</span></span><span style="display:flex;"><span>            dc<span style="color:#f92672">.</span>loc[dc<span style="color:#f92672">.</span>group <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;control&#39;</span>, <span style="color:#e6db74">&#39;cuped_metric&#39;</span>],
+</span></span><span style="display:flex;"><span>        )[<span style="color:#e6db74">&#39;pvalue&#39;</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> p <span style="color:#f92672">&lt;</span> alpha:
+</span></span><span style="display:flex;"><span>            n_err <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    lo, hi <span style="color:#f92672">=</span> proportion_confint(n_err, n_tests, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.05</span>, method<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;wilson&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>n_err <span style="color:#f92672">/</span> n_tests<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">  95% CI [</span><span style="color:#e6db74">{</span>lo<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">, </span><span style="color:#e6db74">{</span>hi<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">]&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;AA FPR — correct (pooled mean):  &#39;</span>, simulate(two_samples_cuped_demeaned))
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;AA FPR — correct (no demeaning): &#39;</span>, simulate(two_samples_cuped))
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;AA FPR — incorrect (per-group):  &#39;</span>, simulate(two_samples_cuped_incorrect))
+</span></span></code></pre></div></details>
+<p>The incorrect per-group demeaning blows up the FPR to ~40% &mdash; a catastrophic failure that would be hard to detect without a simulation like this.
+Both the no-demeaning and pooled-demeaning variants maintain FPR ≈ 5%.</p>
+<h2 id="power-improvement">Power Improvement<a hidden class="anchor" aria-hidden="true" href="#power-improvement">#</a></h2>
+<p>Now let&rsquo;s measure the power gain under a 1% true effect.</p>
+<details class="code-fold">
+<summary>Power comparison: no CUPED vs CUPED</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">no_cuped</span>(test_target, control_target, test_cov, control_cov):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> test_target, control_target
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;Power (1</span><span style="color:#e6db74">% e</span><span style="color:#e6db74">ffect) — no CUPED: &#39;</span>, simulate(no_cuped, mode<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;AB&#39;</span>))
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;Power (1</span><span style="color:#e6db74">% e</span><span style="color:#e6db74">ffect) — CUPED:    &#39;</span>, simulate(two_samples_cuped, mode<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;AB&#39;</span>))
+</span></span></code></pre></div></details>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>CUPED is one of the most cost-effective variance-reduction techniques available:</p>
+<ul>
+<li><strong>No extra traffic</strong> &mdash; it uses data you already have (pre-experiment history).</li>
+<li><strong>Large gains</strong> &mdash; if pre/post correlation is high ($\rho \approx 0.9$), variance drops ~81%.</li>
+<li><strong>Unbiased</strong> &mdash; the expected value of the metric is preserved exactly.</li>
+<li><strong>Easy to implement</strong> &mdash; requires only three statistics per group: covariance, variance of covariate, and means.</li>
+</ul>
+<p><strong>Critical implementation detail:</strong> $\theta$ must be estimated from both groups combined, and the covariate mean subtracted must be the <strong>pooled</strong> pre-experiment mean &mdash; not per-group. Subtracting per-group means silently inflates the false-positive rate from 5% to ~40%.</p>
+<p><strong>Alternatives</strong> when pre-experiment data is unavailable or CUPED gains are small:</p>
+<ul>
+<li><strong>Stratification</strong> &mdash; randomise within strata rather than fully at random, reducing imbalance.</li>
+<li><strong>Prediction subtraction</strong> &mdash; generalises CUPED from a single covariate to a full regression model; useful when many pre-experiment features are available.</li>
+</ul>
+<h2 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h2>
+<ol>
+<li>Deng, A. et al. (2013). <a href="https://www.exp-platform.com/Documents/2013-02-CUPED-ImprovingSensitivityOfControlledExperiments.pdf">Improving the Sensitivity of Online Controlled Experiments by Utilizing Pre-Experiment Data</a> &mdash; the original CUPED paper.</li>
+<li><a href="https://booking.ai/how-booking-com-increases-the-power-of-online-experiments-with-cuped-995d186fff1d">Booking.com: How CUPED increases power of online experiments</a></li>
+<li><a href="https://habr.com/ru/companies/avito/articles/571094/">Avito: Variance reduction methods &mdash; Part 1</a>, <a href="https://habr.com/ru/companies/avito/articles/571096/">Part 2</a></li>
+<li><a href="https://www.youtube.com/watch?v=pZpUM08mv-E&amp;t=1692s">Variance reduction techniques &mdash; conference talk</a></li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://npodlozhniy.github.io/tags/ab-testing/">Ab-Testing</a></li>
+      <li><a href="https://npodlozhniy.github.io/tags/cuped/">Cuped</a></li>
+      <li><a href="https://npodlozhniy.github.io/tags/variance-reduction/">Variance-Reduction</a></li>
+      <li><a href="https://npodlozhniy.github.io/tags/statistics/">Statistics</a></li>
+    </ul>
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share CUPED: Reducing Metric Variance with Pre-Experiment Data on twitter"
+        href="https://twitter.com/intent/tweet/?text=CUPED%3a%20Reducing%20Metric%20Variance%20with%20Pre-Experiment%20Data&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fcuped%2f&amp;hashtags=ab-testing%2ccuped%2cvariance-reduction%2cstatistics">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share CUPED: Reducing Metric Variance with Pre-Experiment Data on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fcuped%2f&amp;title=CUPED%3a%20Reducing%20Metric%20Variance%20with%20Pre-Experiment%20Data&amp;summary=CUPED%3a%20Reducing%20Metric%20Variance%20with%20Pre-Experiment%20Data&amp;source=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fcuped%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share CUPED: Reducing Metric Variance with Pre-Experiment Data on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fcuped%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share CUPED: Reducing Metric Variance with Pre-Experiment Data on telegram"
+        href="https://telegram.me/share/url?text=CUPED%3a%20Reducing%20Metric%20Variance%20with%20Pre-Experiment%20Data&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fcuped%2f">
+        <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+        </svg>
+    </a>
+</div>
+
+  </footer><div id="disqus_thread"></div>
+<script>
+	
+    var disqus_config = function () {
+    this.page.url = 'https:\/\/npodlozhniy.github.io\/posts\/cuped\/';  
+    this.page.identifier = ''; 
+	this.language = document.documentElement.lang; 
+	};
+ 
+    (function() { 
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-npodlozhniy-github-io-2.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+	
+    document.addEventListener('theme-change', function(e) { 
+		if (document.readyState == 'complete') {
+			DISQUS.reset({ reload: true, config: disqus_config });
+		}
+	});
+
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2026 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+
+		
+		const event = new Event('theme-change');
+		document.dispatchEvent(event)
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

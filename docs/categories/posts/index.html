@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>posts | Nikita Podlozhniy</title>
+<title>Posts | Nikita Podlozhniy</title>
 <meta name="keywords" content="">
 <meta name="description" content="">
 <meta name="author" content="">
@@ -45,23 +45,26 @@
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-ESWD18X008', { 'anonymize_ip': false });
-}
-</script>
-<meta property="og:title" content="posts" />
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-ESWD18X008');
+        }
+      </script><meta property="og:title" content="Posts" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://npodlozhniy.github.io/categories/posts/" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="posts"/>
+<meta name="twitter:title" content="Posts"/>
 <meta name="twitter:description" content=""/>
 
 </head>
@@ -134,7 +137,7 @@ if (!doNotTrack) {
 <main class="main"> 
 <header class="page-header"><div class="breadcrumbs"><a href="https://npodlozhniy.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://npodlozhniy.github.io/categories/">Categories</a></div>
   <h1>
-    posts
+    Posts
     <a href="/categories/posts/index.xml" title="RSS" aria-label="RSS">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
         stroke-linecap="round" stroke-linejoin="round" height="23">
@@ -148,19 +151,103 @@ if (!doNotTrack) {
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2>Linearization: Turning Ratio Metrics into Per-User Metrics
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>A simple algebraic transformation that converts ratio metrics into independent per-user values, making T-tests and sensitivity techniques directly applicable</p>
+  </div>
+  <footer class="entry-footer">&lt;span title=&#39;2026-04-01 00:00:00 &#43;0000 UTC&#39;&gt;April 1, 2026&lt;/span&gt;&amp;nbsp;·&amp;nbsp;6 min&amp;nbsp;·&amp;nbsp;Nikita Podlozhniy</footer>
+  <a class="entry-link" aria-label="post link to Linearization: Turning Ratio Metrics into Per-User Metrics" href="https://npodlozhniy.github.io/posts/linearization/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2>CUPED: Reducing Metric Variance with Pre-Experiment Data
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>How CUPED uses pre-experiment covariates to cut metric variance and boost AB test sensitivity — with a rigorous proof of what works and what silently breaks</p>
+  </div>
+  <footer class="entry-footer">&lt;span title=&#39;2026-03-15 00:00:00 &#43;0000 UTC&#39;&gt;March 15, 2026&lt;/span&gt;&amp;nbsp;·&amp;nbsp;7 min&amp;nbsp;·&amp;nbsp;Nikita Podlozhniy</footer>
+  <a class="entry-link" aria-label="post link to CUPED: Reducing Metric Variance with Pre-Experiment Data" href="https://npodlozhniy.github.io/posts/cuped/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2>Superiority vs Non-Inferiority Trials in AB Testing
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Not every experiment needs to show improvement — sometimes proving you haven’t made things worse is enough. A practical guide to non-inferiority trial design.</p>
+  </div>
+  <footer class="entry-footer">&lt;span title=&#39;2026-03-01 00:00:00 &#43;0000 UTC&#39;&gt;March 1, 2026&lt;/span&gt;&amp;nbsp;·&amp;nbsp;5 min&amp;nbsp;·&amp;nbsp;Nikita Podlozhniy</footer>
+  <a class="entry-link" aria-label="post link to Superiority vs Non-Inferiority Trials in AB Testing" href="https://npodlozhniy.github.io/posts/non-inferiority-test/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2>Salts and Layers: Running Multiple AB Tests Simultaneously
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>How MD5-based traffic splitting with salts and a layer system lets you run dozens of orthogonal experiments without conflicts</p>
+  </div>
+  <footer class="entry-footer">&lt;span title=&#39;2026-02-15 00:00:00 &#43;0000 UTC&#39;&gt;February 15, 2026&lt;/span&gt;&amp;nbsp;·&amp;nbsp;5 min&amp;nbsp;·&amp;nbsp;Nikita Podlozhniy</footer>
+  <a class="entry-link" aria-label="post link to Salts and Layers: Running Multiple AB Tests Simultaneously" href="https://npodlozhniy.github.io/posts/ab-salts/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2>Bucketing: Variance Reduction and Faster AB Tests
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>How aggregating observations into buckets normalises skewed metrics, reduces variance, and cuts computation — with a probability proof for choosing the right bucket count</p>
+  </div>
+  <footer class="entry-footer">&lt;span title=&#39;2026-02-01 00:00:00 &#43;0000 UTC&#39;&gt;February 1, 2026&lt;/span&gt;&amp;nbsp;·&amp;nbsp;4 min&amp;nbsp;·&amp;nbsp;Nikita Podlozhniy</footer>
+  <a class="entry-link" aria-label="post link to Bucketing: Variance Reduction and Faster AB Tests" href="https://npodlozhniy.github.io/posts/bucketing/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2>Bootstrap Methods for AB Testing
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Classical and Poisson bootstrap as non-parametric tools for normalizing skewed metrics and enabling valid T-tests on small samples</p>
+  </div>
+  <footer class="entry-footer">&lt;span title=&#39;2026-01-10 00:00:00 &#43;0000 UTC&#39;&gt;January 10, 2026&lt;/span&gt;&amp;nbsp;·&amp;nbsp;4 min&amp;nbsp;·&amp;nbsp;Nikita Podlozhniy</footer>
+  <a class="entry-link" aria-label="post link to Bootstrap Methods for AB Testing" href="https://npodlozhniy.github.io/posts/bootstrap/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2>Delta Method for Ratio Metrics in AB Testing
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Correct variance estimation for ratio metrics using the Delta Method — and why naive approaches quietly break your confidence intervals</p>
+  </div>
+  <footer class="entry-footer">&lt;span title=&#39;2025-12-15 00:00:00 &#43;0000 UTC&#39;&gt;December 15, 2025&lt;/span&gt;&amp;nbsp;·&amp;nbsp;6 min&amp;nbsp;·&amp;nbsp;Nikita Podlozhniy</footer>
+  <a class="entry-link" aria-label="post link to Delta Method for Ratio Metrics in AB Testing" href="https://npodlozhniy.github.io/posts/delta-method/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2>Bayesian A/B Test is NOT immune to peeking
     </h2>
   </header>
   <div class="entry-content">
     <p>Practical guide: PyMC examples, hierarchical models, loss functions, HDI, and safe stopping rules</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-30 00:00:00 +0000 UTC'>November 30, 2025</span>&nbsp;·&nbsp;23 min&nbsp;·&nbsp;Nikita Podlozhniy</footer>
+  <footer class="entry-footer">&lt;span title=&#39;2025-11-30 00:00:00 &#43;0000 UTC&#39;&gt;November 30, 2025&lt;/span&gt;&amp;nbsp;·&amp;nbsp;23 min&amp;nbsp;·&amp;nbsp;Nikita Podlozhniy</footer>
   <a class="entry-link" aria-label="post link to Bayesian A/B Test is NOT immune to peeking" href="https://npodlozhniy.github.io/posts/bayesian-test/"></a>
 </article>
     </main>
     
 <footer class="footer">
-    <span>&copy; 2025 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
+    <span>&copy; 2026 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
     <span>
         Powered by
         <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &

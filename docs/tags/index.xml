@@ -5,49 +5,132 @@
     <link>https://npodlozhniy.github.io/tags/</link>
     <description>Recent content in Tags on Nikita Podlozhniy</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Sun, 30 Nov 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-gb</language>
+    <lastBuildDate>Wed, 01 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>ab-testing</title>
+      <title>Ab-Testing</title>
       <link>https://npodlozhniy.github.io/tags/ab-testing/</link>
-      <pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
-      
+      <pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
       <guid>https://npodlozhniy.github.io/tags/ab-testing/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>bayesian-inference</title>
+      <title>Ratio-Metrics</title>
+      <link>https://npodlozhniy.github.io/tags/ratio-metrics/</link>
+      <pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://npodlozhniy.github.io/tags/ratio-metrics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Statistics</title>
+      <link>https://npodlozhniy.github.io/tags/statistics/</link>
+      <pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://npodlozhniy.github.io/tags/statistics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Variance-Reduction</title>
+      <link>https://npodlozhniy.github.io/tags/variance-reduction/</link>
+      <pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://npodlozhniy.github.io/tags/variance-reduction/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Cuped</title>
+      <link>https://npodlozhniy.github.io/tags/cuped/</link>
+      <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://npodlozhniy.github.io/tags/cuped/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Hypothesis-Testing</title>
+      <link>https://npodlozhniy.github.io/tags/hypothesis-testing/</link>
+      <pubDate>Sun, 01 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://npodlozhniy.github.io/tags/hypothesis-testing/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Sample-Size</title>
+      <link>https://npodlozhniy.github.io/tags/sample-size/</link>
+      <pubDate>Sun, 01 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://npodlozhniy.github.io/tags/sample-size/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Experimentation-Platform</title>
+      <link>https://npodlozhniy.github.io/tags/experimentation-platform/</link>
+      <pubDate>Sun, 15 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://npodlozhniy.github.io/tags/experimentation-platform/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Traffic-Splitting</title>
+      <link>https://npodlozhniy.github.io/tags/traffic-splitting/</link>
+      <pubDate>Sun, 15 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://npodlozhniy.github.io/tags/traffic-splitting/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Bucketing</title>
+      <link>https://npodlozhniy.github.io/tags/bucketing/</link>
+      <pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://npodlozhniy.github.io/tags/bucketing/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Non-Parametric</title>
+      <link>https://npodlozhniy.github.io/tags/non-parametric/</link>
+      <pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://npodlozhniy.github.io/tags/non-parametric/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Bootstrap</title>
+      <link>https://npodlozhniy.github.io/tags/bootstrap/</link>
+      <pubDate>Sat, 10 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://npodlozhniy.github.io/tags/bootstrap/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Bayesian-Inference</title>
       <link>https://npodlozhniy.github.io/tags/bayesian-inference/</link>
       <pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
-      
       <guid>https://npodlozhniy.github.io/tags/bayesian-inference/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>monte-carlo</title>
+      <title>Monte-Carlo</title>
       <link>https://npodlozhniy.github.io/tags/monte-carlo/</link>
       <pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
-      
       <guid>https://npodlozhniy.github.io/tags/monte-carlo/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>pymc</title>
+      <title>Pymc</title>
       <link>https://npodlozhniy.github.io/tags/pymc/</link>
       <pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
-      
       <guid>https://npodlozhniy.github.io/tags/pymc/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>sequential-testing</title>
+      <title>Sequential-Testing</title>
       <link>https://npodlozhniy.github.io/tags/sequential-testing/</link>
       <pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
-      
       <guid>https://npodlozhniy.github.io/tags/sequential-testing/</guid>
       <description></description>
     </item>

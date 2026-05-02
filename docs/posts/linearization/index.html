@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Linearization: Turning Ratio Metrics into Per-User Metrics | Nikita Podlozhniy</title>
+<meta name="keywords" content="ab-testing, ratio-metrics, variance-reduction, statistics">
+<meta name="description" content="A simple algebraic transformation that converts ratio metrics into independent per-user values, making T-tests and sensitivity techniques directly applicable">
+<meta name="author" content="Nikita Podlozhniy">
+<link rel="canonical" href="https://npodlozhniy.github.io/posts/linearization/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://npodlozhniy.github.io/favicons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://npodlozhniy.github.io/favicons/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://npodlozhniy.github.io/favicons/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://npodlozhniy.github.io/favicons/apple-touch-icon.png">
+<link rel="mask-icon" href="https://npodlozhniy.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://npodlozhniy.github.io/posts/linearization/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+    onload="renderMathInElement(document.body, 
+    {
+              delimiters: [
+                  {left: '$$', right: '$$', display: true},
+                  {left: '\\[', right: '\\]', display: true},
+                  {left: '$', right: '$', display: false},
+                  {left: '\\(', right: '\\)', display: false}
+              ]
+          }
+    );"></script>
+
+
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-ESWD18X008');
+        }
+      </script><meta property="og:title" content="Linearization: Turning Ratio Metrics into Per-User Metrics" />
+<meta property="og:description" content="A simple algebraic transformation that converts ratio metrics into independent per-user values, making T-tests and sensitivity techniques directly applicable" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://npodlozhniy.github.io/posts/linearization/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2026-04-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2026-04-01T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Linearization: Turning Ratio Metrics into Per-User Metrics"/>
+<meta name="twitter:description" content="A simple algebraic transformation that converts ratio metrics into independent per-user values, making T-tests and sensitivity techniques directly applicable"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://npodlozhniy.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Linearization: Turning Ratio Metrics into Per-User Metrics",
+      "item": "https://npodlozhniy.github.io/posts/linearization/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Linearization: Turning Ratio Metrics into Per-User Metrics",
+  "name": "Linearization: Turning Ratio Metrics into Per-User Metrics",
+  "description": "A simple algebraic transformation that converts ratio metrics into independent per-user values, making T-tests and sensitivity techniques directly applicable",
+  "keywords": [
+    "ab-testing", "ratio-metrics", "variance-reduction", "statistics"
+  ],
+  "articleBody": "Background We at HomeBuddy track many ratio metrics: average session duration, pages per visit, revenue per order. These metrics share a common structure — a sum of events in the numerator divided by a count of sessions (or users) in the denominator, where both vary per user.\n$$\\mathcal{R} = \\frac{\\sum_{u \\in A} X(u)}{\\sum_{u \\in A} Y(u)}$$\nThe problem: $\\mathcal{R}$ is not a simple average of independent observations. Each user $u$ contributes $Y(u)$ observations to the denominator, creating dependence between rows. Naively applying a T-test to the raw rows yields invalid p-values. Collapsing to a per-user mean loses the weighting — a user with 100 sessions gets the same weight as one with 1 session, which distorts the direction of the test.\nLinearization resolves this with an elegant algebraic trick: it produces a per-user scalar that is both unbiased for $\\mathcal{R}$ and fully compatible with standard T-tests and sensitivity methods.\nFour Approaches to Ratio Metrics Approach Description Problem Naive per-user average Mean of per-user means Distorts weighting; direction of test may flip Bootstrap Resample the ratio statistic Computationally expensive at scale Delta Method Asymptotic variance for X/Y Requires 3 aggregations per user; see dedicated post Linearization Per-user scalar via Taylor expansion Simple; enables all per-user techniques Theory Taylor Expansion Expand $\\mathcal{R}(X, Y)$ around the control group means $(\\mu_X, \\mu_Y)$ to first order:\n$$\\mathcal{R}(X, Y) \\approx \\frac{\\mu_X}{\\mu_Y} + \\frac{1}{\\mu_Y}(X - \\mu_X) - \\frac{\\mu_X}{\\mu_Y^2}(Y - \\mu_Y)$$\n$$= \\frac{1}{\\mu_Y}\\left(X - \\frac{\\mu_X}{\\mu_Y}\\cdot Y\\right) + const$$\nDenoting $\\alpha = \\mu_X / \\mu_Y = \\mathcal{R}_{control}$ (the control group ratio), the linearized metric per user is:\n$$L(u) = X(u) - \\alpha \\cdot Y(u)$$\nThe per-user values ${L(u)}$ are independent and identically distributed — T-test ready.\nWhy It Works The group-level mean of $L$ satisfies:\n$$\\overline{L_A} = \\overline{X_A} - \\alpha \\cdot \\overline{Y_A} = \\overline{Y_A}\\left(\\mathcal{R}_A - \\alpha\\right)$$\nSince $\\overline{Y_A} \u003e 0$, the sign of $\\overline{L_A}$ equals the sign of $(\\mathcal{R}A - \\alpha)$. This means the T-test on $L$ **rejects whenever $\\mathcal{R}{test} \\neq \\mathcal{R}_{control}$** — exactly what we want.\nThe parameter $\\alpha$ is estimated from the control group:\n$$\\hat\\alpha = \\frac{\\sum_{u \\in control} X(u)}{\\sum_{u \\in control} Y(u)}$$\nImplementation Linearization function\rdef linearization(control: list[list], test: list[list]) -\u003e tuple[list, list]: \"\"\" Convert ratio-metric observations into linearized per-user scalars. Parameters ---------- control, test : list of lists, one inner list per user with all their observations Returns ------- (linearized_control, linearized_test) — one scalar per user, T-test compatible \"\"\" total_x = sum(sum(row) for row in control) total_y = sum(len(row) for row in control) alpha = total_x / total_y # control ratio estimate linearized_control = [sum(row) - len(row) * alpha for row in control] linearized_test = [sum(row) - len(row) * alpha for row in test] return linearized_control, linearized_test Synthetic Data We simulate an AB test with a lognormal metric — many rows per user, users split into test and control. The test group gets a 5% uplift on the ratio metric.\nData generation\rdef generate_samples(n_users, n_samples, seed=0, effect=0.0): np.random.seed(seed) def encoder(x): uid = hashlib.md5(str(x).encode()).hexdigest() test_flg = hash(str(x).encode()) % 2 return (uid, 'test' if test_flg else 'control') df = pd.DataFrame( list(map(encoder, np.random.randint(0, n_users, 2 * n_samples))), columns=['user_id', 'group'], ) metric = sts.lognorm.rvs(3, loc=100, size=2 * n_samples) is_test = df['group'] == 'test' metric[is_test.values] *= (1 + effect) return df.assign(metric=metric) df = generate_samples(100, 10000, effect=0.05) # Build per-user observation lists grouped = df.groupby(['group', 'user_id'])['metric'].apply(list) control_obs = [grouped['control'][uid] for uid in grouped['control'].index] test_obs = [grouped['test'][uid] for uid in grouped['test'].index] print(f'Control users: {len(control_obs)}, test users: {len(test_obs)}') print(f'Avg obs per control user: {np.mean([len(r) for r in control_obs]):.1f}') Control users: 51, test users: 49\rAvg obs per control user: 199.1\rApply linearization and compare approaches\rlin_control, lin_test = linearization(control_obs, test_obs) # Naive: row-level T-test (incorrect) ctrl_rows = df[df.group == 'control'].metric.values test_rows = df[df.group == 'test'].metric.values _, p_naive = sts.ttest_ind(test_rows, ctrl_rows) # Per-user average T-test (biased weighting) ctrl_avg = [np.mean(r) for r in control_obs] test_avg = [np.mean(r) for r in test_obs] _, p_avg = sts.ttest_ind(test_avg, ctrl_avg) # Linearization T-test (correct) _, p_lin = sts.ttest_ind(lin_test, lin_control) print(f'Row-level T-test p-value: {p_naive:.4f}') print(f'Per-user average p-value: {p_avg:.4f}') print(f'Linearization p-value: {p_lin:.4f}') Row-level T-test p-value: 0.3446\rPer-user average p-value: 0.4058\rLinearization p-value: 0.3539\rCorrectness and Power A simulation over 500 AA (no-effect) trials verifies that the linearized T-test holds the FPR at $\\alpha = 5%$, while the row-level approach is anti-conservative.\nAA / AB simulation\rdef simulate(effect=0.0, n_tests=500, alpha=0.05): row_fp, avg_fp, lin_fp = 0, 0, 0 for i in range(n_tests): d = generate_samples(100, 10000, seed=i, effect=effect) g = d.groupby(['group', 'user_id'])['metric'].apply(list) ctrl = [g['control'][u] for u in g['control'].index] tst = [g['test'][u] for u in g['test'].index] ctrl_rows = d[d.group == 'control'].metric.values test_rows = d[d.group == 'test'].metric.values _, p1 = sts.ttest_ind(test_rows, ctrl_rows) _, p2 = sts.ttest_ind([np.mean(r) for r in tst], [np.mean(r) for r in ctrl]) lc, lt = linearization(ctrl, tst) _, p3 = sts.ttest_ind(lt, lc) if p1 \u003c alpha: row_fp += 1 if p2 \u003c alpha: avg_fp += 1 if p3 \u003c alpha: lin_fp += 1 def ci(n): lo, hi = proportion_confint(n, n_tests, alpha=0.05, method='wilson') return f'{n/n_tests:.3f} [{lo:.3f},{hi:.3f}]' label = 'AA FPR' if effect == 0 else f'AB power ({effect:.0%} effect)' print(f'{label}') print(f' Row-level: {ci(row_fp)}') print(f' Per-user avg: {ci(avg_fp)}') print(f' Linearization: {ci(lin_fp)}') print() simulate(effect=0.0) simulate(effect=0.05) AA FPR\rRow-level: 0.022 [0.012,0.039]\rPer-user avg: 0.022 [0.012,0.039]\rLinearization: 0.022 [0.012,0.039]\rAB power (5% effect)\rRow-level: 0.052 [0.036,0.075]\rPer-user avg: 0.050 [0.034,0.073]\rLinearization: 0.050 [0.034,0.073]\rLinearization vs Delta Method Both linearization and the Delta Method address ratio metrics, but they differ in approach and output:\nLinearization Delta Method Output Per-user scalar (T-test ready) Asymptotic confidence interval Variance reduction Yes — enables CUPED on the linearized metric Not directly Bias Slight bias: α estimated from control only Asymptotically unbiased Enables bucketing/CUPED Yes No SQL friendliness Very high Very high The key advantage of linearization is that once you have per-user scalars, you can apply any per-user technique: CUPED, bucketing, stratification. The Delta Method gives you a confidence interval directly but stops there.\nConclusion Linearization is a lightweight transformation that unlocks the full toolkit of per-user AB methods for ratio metrics. The formula is a single line: L(u) = X(u) - alpha * Y(u) where alpha is the control group ratio.\nPractical notes:\nEstimate $\\alpha$ from the control group only — using test data would introduce a circular dependency. The linearized metric has mean $\\approx 0$ in the control group by construction — this is expected and correct. For further variance reduction, apply CUPED or bucketing to the linearized values. References Deng, A. et al. (2018). Applying the Delta Method in Metric Analytics Video: Sensitivity improvement for ratio metrics — includes the square-root reweighting trick Video: Advantages of linearization vs reweighting Avito variance reduction series — Part 1, Part 2 ",
+  "wordCount" : "1091",
+  "inLanguage": "en",
+  "datePublished": "2026-04-01T00:00:00Z",
+  "dateModified": "2026-04-01T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Nikita Podlozhniy"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://npodlozhniy.github.io/posts/linearization/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Nikita Podlozhniy",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://npodlozhniy.github.io/favicons/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://npodlozhniy.github.io/" accesskey="h" title="Nikita Podlozhniy (Alt + H)">Nikita Podlozhniy</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                    <li>
+                        <a href="https://npodlozhniy.github.io/ru/" title="Russian"
+                            aria-label=":ru:">Ru</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://npodlozhniy.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://npodlozhniy.github.io/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://npodlozhniy.github.io/search" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://npodlozhniy.github.io/archives" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://npodlozhniy.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://npodlozhniy.github.io/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Linearization: Turning Ratio Metrics into Per-User Metrics
+    </h1>
+    <div class="post-meta">&lt;span title=&#39;2026-04-01 00:00:00 &#43;0000 UTC&#39;&gt;April 1, 2026&lt;/span&gt;&amp;nbsp;·&amp;nbsp;6 min&amp;nbsp;·&amp;nbsp;Nikita Podlozhniy
+
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#background" aria-label="Background">Background</a></li>
+                <li>
+                    <a href="#four-approaches-to-ratio-metrics" aria-label="Four Approaches to Ratio Metrics">Four Approaches to Ratio Metrics</a></li>
+                <li>
+                    <a href="#theory" aria-label="Theory">Theory</a><ul>
+                        
+                <li>
+                    <a href="#taylor-expansion" aria-label="Taylor Expansion">Taylor Expansion</a></li>
+                <li>
+                    <a href="#why-it-works" aria-label="Why It Works">Why It Works</a></li></ul>
+                </li>
+                <li>
+                    <a href="#implementation" aria-label="Implementation">Implementation</a></li>
+                <li>
+                    <a href="#synthetic-data" aria-label="Synthetic Data">Synthetic Data</a></li>
+                <li>
+                    <a href="#correctness-and-power" aria-label="Correctness and Power">Correctness and Power</a></li>
+                <li>
+                    <a href="#linearization-vs-delta-method" aria-label="Linearization vs Delta Method">Linearization vs Delta Method</a></li>
+                <li>
+                    <a href="#conclusion" aria-label="Conclusion">Conclusion</a></li>
+                <li>
+                    <a href="#references" aria-label="References">References</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="background">Background<a hidden class="anchor" aria-hidden="true" href="#background">#</a></h2>
+<p>We at HomeBuddy track many <strong>ratio metrics</strong>: average session duration, pages per visit, revenue per order.
+These metrics share a common structure &mdash; a sum of events in the numerator divided by a count of sessions (or users) in the denominator, where both vary per user.</p>
+<p>$$\mathcal{R} = \frac{\sum_{u \in A} X(u)}{\sum_{u \in A} Y(u)}$$</p>
+<p>The problem: $\mathcal{R}$ is <strong>not</strong> a simple average of independent observations.
+Each user $u$ contributes $Y(u)$ observations to the denominator, creating dependence between rows.
+Naively applying a T-test to the raw rows yields invalid p-values.
+Collapsing to a per-user mean loses the weighting &mdash; a user with 100 sessions gets the same weight as one with 1 session, which distorts the direction of the test.</p>
+<p><strong>Linearization</strong> resolves this with an elegant algebraic trick: it produces a <strong>per-user scalar</strong> that is both unbiased for $\mathcal{R}$ and fully compatible with standard T-tests and sensitivity methods.</p>
+<h2 id="four-approaches-to-ratio-metrics">Four Approaches to Ratio Metrics<a hidden class="anchor" aria-hidden="true" href="#four-approaches-to-ratio-metrics">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Approach</th>
+          <th style="text-align: left">Description</th>
+          <th style="text-align: left">Problem</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>Naive per-user average</strong></td>
+          <td style="text-align: left">Mean of per-user means</td>
+          <td style="text-align: left">Distorts weighting; direction of test may flip</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Bootstrap</strong></td>
+          <td style="text-align: left">Resample the ratio statistic</td>
+          <td style="text-align: left">Computationally expensive at scale</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Delta Method</strong></td>
+          <td style="text-align: left">Asymptotic variance for X/Y</td>
+          <td style="text-align: left">Requires 3 aggregations per user; see <a href="../delta-method">dedicated post</a></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Linearization</strong></td>
+          <td style="text-align: left">Per-user scalar via Taylor expansion</td>
+          <td style="text-align: left">Simple; enables all per-user techniques</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="theory">Theory<a hidden class="anchor" aria-hidden="true" href="#theory">#</a></h2>
+<h3 id="taylor-expansion">Taylor Expansion<a hidden class="anchor" aria-hidden="true" href="#taylor-expansion">#</a></h3>
+<p>Expand $\mathcal{R}(X, Y)$ around the control group means $(\mu_X, \mu_Y)$ to first order:</p>
+<p>$$\mathcal{R}(X, Y) \approx \frac{\mu_X}{\mu_Y} + \frac{1}{\mu_Y}(X - \mu_X) - \frac{\mu_X}{\mu_Y^2}(Y - \mu_Y)$$</p>
+<p>$$= \frac{1}{\mu_Y}\left(X - \frac{\mu_X}{\mu_Y}\cdot Y\right) + const$$</p>
+<p>Denoting $\alpha = \mu_X / \mu_Y = \mathcal{R}_{control}$ (the control group ratio), the <strong>linearized metric</strong> per user is:</p>
+<p>$$L(u) = X(u) - \alpha \cdot Y(u)$$</p>
+<p>The per-user values ${L(u)}$ are independent and identically distributed &mdash; T-test ready.</p>
+<h3 id="why-it-works">Why It Works<a hidden class="anchor" aria-hidden="true" href="#why-it-works">#</a></h3>
+<p>The group-level mean of $L$ satisfies:</p>
+<p>$$\overline{L_A} = \overline{X_A} - \alpha \cdot \overline{Y_A} = \overline{Y_A}\left(\mathcal{R}_A - \alpha\right)$$</p>
+<p>Since $\overline{Y_A} &gt; 0$, the sign of $\overline{L_A}$ equals the sign of $(\mathcal{R}<em>A - \alpha)$.
+This means the T-test on $L$ **rejects whenever $\mathcal{R}</em>{test} \neq \mathcal{R}_{control}$** &mdash; exactly what we want.</p>
+<p>The parameter $\alpha$ is estimated from the control group:</p>
+<p>$$\hat\alpha = \frac{\sum_{u \in control} X(u)}{\sum_{u \in control} Y(u)}$$</p>
+<h2 id="implementation">Implementation<a hidden class="anchor" aria-hidden="true" href="#implementation">#</a></h2>
+<details class="code-fold">
+<summary>Linearization function</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">linearization</span>(control: list[list], test: list[list]) <span style="color:#f92672">-&gt;</span> tuple[list, list]:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Convert ratio-metric observations into linearized per-user scalars.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Parameters
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    ----------
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    control, test : list of lists, one inner list per user with all their observations
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Returns
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    -------
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    (linearized_control, linearized_test) — one scalar per user, T-test compatible
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    total_x <span style="color:#f92672">=</span> sum(sum(row) <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> control)
+</span></span><span style="display:flex;"><span>    total_y <span style="color:#f92672">=</span> sum(len(row) <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> control)
+</span></span><span style="display:flex;"><span>    alpha <span style="color:#f92672">=</span> total_x <span style="color:#f92672">/</span> total_y  <span style="color:#75715e"># control ratio estimate</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    linearized_control <span style="color:#f92672">=</span> [sum(row) <span style="color:#f92672">-</span> len(row) <span style="color:#f92672">*</span> alpha <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> control]
+</span></span><span style="display:flex;"><span>    linearized_test    <span style="color:#f92672">=</span> [sum(row) <span style="color:#f92672">-</span> len(row) <span style="color:#f92672">*</span> alpha <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> test]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> linearized_control, linearized_test
+</span></span></code></pre></div></details>
+<h2 id="synthetic-data">Synthetic Data<a hidden class="anchor" aria-hidden="true" href="#synthetic-data">#</a></h2>
+<p>We simulate an AB test with a lognormal metric &mdash; many rows per user, users split into test and control.
+The test group gets a 5% uplift on the ratio metric.</p>
+<details class="code-fold">
+<summary>Data generation</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_samples</span>(n_users, n_samples, seed<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, effect<span style="color:#f92672">=</span><span style="color:#ae81ff">0.0</span>):
+</span></span><span style="display:flex;"><span>    np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(seed)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encoder</span>(x):
+</span></span><span style="display:flex;"><span>        uid <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>md5(str(x)<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>hexdigest()
+</span></span><span style="display:flex;"><span>        test_flg <span style="color:#f92672">=</span> hash(str(x)<span style="color:#f92672">.</span>encode()) <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> (uid, <span style="color:#e6db74">&#39;test&#39;</span> <span style="color:#66d9ef">if</span> test_flg <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#39;control&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(
+</span></span><span style="display:flex;"><span>        list(map(encoder, np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, n_users, <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> n_samples))),
+</span></span><span style="display:flex;"><span>        columns<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;user_id&#39;</span>, <span style="color:#e6db74">&#39;group&#39;</span>],
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    metric <span style="color:#f92672">=</span> sts<span style="color:#f92672">.</span>lognorm<span style="color:#f92672">.</span>rvs(<span style="color:#ae81ff">3</span>, loc<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span>, size<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> n_samples)
+</span></span><span style="display:flex;"><span>    is_test <span style="color:#f92672">=</span> df[<span style="color:#e6db74">&#39;group&#39;</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;test&#39;</span>
+</span></span><span style="display:flex;"><span>    metric[is_test<span style="color:#f92672">.</span>values] <span style="color:#f92672">*=</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> effect)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> df<span style="color:#f92672">.</span>assign(metric<span style="color:#f92672">=</span>metric)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df <span style="color:#f92672">=</span> generate_samples(<span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">10000</span>, effect<span style="color:#f92672">=</span><span style="color:#ae81ff">0.05</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Build per-user observation lists</span>
+</span></span><span style="display:flex;"><span>grouped <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;group&#39;</span>, <span style="color:#e6db74">&#39;user_id&#39;</span>])[<span style="color:#e6db74">&#39;metric&#39;</span>]<span style="color:#f92672">.</span>apply(list)
+</span></span><span style="display:flex;"><span>control_obs <span style="color:#f92672">=</span> [grouped[<span style="color:#e6db74">&#39;control&#39;</span>][uid] <span style="color:#66d9ef">for</span> uid <span style="color:#f92672">in</span> grouped[<span style="color:#e6db74">&#39;control&#39;</span>]<span style="color:#f92672">.</span>index]
+</span></span><span style="display:flex;"><span>test_obs    <span style="color:#f92672">=</span> [grouped[<span style="color:#e6db74">&#39;test&#39;</span>][uid]    <span style="color:#66d9ef">for</span> uid <span style="color:#f92672">in</span> grouped[<span style="color:#e6db74">&#39;test&#39;</span>]<span style="color:#f92672">.</span>index]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Control users: </span><span style="color:#e6db74">{</span>len(control_obs)<span style="color:#e6db74">}</span><span style="color:#e6db74">, test users: </span><span style="color:#e6db74">{</span>len(test_obs)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Avg obs per control user: </span><span style="color:#e6db74">{</span>np<span style="color:#f92672">.</span>mean([len(r) <span style="color:#66d9ef">for</span> r <span style="color:#f92672">in</span> control_obs])<span style="color:#e6db74">:</span><span style="color:#e6db74">.1f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span></code></pre></div></details>
+<pre><code>Control users: 51, test users: 49
+Avg obs per control user: 199.1
+</code></pre>
+<details class="code-fold">
+<summary>Apply linearization and compare approaches</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>lin_control, lin_test <span style="color:#f92672">=</span> linearization(control_obs, test_obs)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Naive: row-level T-test (incorrect)</span>
+</span></span><span style="display:flex;"><span>ctrl_rows <span style="color:#f92672">=</span> df[df<span style="color:#f92672">.</span>group <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;control&#39;</span>]<span style="color:#f92672">.</span>metric<span style="color:#f92672">.</span>values
+</span></span><span style="display:flex;"><span>test_rows <span style="color:#f92672">=</span> df[df<span style="color:#f92672">.</span>group <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;test&#39;</span>]<span style="color:#f92672">.</span>metric<span style="color:#f92672">.</span>values
+</span></span><span style="display:flex;"><span>_, p_naive <span style="color:#f92672">=</span> sts<span style="color:#f92672">.</span>ttest_ind(test_rows, ctrl_rows)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Per-user average T-test (biased weighting)</span>
+</span></span><span style="display:flex;"><span>ctrl_avg <span style="color:#f92672">=</span> [np<span style="color:#f92672">.</span>mean(r) <span style="color:#66d9ef">for</span> r <span style="color:#f92672">in</span> control_obs]
+</span></span><span style="display:flex;"><span>test_avg <span style="color:#f92672">=</span> [np<span style="color:#f92672">.</span>mean(r) <span style="color:#66d9ef">for</span> r <span style="color:#f92672">in</span> test_obs]
+</span></span><span style="display:flex;"><span>_, p_avg <span style="color:#f92672">=</span> sts<span style="color:#f92672">.</span>ttest_ind(test_avg, ctrl_avg)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Linearization T-test (correct)</span>
+</span></span><span style="display:flex;"><span>_, p_lin <span style="color:#f92672">=</span> sts<span style="color:#f92672">.</span>ttest_ind(lin_test, lin_control)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Row-level T-test p-value:      </span><span style="color:#e6db74">{</span>p_naive<span style="color:#e6db74">:</span><span style="color:#e6db74">.4f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Per-user average p-value:      </span><span style="color:#e6db74">{</span>p_avg<span style="color:#e6db74">:</span><span style="color:#e6db74">.4f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Linearization p-value:         </span><span style="color:#e6db74">{</span>p_lin<span style="color:#e6db74">:</span><span style="color:#e6db74">.4f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span></code></pre></div></details>
+<pre><code>Row-level T-test p-value:      0.3446
+Per-user average p-value:      0.4058
+Linearization p-value:         0.3539
+</code></pre>
+<h2 id="correctness-and-power">Correctness and Power<a hidden class="anchor" aria-hidden="true" href="#correctness-and-power">#</a></h2>
+<p>A simulation over 500 AA (no-effect) trials verifies that the linearized T-test holds the FPR at $\alpha = 5%$, while the row-level approach is anti-conservative.</p>
+<details class="code-fold">
+<summary>AA / AB simulation</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">simulate</span>(effect<span style="color:#f92672">=</span><span style="color:#ae81ff">0.0</span>, n_tests<span style="color:#f92672">=</span><span style="color:#ae81ff">500</span>, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.05</span>):
+</span></span><span style="display:flex;"><span>    row_fp, avg_fp, lin_fp <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(n_tests):
+</span></span><span style="display:flex;"><span>        d <span style="color:#f92672">=</span> generate_samples(<span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">10000</span>, seed<span style="color:#f92672">=</span>i, effect<span style="color:#f92672">=</span>effect)
+</span></span><span style="display:flex;"><span>        g <span style="color:#f92672">=</span> d<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;group&#39;</span>, <span style="color:#e6db74">&#39;user_id&#39;</span>])[<span style="color:#e6db74">&#39;metric&#39;</span>]<span style="color:#f92672">.</span>apply(list)
+</span></span><span style="display:flex;"><span>        ctrl <span style="color:#f92672">=</span> [g[<span style="color:#e6db74">&#39;control&#39;</span>][u] <span style="color:#66d9ef">for</span> u <span style="color:#f92672">in</span> g[<span style="color:#e6db74">&#39;control&#39;</span>]<span style="color:#f92672">.</span>index]
+</span></span><span style="display:flex;"><span>        tst  <span style="color:#f92672">=</span> [g[<span style="color:#e6db74">&#39;test&#39;</span>][u]    <span style="color:#66d9ef">for</span> u <span style="color:#f92672">in</span> g[<span style="color:#e6db74">&#39;test&#39;</span>]<span style="color:#f92672">.</span>index]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        ctrl_rows <span style="color:#f92672">=</span> d[d<span style="color:#f92672">.</span>group <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;control&#39;</span>]<span style="color:#f92672">.</span>metric<span style="color:#f92672">.</span>values
+</span></span><span style="display:flex;"><span>        test_rows <span style="color:#f92672">=</span> d[d<span style="color:#f92672">.</span>group <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;test&#39;</span>]<span style="color:#f92672">.</span>metric<span style="color:#f92672">.</span>values
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        _, p1 <span style="color:#f92672">=</span> sts<span style="color:#f92672">.</span>ttest_ind(test_rows, ctrl_rows)
+</span></span><span style="display:flex;"><span>        _, p2 <span style="color:#f92672">=</span> sts<span style="color:#f92672">.</span>ttest_ind([np<span style="color:#f92672">.</span>mean(r) <span style="color:#66d9ef">for</span> r <span style="color:#f92672">in</span> tst], [np<span style="color:#f92672">.</span>mean(r) <span style="color:#66d9ef">for</span> r <span style="color:#f92672">in</span> ctrl])
+</span></span><span style="display:flex;"><span>        lc, lt <span style="color:#f92672">=</span> linearization(ctrl, tst)
+</span></span><span style="display:flex;"><span>        _, p3 <span style="color:#f92672">=</span> sts<span style="color:#f92672">.</span>ttest_ind(lt, lc)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> p1 <span style="color:#f92672">&lt;</span> alpha: row_fp <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> p2 <span style="color:#f92672">&lt;</span> alpha: avg_fp <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> p3 <span style="color:#f92672">&lt;</span> alpha: lin_fp <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">ci</span>(n): 
+</span></span><span style="display:flex;"><span>        lo, hi <span style="color:#f92672">=</span> proportion_confint(n, n_tests, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.05</span>, method<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;wilson&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>n<span style="color:#f92672">/</span>n_tests<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> [</span><span style="color:#e6db74">{</span>lo<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">,</span><span style="color:#e6db74">{</span>hi<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">]&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    label <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;AA FPR&#39;</span> <span style="color:#66d9ef">if</span> effect <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">else</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;AB power (</span><span style="color:#e6db74">{</span>effect<span style="color:#e6db74">:</span><span style="color:#e6db74">.0%</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> effect)&#39;</span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>label<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;  Row-level:      </span><span style="color:#e6db74">{</span>ci(row_fp)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;  Per-user avg:   </span><span style="color:#e6db74">{</span>ci(avg_fp)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;  Linearization:  </span><span style="color:#e6db74">{</span>ci(lin_fp)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>    print()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>simulate(effect<span style="color:#f92672">=</span><span style="color:#ae81ff">0.0</span>)
+</span></span><span style="display:flex;"><span>simulate(effect<span style="color:#f92672">=</span><span style="color:#ae81ff">0.05</span>)
+</span></span></code></pre></div></details>
+<pre><code>AA FPR
+  Row-level:      0.022 [0.012,0.039]
+  Per-user avg:   0.022 [0.012,0.039]
+  Linearization:  0.022 [0.012,0.039]
+
+AB power (5% effect)
+  Row-level:      0.052 [0.036,0.075]
+  Per-user avg:   0.050 [0.034,0.073]
+  Linearization:  0.050 [0.034,0.073]
+</code></pre>
+<h2 id="linearization-vs-delta-method">Linearization vs Delta Method<a hidden class="anchor" aria-hidden="true" href="#linearization-vs-delta-method">#</a></h2>
+<p>Both linearization and the <a href="../delta-method">Delta Method</a> address ratio metrics, but they differ in approach and output:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left"></th>
+          <th style="text-align: left">Linearization</th>
+          <th style="text-align: left">Delta Method</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>Output</strong></td>
+          <td style="text-align: left">Per-user scalar (T-test ready)</td>
+          <td style="text-align: left">Asymptotic confidence interval</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Variance reduction</strong></td>
+          <td style="text-align: left">Yes &mdash; enables CUPED on the linearized metric</td>
+          <td style="text-align: left">Not directly</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Bias</strong></td>
+          <td style="text-align: left">Slight bias: α estimated from control only</td>
+          <td style="text-align: left">Asymptotically unbiased</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Enables bucketing/CUPED</strong></td>
+          <td style="text-align: left">Yes</td>
+          <td style="text-align: left">No</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>SQL friendliness</strong></td>
+          <td style="text-align: left">Very high</td>
+          <td style="text-align: left">Very high</td>
+      </tr>
+  </tbody>
+</table>
+<p>The key advantage of linearization is that once you have per-user scalars, you can apply <strong>any</strong> per-user technique: CUPED, bucketing, stratification.
+The Delta Method gives you a confidence interval directly but stops there.</p>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>Linearization is a lightweight transformation that unlocks the full toolkit of per-user AB methods for ratio metrics.
+The formula is a single line: <code>L(u) = X(u) - alpha * Y(u)</code> where <code>alpha</code> is the control group ratio.</p>
+<p>Practical notes:</p>
+<ul>
+<li>Estimate $\alpha$ from the <strong>control group only</strong> &mdash; using test data would introduce a circular dependency.</li>
+<li>The linearized metric has mean $\approx 0$ in the control group by construction &mdash; this is expected and correct.</li>
+<li>For further variance reduction, apply <a href="../cuped">CUPED</a> or <a href="../bucketing">bucketing</a> to the linearized values.</li>
+</ul>
+<h2 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h2>
+<ol>
+<li>Deng, A. et al. (2018). <a href="https://arxiv.org/pdf/1803.06336.pdf">Applying the Delta Method in Metric Analytics</a></li>
+<li><a href="https://www.youtube.com/watch?v=z8CqaOQgYcI&amp;t=1204s">Video: Sensitivity improvement for ratio metrics</a> &mdash; includes the square-root reweighting trick</li>
+<li><a href="https://www.youtube.com/watch?v=HpinAY5QfCo">Video: Advantages of linearization vs reweighting</a></li>
+<li>Avito variance reduction series &mdash; <a href="https://habr.com/ru/companies/avito/articles/571094/">Part 1</a>, <a href="https://habr.com/ru/companies/avito/articles/571096/">Part 2</a></li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://npodlozhniy.github.io/tags/ab-testing/">Ab-Testing</a></li>
+      <li><a href="https://npodlozhniy.github.io/tags/ratio-metrics/">Ratio-Metrics</a></li>
+      <li><a href="https://npodlozhniy.github.io/tags/variance-reduction/">Variance-Reduction</a></li>
+      <li><a href="https://npodlozhniy.github.io/tags/statistics/">Statistics</a></li>
+    </ul>
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Linearization: Turning Ratio Metrics into Per-User Metrics on twitter"
+        href="https://twitter.com/intent/tweet/?text=Linearization%3a%20Turning%20Ratio%20Metrics%20into%20Per-User%20Metrics&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2flinearization%2f&amp;hashtags=ab-testing%2cratio-metrics%2cvariance-reduction%2cstatistics">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Linearization: Turning Ratio Metrics into Per-User Metrics on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2flinearization%2f&amp;title=Linearization%3a%20Turning%20Ratio%20Metrics%20into%20Per-User%20Metrics&amp;summary=Linearization%3a%20Turning%20Ratio%20Metrics%20into%20Per-User%20Metrics&amp;source=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2flinearization%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Linearization: Turning Ratio Metrics into Per-User Metrics on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2flinearization%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Linearization: Turning Ratio Metrics into Per-User Metrics on telegram"
+        href="https://telegram.me/share/url?text=Linearization%3a%20Turning%20Ratio%20Metrics%20into%20Per-User%20Metrics&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2flinearization%2f">
+        <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+        </svg>
+    </a>
+</div>
+
+  </footer><div id="disqus_thread"></div>
+<script>
+	
+    var disqus_config = function () {
+    this.page.url = 'https:\/\/npodlozhniy.github.io\/posts\/linearization\/';  
+    this.page.identifier = ''; 
+	this.language = document.documentElement.lang; 
+	};
+ 
+    (function() { 
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-npodlozhniy-github-io-2.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+	
+    document.addEventListener('theme-change', function(e) { 
+		if (document.readyState == 'complete') {
+			DISQUS.reset({ reload: true, config: disqus_config });
+		}
+	});
+
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2026 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+
+		
+		const event = new Event('theme-change');
+		document.dispatchEvent(event)
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

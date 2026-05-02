@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Delta Method for Ratio Metrics in AB Testing | Nikita Podlozhniy</title>
+<meta name="keywords" content="ab-testing, statistics, ratio-metrics, variance-reduction">
+<meta name="description" content="Correct variance estimation for ratio metrics using the Delta Method — and why naive approaches quietly break your confidence intervals">
+<meta name="author" content="Nikita Podlozhniy">
+<link rel="canonical" href="https://npodlozhniy.github.io/posts/delta-method/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://npodlozhniy.github.io/favicons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://npodlozhniy.github.io/favicons/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://npodlozhniy.github.io/favicons/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://npodlozhniy.github.io/favicons/apple-touch-icon.png">
+<link rel="mask-icon" href="https://npodlozhniy.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://npodlozhniy.github.io/posts/delta-method/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+    onload="renderMathInElement(document.body, 
+    {
+              delimiters: [
+                  {left: '$$', right: '$$', display: true},
+                  {left: '\\[', right: '\\]', display: true},
+                  {left: '$', right: '$', display: false},
+                  {left: '\\(', right: '\\)', display: false}
+              ]
+          }
+    );"></script>
+
+
+
+<script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-ESWD18X008');
+        }
+      </script><meta property="og:title" content="Delta Method for Ratio Metrics in AB Testing" />
+<meta property="og:description" content="Correct variance estimation for ratio metrics using the Delta Method — and why naive approaches quietly break your confidence intervals" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://npodlozhniy.github.io/posts/delta-method/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2025-12-15T00:00:00+00:00" />
+<meta property="article:modified_time" content="2025-12-15T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Delta Method for Ratio Metrics in AB Testing"/>
+<meta name="twitter:description" content="Correct variance estimation for ratio metrics using the Delta Method — and why naive approaches quietly break your confidence intervals"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://npodlozhniy.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Delta Method for Ratio Metrics in AB Testing",
+      "item": "https://npodlozhniy.github.io/posts/delta-method/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Delta Method for Ratio Metrics in AB Testing",
+  "name": "Delta Method for Ratio Metrics in AB Testing",
+  "description": "Correct variance estimation for ratio metrics using the Delta Method — and why naive approaches quietly break your confidence intervals",
+  "keywords": [
+    "ab-testing", "statistics", "ratio-metrics", "variance-reduction"
+  ],
+  "articleBody": "\rBackground We at HomeBuddy run dozens of AB tests to improve the customer journey across our onboarding funnel. Many of our key metrics are ratio metrics: average revenue per session, orders per visit, or any per-user aggregate where both the numerator and denominator vary from user to user. Treating such metrics naively — as if each row were an independent observation — leads to underestimated variance, artificially narrow confidence intervals, and inflated false-positive rates.\nThe Delta Method provides the correct asymptotic variance for any continuously differentiable function of random variables, and applying it to ratio metrics is surprisingly straightforward.\nPrerequisites The reader is expected to be comfortable with Python and standard data-science libraries. The notebook was written on Python 3.11.4; below is the minimal set of packages required.\nProblem Definition Consider a metric defined as the ratio $R = X / Y$, where for each user $i$:\n$X_i$ is the total value of some event (e.g. revenue) $Y_i$ is the number of sessions Three common — but not equally correct — ways to estimate the mean and its confidence interval for such a metric are:\nA. Row-level average — treat every row as an independent sample. Underestimates variance because multiple rows from the same user are correlated.\nB. User-level naive average — aggregate to one value per user, then use the sample variance of those averages. Still wrong: the average of per-user averages is not the same as the ratio of sums, and its variance formula does not account for the denominator’s variability.\nC. Delta Method — compute the exact asymptotic variance for $X/Y$ by propagating the variance of both $X$ and $Y$ and their covariance.\nTheory Let $\\hat\\theta_n$ be a sequence of random variables converging in distribution:\n$$ \\hat{\\theta}_n \\xrightarrow{dist} \\mathbb{N}(\\theta_0, V/n) $$\nFor a continuously differentiable function $g: \\mathbb{R} \\to \\mathbb{R}$, the Delta Method states:\n$$ g(\\hat\\theta_n) \\xrightarrow{dist} \\mathbb{N}!\\left(g(\\theta_0),; \\left(\\frac{dg}{d\\theta}\\right)^2_{!\\theta_0} \\cdot \\frac{V}{n}\\right) $$\nProof sketch: By the mean value theorem, $\\exists, \\bar\\theta$ between $\\hat\\theta_n$ and $\\theta_0$ such that\n$$ g(\\hat\\theta_n) - g(\\theta_0) = \\left(\\frac{dg}{d\\theta}\\right)_{!\\bar\\theta} \\cdot (\\hat\\theta_n - \\theta_0) $$\nSince $\\hat\\theta_n \\xrightarrow{\\mathbb{P}} \\theta_0$, we have $\\bar\\theta \\xrightarrow{\\mathbb{P}} \\theta_0$. By the continuous mapping theorem and Slutsky’s theorem the product converges in distribution, giving\n$$ g(\\hat\\theta_n) - g(\\theta_0) \\xrightarrow{dist} \\mathbb{N}!\\left(0,; \\left(\\frac{dg}{d\\theta}\\right)^2_{!\\theta_0} \\cdot \\frac{V}{n}\\right) $$\nApplication to ratio metrics For $R = X/Y$ the asymptotic variance of the sample ratio $\\bar R = \\bar X / \\bar Y$ is:\n$$ \\mathbb{D}\\bar{R} = \\left(\\frac{\\bar{X}}{\\bar{Y}}\\right)^2 \\cdot \\left(\\frac{\\mathbb{D}\\bar{X}}{\\bar{X}^2} + \\frac{\\mathbb{D}\\bar{Y}}{\\bar{Y}^2} - 2\\frac{\\mathrm{cov}(\\bar{X}, \\bar{Y})}{\\bar{X} \\cdot \\bar{Y}} \\right) $$\nwhere\n$$ \\mathrm{cov}(\\bar{X}, \\bar{Y}) = \\frac{\\sum_{i=1}^N(X_i - \\bar{X})(Y_i - \\bar{Y})}{N(N - 1)} $$\nThis formula requires only three aggregations per user — $\\sum X_i$, $\\sum Y_i$, $\\sum X_i Y_i$ — making it trivially parallelisable in any SQL or distributed compute environment.\nRatioXY class implementation\rimport numpy as np import scipy.stats as sts class RatioXY: \"\"\"Confidence interval for a ratio metric X/Y using the Delta Method.\"\"\" def __init__(self, X, Y): self.n = len(X) self.X_mean = np.mean(X) self.Y_mean = np.mean(Y) self.X_var = np.var(X, ddof=1) self.Y_var = np.var(Y, ddof=1) self.XY_cov = np.cov(X, Y, bias=False)[0][1] def ratio_variance(self): return self.X_mean**2 / self.Y_mean**2 * ( self.X_var / self.X_mean**2 + self.Y_var / self.Y_mean**2 - 2 * self.XY_cov / (self.X_mean * self.Y_mean) ) def bias_correction(self): return 1 / self.n * ( self.Y_var * self.X_mean / self.Y_mean**3 - self.XY_cov / self.Y_mean**2 ) def point_estimate(self, bias=False): bc = self.bias_correction() if bias else 0 return self.X_mean / self.Y_mean + bc def deltaci(self, alpha=0.05, bias=False, two_sided=True): pest = self.point_estimate(bias=bias) vest = self.ratio_variance() z = sts.norm.ppf(1 - alpha / 2) if two_sided else sts.norm.ppf(1 - alpha) return pest + np.array([-1, 1]) * z * np.sqrt(vest / self.n) Synthetic Data We simulate a dataset where each user has a variable number of sessions and a lognormally distributed metric per session. The lognormal distribution mimics real-world revenue data: heavy right tail, all positive values.\nSynthetic data generation\rimport pandas as pd import hashlib def generate_samples(n_users, n_samples, seed=2023): np.random.seed(seed) def encoder(x): uid = hashlib.md5(str(x).encode()).hexdigest() test_flg = hash(str(x).encode()) % 2 return (uid, 'test' if test_flg else 'control') df = pd.DataFrame( list(map(encoder, np.random.randint(0, n_users, 2 * n_samples))), columns=['user_id', 'group'], ) return df.assign(metric=sts.lognorm.rvs(3, loc=100, size=2 * n_samples)) df = generate_samples(1000, 10000) print(f'Rows: {df.shape[0]}, unique users: {df.user_id.nunique()}') df.sample(3) Rows: 20000, unique users: 1000\ruser_id group metric 8225 274ad4786c3abca69fa097b85867d9a4 test 108.472413 775 bea5955b308361a1b07bc55042e25e54 control 114.576327 14845 389bc7bb1e1c2a5e7e147703232a88f6 test 106.192022 Variance Estimation: Three Approaches Each approach estimates a 95% confidence interval for the control group mean. The true population mean is approximately 180.5 (lognormal with s=3, loc=100). We compare how wide — and how correct — each CI is.\nA. Row-level (incorrect)\rrow_level = df.groupby('group')['metric'].agg(['mean', 'var']) report( 'A. Row-level', row_level.loc['control', 'mean'], row_level.loc['control', 'var'], df.shape[0], ) A. Row-level: mean=193.92, 95% CI = [164.56, 223.27], width=58.71\rThe row-level approach treats 20 000 rows as independent observations. The sample mean is unbiased, but the variance is severely underestimated because many rows belong to the same user.\nB. User-level naive average (incorrect)\rtemp = ( df.groupby(['group', 'user_id'])['metric'] .agg(['sum', 'count']) .reset_index(level=1) ) temp['avg'] = temp['sum'] / temp['count'] user_level = temp.groupby('group')['avg'].agg(['mean', 'var']) report( 'B. User avg', user_level.loc['control', 'mean'], user_level.loc['control', 'var'], temp.shape[0], ) B. User avg: mean=196.76, 95% CI = [167.11, 226.41], width=59.30\rAveraging per-user averages gives neither the correct point estimate (the mean of averages $\\neq$ the ratio of sums) nor the correct variance, because the denominator $Y_i$ varies across users.\nC. Delta Method (correct)\rX_control = temp.loc['control', 'sum'].values Y_control = temp.loc['control', 'count'].values ctrl = RatioXY(X_control, Y_control) lo, hi = ctrl.deltaci(bias=False) print( f'C. Delta Method: mean={ctrl.point_estimate():.2f}, ' f'95% CI = [{lo:.2f}, {hi:.2f}], width={hi-lo:.2f}' ) C. Delta Method: mean=193.92, 95% CI = [152.50, 235.34], width=82.84\rThe Delta Method produces a wider confidence interval — not because it is less precise, but because it correctly captures the additional uncertainty from the denominator. The narrower intervals from approaches A and B are over-confident and would inflate your false-positive rate in an AB test.\nConfidence interval comparison chart\rimport plotly.graph_objs as go from pathlib import Path def find_git_repo(path=None): source = Path(path) if path else Path.cwd() for p in source.parents: if (p / '.git').is_dir(): return p row_mean = row_level.loc['control', 'mean'] row_var = row_level.loc['control', 'var'] row_lo, row_hi = row_mean - z * np.sqrt(row_var / df.shape[0]), row_mean + z * np.sqrt(row_var / df.shape[0]) usr_mean = user_level.loc['control', 'mean'] usr_var = user_level.loc['control', 'var'] usr_lo, usr_hi = usr_mean - z * np.sqrt(usr_var / temp.shape[0]), usr_mean + z * np.sqrt(usr_var / temp.shape[0]) dlt_lo, dlt_hi = ctrl.deltaci() dlt_mean = ctrl.point_estimate() labels = ['A. Row-Level', 'B. User Average', 'C. Delta Method'] means = [row_mean, usr_mean, dlt_mean] lows = [row_lo, usr_lo, dlt_lo] highs = [row_hi, usr_hi, dlt_hi] figure = go.Figure() figure.add_trace(go.Scatter( x=labels, y=means, error_y=dict( type='data', symmetric=False, array=[hi - m for m, hi in zip(means, highs)], arrayminus=[m - lo for m, lo in zip(means, lows)], ), mode='markers', marker=dict(size=12), name='95% CI', )) figure.update_layout( title={'text': '95% Confidence Intervals — Three Approaches', 'x': 0.5}, yaxis_title='Estimated Mean', template='plotly_dark', ) figure.show() Conclusion Whenever your AB test metric is a ratio — revenue per visit, events per user, average order value — the Delta Method is the correct tool for variance estimation. It requires only three per-user aggregations ($\\sum X_i$, $\\sum Y_i$, $\\sum X_i Y_i$) and is trivially expressible in SQL, making it production-ready with no additional infrastructure.\nThe naive alternatives consistently underestimate variance, leading to confidence intervals that are too narrow and hypothesis tests that reject the null too often.\nReferences Deng, A. et al. (2018). Applying the Delta Method in Metric Analytics — the original paper this implementation is based on. Medium: Applying Delta Method for A/B Tests Analysis StackExchange: Example of using the Delta Method StatLect: Delta Method — theory with examples Avito variance reduction series — Part 1, Part 2 ",
+  "wordCount" : "1258",
+  "inLanguage": "en",
+  "datePublished": "2025-12-15T00:00:00Z",
+  "dateModified": "2025-12-15T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Nikita Podlozhniy"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://npodlozhniy.github.io/posts/delta-method/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Nikita Podlozhniy",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://npodlozhniy.github.io/favicons/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://npodlozhniy.github.io/" accesskey="h" title="Nikita Podlozhniy (Alt + H)">Nikita Podlozhniy</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                    <li>
+                        <a href="https://npodlozhniy.github.io/ru/" title="Russian"
+                            aria-label=":ru:">Ru</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://npodlozhniy.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://npodlozhniy.github.io/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://npodlozhniy.github.io/search" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://npodlozhniy.github.io/archives" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://npodlozhniy.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://npodlozhniy.github.io/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Delta Method for Ratio Metrics in AB Testing
+    </h1>
+    <div class="post-meta">&lt;span title=&#39;2025-12-15 00:00:00 &#43;0000 UTC&#39;&gt;December 15, 2025&lt;/span&gt;&amp;nbsp;·&amp;nbsp;6 min&amp;nbsp;·&amp;nbsp;Nikita Podlozhniy
+
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#background" aria-label="Background">Background</a><ul>
+                        
+                <li>
+                    <a href="#prerequisites" aria-label="Prerequisites">Prerequisites</a></li></ul>
+                </li>
+                <li>
+                    <a href="#problem-definition" aria-label="Problem Definition">Problem Definition</a></li>
+                <li>
+                    <a href="#theory" aria-label="Theory">Theory</a><ul>
+                        
+                <li>
+                    <a href="#application-to-ratio-metrics" aria-label="Application to ratio metrics">Application to ratio metrics</a></li></ul>
+                </li>
+                <li>
+                    <a href="#synthetic-data" aria-label="Synthetic Data">Synthetic Data</a></li>
+                <li>
+                    <a href="#variance-estimation-three-approaches" aria-label="Variance Estimation: Three Approaches">Variance Estimation: Three Approaches</a></li>
+                <li>
+                    <a href="#conclusion" aria-label="Conclusion">Conclusion</a></li>
+                <li>
+                    <a href="#references" aria-label="References">References</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><!--
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous" data-relocate-top="true"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+-->
+<h2 id="background">Background<a hidden class="anchor" aria-hidden="true" href="#background">#</a></h2>
+<p>We at HomeBuddy run dozens of AB tests to improve the customer journey across our onboarding funnel.
+Many of our key metrics are <strong>ratio metrics</strong>: average revenue per session, orders per visit, or any per-user aggregate where both the numerator and denominator vary from user to user.
+Treating such metrics naively &mdash; as if each row were an independent observation &mdash; leads to underestimated variance, artificially narrow confidence intervals, and inflated false-positive rates.</p>
+<p>The <strong>Delta Method</strong> provides the correct asymptotic variance for any continuously differentiable function of random variables, and applying it to ratio metrics is surprisingly straightforward.</p>
+<h3 id="prerequisites">Prerequisites<a hidden class="anchor" aria-hidden="true" href="#prerequisites">#</a></h3>
+<p>The reader is expected to be comfortable with Python and standard data-science libraries.
+The notebook was written on Python 3.11.4; below is the minimal set of packages required.</p>
+<h2 id="problem-definition">Problem Definition<a hidden class="anchor" aria-hidden="true" href="#problem-definition">#</a></h2>
+<p>Consider a metric defined as the ratio $R = X / Y$, where for each user $i$:</p>
+<ul>
+<li>$X_i$ is the total value of some event (e.g. revenue)</li>
+<li>$Y_i$ is the number of sessions</li>
+</ul>
+<p>Three common &mdash; but not equally correct &mdash; ways to estimate the mean and its confidence interval for such a metric are:</p>
+<p><strong>A. Row-level average</strong> &mdash; treat every row as an independent sample. Underestimates variance because multiple rows from the same user are correlated.</p>
+<p><strong>B. User-level naive average</strong> &mdash; aggregate to one value per user, then use the sample variance of those averages. Still wrong: the average of per-user averages is not the same as the ratio of sums, and its variance formula does not account for the denominator&rsquo;s variability.</p>
+<p><strong>C. Delta Method</strong> &mdash; compute the exact asymptotic variance for $X/Y$ by propagating the variance of both $X$ and $Y$ and their covariance.</p>
+<h2 id="theory">Theory<a hidden class="anchor" aria-hidden="true" href="#theory">#</a></h2>
+<p>Let $\hat\theta_n$ be a sequence of random variables converging in distribution:</p>
+<p>$$ \hat{\theta}_n \xrightarrow{dist} \mathbb{N}(\theta_0, V/n) $$</p>
+<p>For a continuously differentiable function $g: \mathbb{R} \to \mathbb{R}$, the <strong>Delta Method</strong> states:</p>
+<p>$$ g(\hat\theta_n) \xrightarrow{dist} \mathbb{N}!\left(g(\theta_0),; \left(\frac{dg}{d\theta}\right)^2_{!\theta_0} \cdot \frac{V}{n}\right) $$</p>
+<p><strong>Proof sketch:</strong> By the mean value theorem, $\exists, \bar\theta$ between $\hat\theta_n$ and $\theta_0$ such that</p>
+<p>$$ g(\hat\theta_n) - g(\theta_0) = \left(\frac{dg}{d\theta}\right)_{!\bar\theta} \cdot (\hat\theta_n - \theta_0) $$</p>
+<p>Since $\hat\theta_n \xrightarrow{\mathbb{P}} \theta_0$, we have $\bar\theta \xrightarrow{\mathbb{P}} \theta_0$. By the continuous mapping theorem and Slutsky&rsquo;s theorem the product converges in distribution, giving</p>
+<p>$$ g(\hat\theta_n) - g(\theta_0) \xrightarrow{dist} \mathbb{N}!\left(0,; \left(\frac{dg}{d\theta}\right)^2_{!\theta_0} \cdot \frac{V}{n}\right) $$</p>
+<h3 id="application-to-ratio-metrics">Application to ratio metrics<a hidden class="anchor" aria-hidden="true" href="#application-to-ratio-metrics">#</a></h3>
+<p>For $R = X/Y$ the asymptotic variance of the sample ratio $\bar R = \bar X / \bar Y$ is:</p>
+<p>$$ \mathbb{D}\bar{R} = \left(\frac{\bar{X}}{\bar{Y}}\right)^2 \cdot \left(\frac{\mathbb{D}\bar{X}}{\bar{X}^2} + \frac{\mathbb{D}\bar{Y}}{\bar{Y}^2} - 2\frac{\mathrm{cov}(\bar{X}, \bar{Y})}{\bar{X} \cdot \bar{Y}} \right) $$</p>
+<p>where</p>
+<p>$$ \mathrm{cov}(\bar{X}, \bar{Y}) = \frac{\sum_{i=1}^N(X_i - \bar{X})(Y_i - \bar{Y})}{N(N - 1)} $$</p>
+<p>This formula requires only three aggregations per user &mdash; $\sum X_i$, $\sum Y_i$, $\sum X_i Y_i$ &mdash; making it trivially parallelisable in any SQL or distributed compute environment.</p>
+<details class="code-fold">
+<summary>RatioXY class implementation</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> scipy.stats <span style="color:#66d9ef">as</span> sts
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RatioXY</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Confidence interval for a ratio metric X/Y using the Delta Method.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self, X, Y):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>n <span style="color:#f92672">=</span> len(X)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>X_mean <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>mean(X)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>Y_mean <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>mean(Y)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>X_var <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>var(X, ddof<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>Y_var <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>var(Y, ddof<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>XY_cov <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>cov(X, Y, bias<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">ratio_variance</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>X_mean<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">/</span> self<span style="color:#f92672">.</span>Y_mean<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> (
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>X_var <span style="color:#f92672">/</span> self<span style="color:#f92672">.</span>X_mean<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">+</span> self<span style="color:#f92672">.</span>Y_var <span style="color:#f92672">/</span> self<span style="color:#f92672">.</span>Y_mean<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> self<span style="color:#f92672">.</span>XY_cov <span style="color:#f92672">/</span> (self<span style="color:#f92672">.</span>X_mean <span style="color:#f92672">*</span> self<span style="color:#f92672">.</span>Y_mean)
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">bias_correction</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">/</span> self<span style="color:#f92672">.</span>n <span style="color:#f92672">*</span> (
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>Y_var <span style="color:#f92672">*</span> self<span style="color:#f92672">.</span>X_mean <span style="color:#f92672">/</span> self<span style="color:#f92672">.</span>Y_mean<span style="color:#f92672">**</span><span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>XY_cov <span style="color:#f92672">/</span> self<span style="color:#f92672">.</span>Y_mean<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">point_estimate</span>(self, bias<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>):
+</span></span><span style="display:flex;"><span>        bc <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>bias_correction() <span style="color:#66d9ef">if</span> bias <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>X_mean <span style="color:#f92672">/</span> self<span style="color:#f92672">.</span>Y_mean <span style="color:#f92672">+</span> bc
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">deltaci</span>(self, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.05</span>, bias<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, two_sided<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>):
+</span></span><span style="display:flex;"><span>        pest <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>point_estimate(bias<span style="color:#f92672">=</span>bias)
+</span></span><span style="display:flex;"><span>        vest <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>ratio_variance()
+</span></span><span style="display:flex;"><span>        z <span style="color:#f92672">=</span> sts<span style="color:#f92672">.</span>norm<span style="color:#f92672">.</span>ppf(<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> alpha <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">if</span> two_sided <span style="color:#66d9ef">else</span> sts<span style="color:#f92672">.</span>norm<span style="color:#f92672">.</span>ppf(<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> alpha)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> pest <span style="color:#f92672">+</span> np<span style="color:#f92672">.</span>array([<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>]) <span style="color:#f92672">*</span> z <span style="color:#f92672">*</span> np<span style="color:#f92672">.</span>sqrt(vest <span style="color:#f92672">/</span> self<span style="color:#f92672">.</span>n)
+</span></span></code></pre></div></details>
+<h2 id="synthetic-data">Synthetic Data<a hidden class="anchor" aria-hidden="true" href="#synthetic-data">#</a></h2>
+<p>We simulate a dataset where each user has a variable number of sessions and a lognormally distributed metric per session.
+The lognormal distribution mimics real-world revenue data: heavy right tail, all positive values.</p>
+<details class="code-fold">
+<summary>Synthetic data generation</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> hashlib
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_samples</span>(n_users, n_samples, seed<span style="color:#f92672">=</span><span style="color:#ae81ff">2023</span>):
+</span></span><span style="display:flex;"><span>    np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(seed)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encoder</span>(x):
+</span></span><span style="display:flex;"><span>        uid <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>md5(str(x)<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>hexdigest()
+</span></span><span style="display:flex;"><span>        test_flg <span style="color:#f92672">=</span> hash(str(x)<span style="color:#f92672">.</span>encode()) <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> (uid, <span style="color:#e6db74">&#39;test&#39;</span> <span style="color:#66d9ef">if</span> test_flg <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#39;control&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(
+</span></span><span style="display:flex;"><span>        list(map(encoder, np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, n_users, <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> n_samples))),
+</span></span><span style="display:flex;"><span>        columns<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;user_id&#39;</span>, <span style="color:#e6db74">&#39;group&#39;</span>],
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> df<span style="color:#f92672">.</span>assign(metric<span style="color:#f92672">=</span>sts<span style="color:#f92672">.</span>lognorm<span style="color:#f92672">.</span>rvs(<span style="color:#ae81ff">3</span>, loc<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span>, size<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> n_samples))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df <span style="color:#f92672">=</span> generate_samples(<span style="color:#ae81ff">1000</span>, <span style="color:#ae81ff">10000</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;Rows: </span><span style="color:#e6db74">{</span>df<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">0</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">,  unique users: </span><span style="color:#e6db74">{</span>df<span style="color:#f92672">.</span>user_id<span style="color:#f92672">.</span>nunique()<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>df<span style="color:#f92672">.</span>sample(<span style="color:#ae81ff">3</span>)
+</span></span></code></pre></div></details>
+<pre><code>Rows: 20000,  unique users: 1000
+</code></pre>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+</code></pre>
+<p></style></p>
+<table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>user_id</th>
+          <th>group</th>
+          <th>metric</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>8225</td>
+          <td>274ad4786c3abca69fa097b85867d9a4</td>
+          <td>test</td>
+          <td>108.472413</td>
+      </tr>
+      <tr>
+          <td>775</td>
+          <td>bea5955b308361a1b07bc55042e25e54</td>
+          <td>control</td>
+          <td>114.576327</td>
+      </tr>
+      <tr>
+          <td>14845</td>
+          <td>389bc7bb1e1c2a5e7e147703232a88f6</td>
+          <td>test</td>
+          <td>106.192022</td>
+      </tr>
+  </tbody>
+</table>
+</div>
+<h2 id="variance-estimation-three-approaches">Variance Estimation: Three Approaches<a hidden class="anchor" aria-hidden="true" href="#variance-estimation-three-approaches">#</a></h2>
+<p>Each approach estimates a 95% confidence interval for the <strong>control group mean</strong>.
+The true population mean is approximately 180.5 (lognormal with <code>s=3, loc=100</code>).
+We compare how wide &mdash; and how correct &mdash; each CI is.</p>
+<details class="code-fold">
+<summary>A. Row-level (incorrect)</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>row_level <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>groupby(<span style="color:#e6db74">&#39;group&#39;</span>)[<span style="color:#e6db74">&#39;metric&#39;</span>]<span style="color:#f92672">.</span>agg([<span style="color:#e6db74">&#39;mean&#39;</span>, <span style="color:#e6db74">&#39;var&#39;</span>])
+</span></span><span style="display:flex;"><span>report(
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;A. Row-level&#39;</span>,
+</span></span><span style="display:flex;"><span>    row_level<span style="color:#f92672">.</span>loc[<span style="color:#e6db74">&#39;control&#39;</span>, <span style="color:#e6db74">&#39;mean&#39;</span>],
+</span></span><span style="display:flex;"><span>    row_level<span style="color:#f92672">.</span>loc[<span style="color:#e6db74">&#39;control&#39;</span>, <span style="color:#e6db74">&#39;var&#39;</span>],
+</span></span><span style="display:flex;"><span>    df<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">0</span>],
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div></details>
+<pre><code>A. Row-level:  mean=193.92,  95% CI = [164.56, 223.27],  width=58.71
+</code></pre>
+<p>The row-level approach treats 20 000 rows as independent observations. The sample mean is unbiased, but the variance is severely underestimated because many rows belong to the same user.</p>
+<details class="code-fold">
+<summary>B. User-level naive average (incorrect)</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>temp <span style="color:#f92672">=</span> (
+</span></span><span style="display:flex;"><span>    df<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;group&#39;</span>, <span style="color:#e6db74">&#39;user_id&#39;</span>])[<span style="color:#e6db74">&#39;metric&#39;</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">.</span>agg([<span style="color:#e6db74">&#39;sum&#39;</span>, <span style="color:#e6db74">&#39;count&#39;</span>])
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">.</span>reset_index(level<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>temp[<span style="color:#e6db74">&#39;avg&#39;</span>] <span style="color:#f92672">=</span> temp[<span style="color:#e6db74">&#39;sum&#39;</span>] <span style="color:#f92672">/</span> temp[<span style="color:#e6db74">&#39;count&#39;</span>]
+</span></span><span style="display:flex;"><span>user_level <span style="color:#f92672">=</span> temp<span style="color:#f92672">.</span>groupby(<span style="color:#e6db74">&#39;group&#39;</span>)[<span style="color:#e6db74">&#39;avg&#39;</span>]<span style="color:#f92672">.</span>agg([<span style="color:#e6db74">&#39;mean&#39;</span>, <span style="color:#e6db74">&#39;var&#39;</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>report(
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;B. User avg&#39;</span>,
+</span></span><span style="display:flex;"><span>    user_level<span style="color:#f92672">.</span>loc[<span style="color:#e6db74">&#39;control&#39;</span>, <span style="color:#e6db74">&#39;mean&#39;</span>],
+</span></span><span style="display:flex;"><span>    user_level<span style="color:#f92672">.</span>loc[<span style="color:#e6db74">&#39;control&#39;</span>, <span style="color:#e6db74">&#39;var&#39;</span>],
+</span></span><span style="display:flex;"><span>    temp<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">0</span>],
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div></details>
+<pre><code>B. User avg:  mean=196.76,  95% CI = [167.11, 226.41],  width=59.30
+</code></pre>
+<p>Averaging per-user averages gives neither the correct point estimate (the mean of averages $\neq$ the ratio of sums) nor the correct variance, because the denominator $Y_i$ varies across users.</p>
+<details class="code-fold">
+<summary>C. Delta Method (correct)</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>X_control <span style="color:#f92672">=</span> temp<span style="color:#f92672">.</span>loc[<span style="color:#e6db74">&#39;control&#39;</span>, <span style="color:#e6db74">&#39;sum&#39;</span>]<span style="color:#f92672">.</span>values
+</span></span><span style="display:flex;"><span>Y_control <span style="color:#f92672">=</span> temp<span style="color:#f92672">.</span>loc[<span style="color:#e6db74">&#39;control&#39;</span>, <span style="color:#e6db74">&#39;count&#39;</span>]<span style="color:#f92672">.</span>values
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ctrl <span style="color:#f92672">=</span> RatioXY(X_control, Y_control)
+</span></span><span style="display:flex;"><span>lo, hi <span style="color:#f92672">=</span> ctrl<span style="color:#f92672">.</span>deltaci(bias<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>print(
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;C. Delta Method:  mean=</span><span style="color:#e6db74">{</span>ctrl<span style="color:#f92672">.</span>point_estimate()<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">,  &#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;95% CI = [</span><span style="color:#e6db74">{</span>lo<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">, </span><span style="color:#e6db74">{</span>hi<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">],  width=</span><span style="color:#e6db74">{</span>hi<span style="color:#f92672">-</span>lo<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div></details>
+<pre><code>C. Delta Method:  mean=193.92,  95% CI = [152.50, 235.34],  width=82.84
+</code></pre>
+<p>The Delta Method produces a <strong>wider</strong> confidence interval &mdash; not because it is less precise, but because it correctly captures the additional uncertainty from the denominator. The narrower intervals from approaches A and B are over-confident and would inflate your false-positive rate in an AB test.</p>
+<details class="code-fold">
+<summary>Confidence interval comparison chart</summary>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly.graph_objs <span style="color:#66d9ef">as</span> go
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pathlib <span style="color:#f92672">import</span> Path
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">find_git_repo</span>(path<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+</span></span><span style="display:flex;"><span>    source <span style="color:#f92672">=</span> Path(path) <span style="color:#66d9ef">if</span> path <span style="color:#66d9ef">else</span> Path<span style="color:#f92672">.</span>cwd()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> source<span style="color:#f92672">.</span>parents:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (p <span style="color:#f92672">/</span> <span style="color:#e6db74">&#39;.git&#39;</span>)<span style="color:#f92672">.</span>is_dir():
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> p
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>row_mean <span style="color:#f92672">=</span> row_level<span style="color:#f92672">.</span>loc[<span style="color:#e6db74">&#39;control&#39;</span>, <span style="color:#e6db74">&#39;mean&#39;</span>]
+</span></span><span style="display:flex;"><span>row_var <span style="color:#f92672">=</span> row_level<span style="color:#f92672">.</span>loc[<span style="color:#e6db74">&#39;control&#39;</span>, <span style="color:#e6db74">&#39;var&#39;</span>]
+</span></span><span style="display:flex;"><span>row_lo, row_hi <span style="color:#f92672">=</span> row_mean <span style="color:#f92672">-</span> z <span style="color:#f92672">*</span> np<span style="color:#f92672">.</span>sqrt(row_var <span style="color:#f92672">/</span> df<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">0</span>]), row_mean <span style="color:#f92672">+</span> z <span style="color:#f92672">*</span> np<span style="color:#f92672">.</span>sqrt(row_var <span style="color:#f92672">/</span> df<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">0</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>usr_mean <span style="color:#f92672">=</span> user_level<span style="color:#f92672">.</span>loc[<span style="color:#e6db74">&#39;control&#39;</span>, <span style="color:#e6db74">&#39;mean&#39;</span>]
+</span></span><span style="display:flex;"><span>usr_var <span style="color:#f92672">=</span> user_level<span style="color:#f92672">.</span>loc[<span style="color:#e6db74">&#39;control&#39;</span>, <span style="color:#e6db74">&#39;var&#39;</span>]
+</span></span><span style="display:flex;"><span>usr_lo, usr_hi <span style="color:#f92672">=</span> usr_mean <span style="color:#f92672">-</span> z <span style="color:#f92672">*</span> np<span style="color:#f92672">.</span>sqrt(usr_var <span style="color:#f92672">/</span> temp<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">0</span>]), usr_mean <span style="color:#f92672">+</span> z <span style="color:#f92672">*</span> np<span style="color:#f92672">.</span>sqrt(usr_var <span style="color:#f92672">/</span> temp<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">0</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>dlt_lo, dlt_hi <span style="color:#f92672">=</span> ctrl<span style="color:#f92672">.</span>deltaci()
+</span></span><span style="display:flex;"><span>dlt_mean <span style="color:#f92672">=</span> ctrl<span style="color:#f92672">.</span>point_estimate()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>labels <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;A. Row-Level&#39;</span>, <span style="color:#e6db74">&#39;B. User Average&#39;</span>, <span style="color:#e6db74">&#39;C. Delta Method&#39;</span>]
+</span></span><span style="display:flex;"><span>means  <span style="color:#f92672">=</span> [row_mean, usr_mean, dlt_mean]
+</span></span><span style="display:flex;"><span>lows   <span style="color:#f92672">=</span> [row_lo,  usr_lo,  dlt_lo]
+</span></span><span style="display:flex;"><span>highs  <span style="color:#f92672">=</span> [row_hi,  usr_hi,  dlt_hi]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>figure <span style="color:#f92672">=</span> go<span style="color:#f92672">.</span>Figure()
+</span></span><span style="display:flex;"><span>figure<span style="color:#f92672">.</span>add_trace(go<span style="color:#f92672">.</span>Scatter(
+</span></span><span style="display:flex;"><span>    x<span style="color:#f92672">=</span>labels, y<span style="color:#f92672">=</span>means,
+</span></span><span style="display:flex;"><span>    error_y<span style="color:#f92672">=</span>dict(
+</span></span><span style="display:flex;"><span>        type<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;data&#39;</span>, symmetric<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>,
+</span></span><span style="display:flex;"><span>        array<span style="color:#f92672">=</span>[hi <span style="color:#f92672">-</span> m <span style="color:#66d9ef">for</span> m, hi <span style="color:#f92672">in</span> zip(means, highs)],
+</span></span><span style="display:flex;"><span>        arrayminus<span style="color:#f92672">=</span>[m <span style="color:#f92672">-</span> lo <span style="color:#66d9ef">for</span> m, lo <span style="color:#f92672">in</span> zip(means, lows)],
+</span></span><span style="display:flex;"><span>    ),
+</span></span><span style="display:flex;"><span>    mode<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;markers&#39;</span>,
+</span></span><span style="display:flex;"><span>    marker<span style="color:#f92672">=</span>dict(size<span style="color:#f92672">=</span><span style="color:#ae81ff">12</span>),
+</span></span><span style="display:flex;"><span>    name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;95% CI&#39;</span>,
+</span></span><span style="display:flex;"><span>))
+</span></span><span style="display:flex;"><span>figure<span style="color:#f92672">.</span>update_layout(
+</span></span><span style="display:flex;"><span>    title<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;text&#39;</span>: <span style="color:#e6db74">&#39;95% Confidence Intervals — Three Approaches&#39;</span>, <span style="color:#e6db74">&#39;x&#39;</span>: <span style="color:#ae81ff">0.5</span>},
+</span></span><span style="display:flex;"><span>    yaxis_title<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Estimated Mean&#39;</span>,
+</span></span><span style="display:flex;"><span>    template<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;plotly_dark&#39;</span>,
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>figure<span style="color:#f92672">.</span>show()
+</span></span></code></pre></div></details>
+
+
+<div id="plotly-001"></div>
+
+<script>
+  Plotly.newPlot(document.getElementById("plotly-001"), {"data":[{"error_y":{"array":[23.43,24.6,33.31],"arrayminus":[23.44,24.59,33.31],"symmetric":false,"type":"data"},"marker":{"size":12},"mode":"markers","name":"95% CI","type":"scatter","x":["A. Row-Level","B. User Average","C. Delta Method"],"y":[180.48,180.55,180.48]}],"layout":{"template":{"data":{"bar":[{"error_x":{"color":"#f2f5fa"},"error_y":{"color":"#f2f5fa"},"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"barpolar":[{"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"carpet":[{"aaxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"baxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"type":"carpet"}],"scatter":[{"marker":{"line":{"color":"#283442"}},"type":"scatter"}]},"layout":{"annotationdefaults":{"arrowcolor":"#f2f5fa","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]],"sequentialminus":[[0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#f2f5fa"},"geo":{"bgcolor":"rgb(17,17,17)","lakecolor":"rgb(17,17,17)","landcolor":"rgb(17,17,17)","showlakes":true,"showland":true,"subunitcolor":"#506784"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(17,17,17)","plot_bgcolor":"rgb(17,17,17)","polar":{"angularaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","radialaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"yaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"zaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"}},"shapedefaults":{"line":{"color":"#f2f5fa"}},"sliderdefaults":{"bgcolor":"#C8D4E3","bordercolor":"rgb(17,17,17)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"baxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","caxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#506784","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2}}},"title":{"text":"95% Confidence Intervals — Three Approaches","x":0.5},"yaxis":{"title":{"text":"Estimated Mean"}}}});
+</script>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>Whenever your AB test metric is a ratio &mdash; revenue per visit, events per user, average order value &mdash; the Delta Method is the correct tool for variance estimation.
+It requires only three per-user aggregations ($\sum X_i$, $\sum Y_i$, $\sum X_i Y_i$) and is trivially expressible in SQL, making it production-ready with no additional infrastructure.</p>
+<p>The naive alternatives consistently underestimate variance, leading to confidence intervals that are too narrow and hypothesis tests that reject the null too often.</p>
+<h2 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h2>
+<ol>
+<li>Deng, A. et al. (2018). <a href="https://arxiv.org/pdf/1803.06336.pdf">Applying the Delta Method in Metric Analytics</a> &mdash; the original paper this implementation is based on.</li>
+<li><a href="https://medium.com/@ahmadnuraziz3/applying-delta-method-for-a-b-tests-analysis-8b1d13411c22">Medium: Applying Delta Method for A/B Tests Analysis</a></li>
+<li><a href="https://math.stackexchange.com/questions/1598503/example-of-using-delta-method">StackExchange: Example of using the Delta Method</a></li>
+<li><a href="https://www.statlect.com/asymptotic-theory/delta-method">StatLect: Delta Method &mdash; theory with examples</a></li>
+<li>Avito variance reduction series &mdash; <a href="https://habr.com/ru/companies/avito/articles/571094/">Part 1</a>, <a href="https://habr.com/ru/companies/avito/articles/571096/">Part 2</a></li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://npodlozhniy.github.io/tags/ab-testing/">Ab-Testing</a></li>
+      <li><a href="https://npodlozhniy.github.io/tags/statistics/">Statistics</a></li>
+      <li><a href="https://npodlozhniy.github.io/tags/ratio-metrics/">Ratio-Metrics</a></li>
+      <li><a href="https://npodlozhniy.github.io/tags/variance-reduction/">Variance-Reduction</a></li>
+    </ul>
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Delta Method for Ratio Metrics in AB Testing on twitter"
+        href="https://twitter.com/intent/tweet/?text=Delta%20Method%20for%20Ratio%20Metrics%20in%20AB%20Testing&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fdelta-method%2f&amp;hashtags=ab-testing%2cstatistics%2cratio-metrics%2cvariance-reduction">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Delta Method for Ratio Metrics in AB Testing on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fdelta-method%2f&amp;title=Delta%20Method%20for%20Ratio%20Metrics%20in%20AB%20Testing&amp;summary=Delta%20Method%20for%20Ratio%20Metrics%20in%20AB%20Testing&amp;source=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fdelta-method%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Delta Method for Ratio Metrics in AB Testing on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fdelta-method%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Delta Method for Ratio Metrics in AB Testing on telegram"
+        href="https://telegram.me/share/url?text=Delta%20Method%20for%20Ratio%20Metrics%20in%20AB%20Testing&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fdelta-method%2f">
+        <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+        </svg>
+    </a>
+</div>
+
+  </footer><div id="disqus_thread"></div>
+<script>
+	
+    var disqus_config = function () {
+    this.page.url = 'https:\/\/npodlozhniy.github.io\/posts\/delta-method\/';  
+    this.page.identifier = ''; 
+	this.language = document.documentElement.lang; 
+	};
+ 
+    (function() { 
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-npodlozhniy-github-io-2.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+	
+    document.addEventListener('theme-change', function(e) { 
+		if (document.readyState == 'complete') {
+			DISQUS.reset({ reload: true, config: disqus_config });
+		}
+	});
+
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2026 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+
+		
+		const event = new Event('theme-change');
+		document.dispatchEvent(event)
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

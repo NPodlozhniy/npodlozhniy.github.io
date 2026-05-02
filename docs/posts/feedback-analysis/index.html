@@ -7,7 +7,9 @@
 <meta name="robots" content="index, follow">
 <title>Customer Feedback Analysis in Python | Nikita Podlozhniy</title>
 <meta name="keywords" content="">
-<meta name="description" content="Background Every company has always taken pride in providing excellent customer service, therefore it&rsquo;s crucial as part of ongoing improvements for product to collect and analyse feedback after each customer interaction on support channels
+<meta name="description" content="
+Background
+Every company has always taken pride in providing excellent customer service, therefore it&rsquo;s crucial as part of ongoing improvements for product to collect and analyse feedback after each customer interaction on support channels
 A top-notch analyst in Hi-Tech industry should be in capable of handle at least base feedback analysis quickly and efficiently and going through this article you will be introduced with the necessary concepts and eventually given the base guide on how to unlock the true power of text data">
 <meta name="author" content="Nikita Podlozhniy">
 <link rel="canonical" href="https://npodlozhniy.github.io/posts/feedback-analysis/">
@@ -46,18 +48,23 @@ A top-notch analyst in Hi-Tech industry should be in capable of handle at least 
 
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-ESWD18X008', { 'anonymize_ip': false });
-}
-</script>
-<meta property="og:title" content="Customer Feedback Analysis in Python" />
-<meta property="og:description" content="Background Every company has always taken pride in providing excellent customer service, therefore it&rsquo;s crucial as part of ongoing improvements for product to collect and analyse feedback after each customer interaction on support channels
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-ESWD18X008');
+        }
+      </script><meta property="og:title" content="Customer Feedback Analysis in Python" />
+<meta property="og:description" content="
+Background
+Every company has always taken pride in providing excellent customer service, therefore it&rsquo;s crucial as part of ongoing improvements for product to collect and analyse feedback after each customer interaction on support channels
 A top-notch analyst in Hi-Tech industry should be in capable of handle at least base feedback analysis quickly and efficiently and going through this article you will be introduced with the necessary concepts and eventually given the base guide on how to unlock the true power of text data" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://npodlozhniy.github.io/posts/feedback-analysis/" /><meta property="article:section" content="posts" />
@@ -66,7 +73,9 @@ A top-notch analyst in Hi-Tech industry should be in capable of handle at least 
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Customer Feedback Analysis in Python"/>
-<meta name="twitter:description" content="Background Every company has always taken pride in providing excellent customer service, therefore it&rsquo;s crucial as part of ongoing improvements for product to collect and analyse feedback after each customer interaction on support channels
+<meta name="twitter:description" content="
+Background
+Every company has always taken pride in providing excellent customer service, therefore it&rsquo;s crucial as part of ongoing improvements for product to collect and analyse feedback after each customer interaction on support channels
 A top-notch analyst in Hi-Tech industry should be in capable of handle at least base feedback analysis quickly and efficiently and going through this article you will be introduced with the necessary concepts and eventually given the base guide on how to unlock the true power of text data"/>
 
 
@@ -96,7 +105,7 @@ A top-notch analyst in Hi-Tech industry should be in capable of handle at least 
   "@type": "BlogPosting",
   "headline": "Customer Feedback Analysis in Python",
   "name": "Customer Feedback Analysis in Python",
-  "description": "Background Every company has always taken pride in providing excellent customer service, therefore it\u0026rsquo;s crucial as part of ongoing improvements for product to collect and analyse feedback after each customer interaction on support channels\nA top-notch analyst in Hi-Tech industry should be in capable of handle at least base feedback analysis quickly and efficiently and going through this article you will be introduced with the necessary concepts and eventually given the base guide on how to unlock the true power of text data",
+  "description": "\rBackground Every company has always taken pride in providing excellent customer service, therefore it\u0026rsquo;s crucial as part of ongoing improvements for product to collect and analyse feedback after each customer interaction on support channels\nA top-notch analyst in Hi-Tech industry should be in capable of handle at least base feedback analysis quickly and efficiently and going through this article you will be introduced with the necessary concepts and eventually given the base guide on how to unlock the true power of text data\n",
   "keywords": [
     
   ],
@@ -198,7 +207,7 @@ A top-notch analyst in Hi-Tech industry should be in capable of handle at least 
     <h1 class="post-title">
       Customer Feedback Analysis in Python
     </h1>
-    <div class="post-meta"><span title='2023-10-29 00:00:00 +0000 UTC'>October 29, 2023</span>&nbsp;·&nbsp;17 min&nbsp;·&nbsp;Nikita Podlozhniy
+    <div class="post-meta">&lt;span title=&#39;2023-10-29 00:00:00 &#43;0000 UTC&#39;&gt;October 29, 2023&lt;/span&gt;&amp;nbsp;·&amp;nbsp;17 min&amp;nbsp;·&amp;nbsp;Nikita Podlozhniy
 
 </div>
   </header> <div class="toc">
@@ -268,7 +277,7 @@ A top-notch analyst in Hi-Tech industry should be in capable of handle at least 
 <p>The actual notebook was written on Python 3.7.9 and to keep the results reproducible here is the list of particular packages that are being used in the article specified with their versions</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>numpy<span style="color:#f92672">==</span><span style="color:#ae81ff">1.21.6</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>numpy<span style="color:#f92672">==</span><span style="color:#ae81ff">1.21.6</span>
 </span></span><span style="display:flex;"><span>pandas<span style="color:#f92672">==</span><span style="color:#ae81ff">1.3.5</span>
 </span></span><span style="display:flex;"><span>pandas<span style="color:#f92672">-</span>profiling<span style="color:#f92672">==</span><span style="color:#ae81ff">3.1.0</span>
 </span></span><span style="display:flex;"><span>matplotlib<span style="color:#f92672">==</span><span style="color:#ae81ff">3.4.2</span>
@@ -284,7 +293,7 @@ A top-notch analyst in Hi-Tech industry should be in capable of handle at least 
 <p>During this notebook the feedback which comes in the form of ratings (from 1-5) and textual comments is considered. The general purpose is to dive deeper into this feedback, identify common themes, if certain issues lead to more negative feedback than others and understand areas of improvement</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> warnings
@@ -305,7 +314,7 @@ A top-notch analyst in Hi-Tech industry should be in capable of handle at least 
 <p>First of all - let&rsquo;s have a fluent look at the suggested data, <code>pandas-profiling</code> is a very useful tool to perform basic and boring Exploratory Data Analysis in a minute. View <a href="./data-profile.html">Data Profile</a> by clicking here</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pandas_profiling <span style="color:#f92672">import</span> ProfileReport
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pandas_profiling <span style="color:#f92672">import</span> ProfileReport
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(<span style="color:#e6db74">&#39;feedback-data-sample.csv&#39;</span>, index_col<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)
 </span></span><span style="display:flex;"><span>
@@ -341,7 +350,7 @@ A top-notch analyst in Hi-Tech industry should be in capable of handle at least 
 </ul>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>sort_index()<span style="color:#f92672">.</span>drop(columns<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;language&#39;</span>})
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>sort_index()<span style="color:#f92672">.</span>drop(columns<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;language&#39;</span>})
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">define_sentiment</span>(rating: float) <span style="color:#f92672">-&gt;</span> int:
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> rating <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">3</span>:
@@ -372,7 +381,7 @@ A top-notch analyst in Hi-Tech industry should be in capable of handle at least 
 <p>Sounds like if the resources are not a problem it&rsquo;s better to use lemmatization by default, but there is an opinion that Stemming works efficiently for some specific tasks like: spam classification and feedback sentiment classification, given that it&rsquo;s the case, let&rsquo;s apply both and take a choice in the end</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> re
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> re
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> nltk
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># If the code below doesn&#39;t work - download add-ons first</span>
@@ -410,7 +419,7 @@ Example: very
 <p>Unicode transliteration is needed, given that the data contains non-ascii symbols</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> unidecode <span style="color:#f92672">import</span> unidecode
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> unidecode <span style="color:#f92672">import</span> unidecode
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>df[df<span style="color:#f92672">.</span>comments<span style="color:#f92672">.</span>notnull()][
 </span></span><span style="display:flex;"><span>    df[df<span style="color:#f92672">.</span>comments<span style="color:#f92672">.</span>notnull()]<span style="color:#f92672">.</span>comments <span style="color:#f92672">!=</span> df[df<span style="color:#f92672">.</span>comments<span style="color:#f92672">.</span>notnull()]<span style="color:#f92672">.</span>comments<span style="color:#f92672">.</span>apply(unidecode)
@@ -427,7 +436,7 @@ Name: comments, dtype: object
 <p>Putting it all together</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">clean_data</span>(x, tokenizer, black_list<span style="color:#f92672">=</span>stop_words):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">clean_data</span>(x, tokenizer, black_list<span style="color:#f92672">=</span>stop_words):
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    The method removes from a sentence `x`
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">     - punctuation &amp; digits
@@ -461,7 +470,7 @@ Name: comments, dtype: object
 <p>P.S. In any data mining initiative, it is a good idea to retain some portion of the data to validate your final findings, so let&rsquo;s create a holdout piece of data to adhere true-to-life approach</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.model_selection <span style="color:#f92672">import</span> train_test_split
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.model_selection <span style="color:#f92672">import</span> train_test_split
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>X_train, X_test, y_train, y_test <span style="color:#f92672">=</span> train_test_split(
 </span></span><span style="display:flex;"><span>    df[[<span style="color:#e6db74">&#34;lemma_text&#34;</span>, <span style="color:#e6db74">&#34;stem_text&#34;</span>]],
@@ -516,20 +525,20 @@ Name: comments, dtype: object
 <p>First of all, as promised different tokenizers should be compared</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>make_word_cloud(frequent_ngrams(X_train[<span style="color:#e6db74">&#34;stem_text&#34;</span>], <span style="color:#ae81ff">1</span>))
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>make_word_cloud(frequent_ngrams(X_train[<span style="color:#e6db74">&#34;stem_text&#34;</span>], <span style="color:#ae81ff">1</span>))
 </span></span></code></pre></div></details>
 <p><img loading="lazy" src="PleoText_files/figure-markdown_strict/cell-10-output-1.png" alt=""  />
 </p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>make_word_cloud(frequent_ngrams(X_train[<span style="color:#e6db74">&#34;lemma_text&#34;</span>], <span style="color:#ae81ff">1</span>))
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>make_word_cloud(frequent_ngrams(X_train[<span style="color:#e6db74">&#34;lemma_text&#34;</span>], <span style="color:#ae81ff">1</span>))
 </span></span></code></pre></div></details>
 <p><img loading="lazy" src="PleoText_files/figure-markdown_strict/cell-11-output-1.png" alt=""  />
 </p>
 <p>Well, at first glance it looks like both tokenizers work very similarly, one noticeable difference is that stemmer treats word pairs like <code>help</code> and <code>helpful</code> or <code>quick</code> and <code>quickly</code> as one token and actually it might be wrong, imagine if we encounter <code>helpful</code> more in positive sentence and <code>help</code> in negative, then they shouldn&rsquo;t be united</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> word <span style="color:#f92672">in</span> [<span style="color:#e6db74">&#34;help&#34;</span>, <span style="color:#e6db74">&#34;helpful&#34;</span>]:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> word <span style="color:#f92672">in</span> [<span style="color:#e6db74">&#34;help&#34;</span>, <span style="color:#e6db74">&#34;helpful&#34;</span>]:
 </span></span><span style="display:flex;"><span>    score <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>loc[
 </span></span><span style="display:flex;"><span>        df[<span style="color:#e6db74">&#34;comments&#34;</span>]<span style="color:#f92672">.</span>apply(
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">lambda</span> x: <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34; </span><span style="color:#e6db74">{</span>word<span style="color:#e6db74">}</span><span style="color:#e6db74"> &#34;</span> <span style="color:#f92672">in</span> x <span style="color:#66d9ef">if</span> x <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> np<span style="color:#f92672">.</span>nan <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">False</span>
@@ -543,26 +552,26 @@ for `helpful` average sentiment score = 0.95
 <p>Indeed, that is the case, so let&rsquo;s end up with traditional lemmatizer and take a look at word clouds separately for different sentiments</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>make_word_cloud(frequent_ngrams(X_train<span style="color:#f92672">.</span>loc[y_train <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#34;lemma_text&#34;</span>], <span style="color:#ae81ff">1</span>))
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>make_word_cloud(frequent_ngrams(X_train<span style="color:#f92672">.</span>loc[y_train <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#34;lemma_text&#34;</span>], <span style="color:#ae81ff">1</span>))
 </span></span></code></pre></div></details>
 <p><img loading="lazy" src="PleoText_files/figure-markdown_strict/cell-13-output-1.png" alt=""  />
 </p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>make_word_cloud(frequent_ngrams(X_train<span style="color:#f92672">.</span>loc[y_train <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#34;lemma_text&#34;</span>], <span style="color:#ae81ff">1</span>))
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>make_word_cloud(frequent_ngrams(X_train<span style="color:#f92672">.</span>loc[y_train <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#34;lemma_text&#34;</span>], <span style="color:#ae81ff">1</span>))
 </span></span></code></pre></div></details>
 <p><img loading="lazy" src="PleoText_files/figure-markdown_strict/cell-14-output-1.png" alt=""  />
 </p>
 <p>Good news, they are very different in essence, in positive reviews customers use gratitude words more like <code>thank</code> and <code>helpful</code> on the other hand in negative sentences customer highlight that the <code>issue</code> <code>still</code> <code>not</code> <code>resolved</code>. In addition it might be useful to take a look at popular collocations</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>make_word_cloud(frequent_ngrams(X_train<span style="color:#f92672">.</span>loc[y_train <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#34;lemma_text&#34;</span>], <span style="color:#ae81ff">2</span>))
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>make_word_cloud(frequent_ngrams(X_train<span style="color:#f92672">.</span>loc[y_train <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#34;lemma_text&#34;</span>], <span style="color:#ae81ff">2</span>))
 </span></span></code></pre></div></details>
 <p><img loading="lazy" src="PleoText_files/figure-markdown_strict/cell-15-output-1.png" alt=""  />
 </p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>make_word_cloud(frequent_ngrams(X_train<span style="color:#f92672">.</span>loc[y_train <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#34;lemma_text&#34;</span>], <span style="color:#ae81ff">3</span>))
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>make_word_cloud(frequent_ngrams(X_train<span style="color:#f92672">.</span>loc[y_train <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#34;lemma_text&#34;</span>], <span style="color:#ae81ff">3</span>))
 </span></span></code></pre></div></details>
 <p><img loading="lazy" src="PleoText_files/figure-markdown_strict/cell-16-output-1.png" alt=""  />
 </p>
@@ -576,7 +585,7 @@ for `helpful` average sentiment score = 0.95
 <p>It&rsquo;s critical to reduce feature number otherwise X-matrix will be too sparse, and the clusterization will fail to give a substantial result, actually only quite often words should be taken into account</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.feature_extraction.text <span style="color:#f92672">import</span> TfidfVectorizer
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.feature_extraction.text <span style="color:#f92672">import</span> TfidfVectorizer
 </span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.metrics <span style="color:#f92672">import</span> accuracy_score
 </span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.cluster <span style="color:#f92672">import</span> KMeans
 </span></span><span style="display:flex;"><span>
@@ -616,7 +625,7 @@ for `helpful` average sentiment score = 0.95
 <p>From the chart is clear that the larger number of features doesn&rsquo;t lead to the Accuracy increase, from the principal of maximum Accuracy the optimal number of features might be 69 for example, let&rsquo;s fix it and track which features the model decided to consider</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>tfidf <span style="color:#f92672">=</span> TfidfVectorizer(min_df<span style="color:#f92672">=</span><span style="color:#ae81ff">69</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>tfidf <span style="color:#f92672">=</span> TfidfVectorizer(min_df<span style="color:#f92672">=</span><span style="color:#ae81ff">69</span>)
 </span></span><span style="display:flex;"><span>X <span style="color:#f92672">=</span> tfidf<span style="color:#f92672">.</span>fit_transform(X_train[<span style="color:#e6db74">&#34;lemma_text&#34;</span>])
 </span></span><span style="display:flex;"><span>words <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array(tfidf<span style="color:#f92672">.</span>get_feature_names())
 </span></span><span style="display:flex;"><span>
@@ -629,7 +638,7 @@ answer get help helpful issue not problem quick resolve response solve still tha
 <p>The clusterization which is based just on <strong>14 words!</strong> gives an accuracy higher than 75%, but it&rsquo;s the result only valid for the train sample, which was used to identify <code>min_df</code> hyperparameter, so to have an unbiased estimation test sample should be considered here</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>km <span style="color:#f92672">=</span> KMeans(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>km <span style="color:#f92672">=</span> KMeans(
 </span></span><span style="display:flex;"><span>    n_clusters<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>,
 </span></span><span style="display:flex;"><span>    init<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;k-means++&#39;</span>,
 </span></span><span style="display:flex;"><span>    max_iter<span style="color:#f92672">=</span><span style="color:#ae81ff">300</span>,
@@ -649,7 +658,7 @@ Cluster No. 1 not issue resolve still solve problem get
 <p>Well, looks like Cluster-0 caught positive feedback and Cluster-1 negative, then given that target is the value from [-1, 1] set, to define an accuracy some transformation must be put in place first</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>predictions_train <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> <span style="color:#f92672">-</span>km<span style="color:#f92672">.</span>predict(X) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>predictions_train <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> <span style="color:#f92672">-</span>km<span style="color:#f92672">.</span>predict(X) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Accuracy of K-Means train sample = </span><span style="color:#e6db74">{</span>accuracy_score(predictions_train, y_train)<span style="color:#e6db74">:</span><span style="color:#e6db74">.1%</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
 </span></span></code></pre></div></details>
@@ -657,7 +666,7 @@ Cluster No. 1 not issue resolve still solve problem get
 </code></pre>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>predictions_test <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> <span style="color:#f92672">-</span>km<span style="color:#f92672">.</span>predict(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>predictions_test <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> <span style="color:#f92672">-</span>km<span style="color:#f92672">.</span>predict(
 </span></span><span style="display:flex;"><span>    tfidf<span style="color:#f92672">.</span>transform(
 </span></span><span style="display:flex;"><span>        X_test[<span style="color:#e6db74">&#34;lemma_text&#34;</span>]
 </span></span><span style="display:flex;"><span>    )
@@ -688,7 +697,7 @@ Cluster No. 1 not issue resolve still solve problem get
 <p>In addition as it was shown during unsupervised analysis, barely all the words should be taken into account to build a substantial model and it alleviates the learning process also, therefore SVD application for feature space reduction will be considered</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.feature_extraction.text <span style="color:#f92672">import</span> CountVectorizer, TfidfTransformer
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.feature_extraction.text <span style="color:#f92672">import</span> CountVectorizer, TfidfTransformer
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.linear_model <span style="color:#f92672">import</span> LogisticRegression, SGDClassifier
 </span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.ensemble <span style="color:#f92672">import</span> RandomForestClassifier
@@ -724,7 +733,7 @@ Cluster No. 1 not issue resolve still solve problem get
 <p>Using vanilla classifiers let&rsquo;s define which one suits the data better from scratch and reveal hyperparameters on the validation basis after for this candidate</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">20231024</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">20231024</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> vectorizer <span style="color:#f92672">in</span> [CountVectorizer, TfidfVectorizer]:
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> classifier <span style="color:#f92672">in</span> [LogisticRegression, SGDClassifier, RandomForestClassifier, LinearSVC, MultinomialNB]:
@@ -793,7 +802,7 @@ Cluster No. 1 not issue resolve still solve problem get
 </ol>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.model_selection <span style="color:#f92672">import</span> GridSearchCV
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.model_selection <span style="color:#f92672">import</span> GridSearchCV
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>clf <span style="color:#f92672">=</span> model(
 </span></span><span style="display:flex;"><span>    vectorizer<span style="color:#f92672">=</span>TfidfVectorizer(),
@@ -824,7 +833,7 @@ vectorizer__ngram_range: (1, 2)
 </code></pre>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># If you want to see all the results of the scoring use the following code</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># If you want to see all the results of the scoring use the following code</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># for param, score in zip(</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#     search.cv_results_[&#39;params&#39;],</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#     search.cv_results_[&#39;mean_test_score&#39;]</span>
@@ -835,7 +844,7 @@ vectorizer__ngram_range: (1, 2)
 <p>Well, given the parameters are all defined, let&rsquo;s set them up and take closer look at the trained model</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.metrics <span style="color:#f92672">import</span> classification_report
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.metrics <span style="color:#f92672">import</span> classification_report
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>clf <span style="color:#f92672">=</span> model(
 </span></span><span style="display:flex;"><span>    vectorizer<span style="color:#f92672">=</span>TfidfVectorizer(ngram_range<span style="color:#f92672">=</span>(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>)),
@@ -858,7 +867,7 @@ weighted avg       0.91      0.91      0.91       276
 <p>If we just out of curiosity take a look at another candidate - Naive Bayes, then the results are</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>clf <span style="color:#f92672">=</span> model(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>clf <span style="color:#f92672">=</span> model(
 </span></span><span style="display:flex;"><span>    vectorizer<span style="color:#f92672">=</span>CountVectorizer(ngram_range<span style="color:#f92672">=</span>(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>)),
 </span></span><span style="display:flex;"><span>    classifier<span style="color:#f92672">=</span>MultinomialNB(),
 </span></span><span style="display:flex;"><span>)
@@ -878,7 +887,7 @@ weighted avg       0.89      0.89      0.89       276
 <p>Well, regression works a bit better and it&rsquo;s a pretty powerful classificator, but what is really needed is feature exploration, which words have been determined by the model sentiment and what do customers really appreciate or complain about. In order to evaluate features easily SVD step is skipped here, it doesn&rsquo;t inflict tangible damage on model quality but simplifies analysis a lot</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> shap
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> shap
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>vectorizer<span style="color:#f92672">=</span>TfidfVectorizer(ngram_range<span style="color:#f92672">=</span>(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>))
 </span></span><span style="display:flex;"><span>classifier<span style="color:#f92672">=</span>LinearSVC(random_state<span style="color:#f92672">=</span><span style="color:#ae81ff">20231020</span>)
@@ -904,7 +913,7 @@ weighted avg       0.89      0.89      0.89       276
 <p>P.S. if visualization doesn&rsquo;t work run <code>shap.initjs()</code> first</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> word <span style="color:#f92672">in</span>[<span style="color:#e6db74">&#39;account&#39;</span>, <span style="color:#e6db74">&#39;pleo&#39;</span>, <span style="color:#e6db74">&#39;sonja&#39;</span>]:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> word <span style="color:#f92672">in</span>[<span style="color:#e6db74">&#39;account&#39;</span>, <span style="color:#e6db74">&#39;pleo&#39;</span>, <span style="color:#e6db74">&#39;sonja&#39;</span>]:
 </span></span><span style="display:flex;"><span>    print(word, <span style="color:#f92672">*</span>X_train[<span style="color:#e6db74">&#34;lemma_text&#34;</span>]<span style="color:#f92672">.</span>apply(<span style="color:#66d9ef">lambda</span> x: word <span style="color:#f92672">in</span> x)<span style="color:#f92672">.</span>values<span style="color:#f92672">.</span>argsort()[<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>:])
 </span></span></code></pre></div></details>
 <pre><code>account 154 375 104
@@ -913,7 +922,7 @@ sonja 826 943 190
 </code></pre>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>idx <span style="color:#f92672">=</span> <span style="color:#ae81ff">154</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>idx <span style="color:#f92672">=</span> <span style="color:#ae81ff">154</span>
 </span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;Positive&#39;</span> <span style="color:#66d9ef">if</span> y_train<span style="color:#f92672">.</span>values[idx] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#39;Negative&#39;</span>)
 </span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;Text:&#39;</span>, df<span style="color:#f92672">.</span>iloc[idx][<span style="color:#e6db74">&#34;comments&#34;</span>])
 </span></span><span style="display:flex;"><span>shap<span style="color:#f92672">.</span>plots<span style="color:#f92672">.</span>force(
@@ -930,7 +939,7 @@ Text: my email account is still not connected and it does not work. tried a coup
 </p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>idx <span style="color:#f92672">=</span> <span style="color:#ae81ff">242</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>idx <span style="color:#f92672">=</span> <span style="color:#ae81ff">242</span>
 </span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;Positive&#39;</span> <span style="color:#66d9ef">if</span> y_train<span style="color:#f92672">.</span>values[idx] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#39;Negative&#39;</span>)
 </span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;Text:&#39;</span>, df<span style="color:#f92672">.</span>iloc[idx][<span style="color:#e6db74">&#34;comments&#34;</span>])
 </span></span><span style="display:flex;"><span>shap<span style="color:#f92672">.</span>plots<span style="color:#f92672">.</span>force(
@@ -947,7 +956,7 @@ Text: Fast answer and a perfect answer because the function I was looking for wa
 </p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>idx <span style="color:#f92672">=</span> <span style="color:#ae81ff">826</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>idx <span style="color:#f92672">=</span> <span style="color:#ae81ff">826</span>
 </span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;Positive&#39;</span> <span style="color:#66d9ef">if</span> y_train<span style="color:#f92672">.</span>values[idx] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#39;Negative&#39;</span>)
 </span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;Text:&#39;</span>, df<span style="color:#f92672">.</span>iloc[idx][<span style="color:#e6db74">&#34;comments&#34;</span>])
 </span></span><span style="display:flex;"><span>shap<span style="color:#f92672">.</span>plots<span style="color:#f92672">.</span>force(
@@ -972,7 +981,7 @@ Text: Quick and thorough answer by support agent Sonja!
 <p>Well, we got some new insights using custom model approach, let&rsquo;s see whether the modern NN architecture will be able to unlock even more meaningful take-away&rsquo;s without additional training</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> transformers <span style="color:#f92672">import</span> pipeline
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> transformers <span style="color:#f92672">import</span> pipeline
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>sentiment_transformer_model <span style="color:#f92672">=</span> pipeline(
 </span></span><span style="display:flex;"><span>    task<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sentiment-analysis&#34;</span>,
@@ -991,7 +1000,7 @@ Text: Quick and thorough answer by support agent Sonja!
 <p>The drawback of this approach becomes obvious as soon as you start applying it, even inference is taking a lot of time, fingers crossed it&rsquo;s worths it, let&rsquo;s look at the classification quality</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">twitter_roberta_predict</span>(scoring_output):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">twitter_roberta_predict</span>(scoring_output):
 </span></span><span style="display:flex;"><span>    scoring_output<span style="color:#f92672">.</span>sort(key<span style="color:#f92672">=</span><span style="color:#66d9ef">lambda</span> x: x[<span style="color:#e6db74">&#39;score&#39;</span>], reverse<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
 </span></span><span style="display:flex;"><span>    prediction <span style="color:#f92672">=</span> scoring_output[scoring_output[<span style="color:#ae81ff">0</span>][<span style="color:#e6db74">&#39;label&#39;</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;neutral&#39;</span>][<span style="color:#e6db74">&#39;label&#39;</span>]
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> prediction <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;positive&#34;</span>:
@@ -1018,7 +1027,7 @@ weighted avg       0.31      0.29      0.29       276
 <p>Anyway, let&rsquo;s take a look on how the language model works before pigeonholing it, here we are just some examples, to get a better summary a larger portion of the dataset is needed</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>explainer <span style="color:#f92672">=</span> shap<span style="color:#f92672">.</span>Explainer(sentiment_transformer_model)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>explainer <span style="color:#f92672">=</span> shap<span style="color:#f92672">.</span>Explainer(sentiment_transformer_model)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>shap_values <span style="color:#f92672">=</span> explainer(
 </span></span><span style="display:flex;"><span>    X_train<span style="color:#f92672">.</span>loc[X_train[<span style="color:#e6db74">&#34;lemma_text&#34;</span>]<span style="color:#f92672">.</span>apply(<span style="color:#66d9ef">lambda</span> x: len(x<span style="color:#f92672">.</span>split()) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">5</span>), <span style="color:#e6db74">&#34;lemma_text&#34;</span>]<span style="color:#f92672">.</span>sample(<span style="color:#ae81ff">3</span>),
@@ -5886,7 +5895,7 @@ function _output_onmouseover_tlgfrsmwqcykupamtzmr(i, el) {
         ></div></div></div></div></div>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>shap_values <span style="color:#f92672">=</span> explainer(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>shap_values <span style="color:#f92672">=</span> explainer(
 </span></span><span style="display:flex;"><span>    X_train[<span style="color:#e6db74">&#34;lemma_text&#34;</span>]<span style="color:#f92672">.</span>sample(<span style="color:#ae81ff">10</span>),
 </span></span><span style="display:flex;"><span>    silent<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>
 </span></span><span style="display:flex;"><span>)
@@ -5907,7 +5916,7 @@ function _output_onmouseover_tlgfrsmwqcykupamtzmr(i, el) {
 <p>Here for topic modelling is used one of the well-known model - LDA</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> gensim <span style="color:#f92672">import</span> corpora, models
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> gensim <span style="color:#f92672">import</span> corpora, models
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>loc[df[<span style="color:#e6db74">&#34;sentiment&#34;</span>] <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#34;lemma_text&#34;</span>]<span style="color:#f92672">.</span>apply(str<span style="color:#f92672">.</span>split)
 </span></span><span style="display:flex;"><span>texts <span style="color:#f92672">=</span> data<span style="color:#f92672">.</span>to_list()
@@ -5920,7 +5929,7 @@ function _output_onmouseover_tlgfrsmwqcykupamtzmr(i, el) {
 <p>Coherence is the metric that is most correlated with an external human assessment quality metric and hopefully it can be calculated without any manual interposition hence it&rsquo;s very useful to determine the optimal topic number</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">20231025</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">20231025</span>)
 </span></span><span style="display:flex;"><span>topics <span style="color:#f92672">=</span> range(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">8</span>)
 </span></span><span style="display:flex;"><span>out <span style="color:#f92672">=</span> []
 </span></span><span style="display:flex;"><span>
@@ -5943,7 +5952,7 @@ Topic Num = 7 Coherence = -5.01
 </code></pre>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>plot(topics, out, <span style="color:#e6db74">&#34;go-&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>plot(topics, out, <span style="color:#e6db74">&#34;go-&#34;</span>)
 </span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>title(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Best Topic Num = </span><span style="color:#e6db74">{</span>topics[np<span style="color:#f92672">.</span>array(out)<span style="color:#f92672">.</span>argmax()]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
 </span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>ylabel(<span style="color:#e6db74">&#34;Coherence&#34;</span>)
 </span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>xlabel(<span style="color:#e6db74">&#34;Topics Num&#34;</span>)
@@ -5954,7 +5963,7 @@ Topic Num = 7 Coherence = -5.01
 <p>Well, let&rsquo;s build the model for 3 topics then as it provides the highest value of coherence</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">20231025</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">20231025</span>)
 </span></span><span style="display:flex;"><span>ldamodel <span style="color:#f92672">=</span> models<span style="color:#f92672">.</span>ldamodel<span style="color:#f92672">.</span>LdaModel(corpus, id2word<span style="color:#f92672">=</span>dictionary, num_topics<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>, passes<span style="color:#f92672">=</span><span style="color:#ae81ff">20</span>)
 </span></span><span style="display:flex;"><span>ldamodel<span style="color:#f92672">.</span>show_topics(num_topics<span style="color:#f92672">=</span>ldamodel<span style="color:#f92672">.</span>num_topics, num_words<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>, formatted<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
 </span></span></code></pre></div></details>
@@ -5968,7 +5977,7 @@ Topic Num = 7 Coherence = -5.01
 <p>Methods to get $\Phi$ and $\Theta$ matrices from the LDA model which are represent $P(word|topic)$ and $P(topic|document)$ respectively from LDA model</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_phi</span>(ldamodel):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_phi</span>(ldamodel):
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> pd<span style="color:#f92672">.</span>DataFrame(ldamodel<span style="color:#f92672">.</span>get_topics())<span style="color:#f92672">.</span>T
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_theta</span>(ldamodel):
@@ -5989,7 +5998,7 @@ P(topic|word) = \frac {P(word|topic) P(topic)} {\sum_t&rsquo; P(word|t&rsquo;) P
 $$</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>phi_top_words <span style="color:#f92672">=</span> (
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>phi_top_words <span style="color:#f92672">=</span> (
 </span></span><span style="display:flex;"><span>    phi<span style="color:#f92672">.</span>assign(sum<span style="color:#f92672">=</span>phi<span style="color:#f92672">.</span>sum(axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>))
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">.</span>sort_values(by<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;sum&#39;</span>, ascending<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">.</span>drop(columns<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;sum&#39;</span>])
@@ -6017,7 +6026,7 @@ $$</p>
 <p>Once we have all the matrices, let&rsquo;s visualize the data with Word Cloud where the size represents the total probability for the word over all the themes and the color reflects the theme for which the probability is reaching the maximum when receiving such a word as an input</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%</span>matplotlib inline
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%</span>matplotlib inline
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>colors <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;white&#34;</span>, <span style="color:#e6db74">&#34;yellow&#34;</span>, <span style="color:#e6db74">&#34;green&#34;</span>]
 </span></span><span style="display:flex;"><span>
@@ -6048,7 +6057,7 @@ $$</p>
 <p>It&rsquo;s time to name the topics then and take a look at the prior distribution, note that the general theme is more popular as expected from a common sense</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>topic_labels <span style="color:#f92672">=</span> [
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>topic_labels <span style="color:#f92672">=</span> [
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Specific feedback - Particular account or payment problem&#34;</span>,
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;General negative customer experience - Issue was not duly resolved&#34;</span>,
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Formal direct feedback - Pleo service takes too much time&#34;</span>,
@@ -6075,36 +6084,36 @@ $$</p>
 </code></pre>
 <p></style></p>
 <table>
-<thead>
-<tr>
-<th></th>
-<th>p(t)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Label</td>
-<td></td>
-</tr>
-<tr>
-<td>General negative customer experience - Issue was not duly resolved</td>
-<td>0.42</td>
-</tr>
-<tr>
-<td>Formal direct feedback - Pleo service takes too much time</td>
-<td>0.35</td>
-</tr>
-<tr>
-<td>Specific feedback - Particular account or payment problem</td>
-<td>0.24</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th></th>
+          <th>p(t)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Label</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>General negative customer experience - Issue was not duly resolved</td>
+          <td>0.42</td>
+      </tr>
+      <tr>
+          <td>Formal direct feedback - Pleo service takes too much time</td>
+          <td>0.35</td>
+      </tr>
+      <tr>
+          <td>Specific feedback - Particular account or payment problem</td>
+          <td>0.24</td>
+      </tr>
+  </tbody>
 </table>
 </div>
 <p>Here are examples of review for each of the topic which quite good reflect their naming</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i, nm <span style="color:#f92672">in</span> enumerate(topic_labels):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i, nm <span style="color:#f92672">in</span> enumerate(topic_labels):
 </span></span><span style="display:flex;"><span>    print(i, nm)
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> comment <span style="color:#f92672">in</span> df<span style="color:#f92672">.</span>loc[
 </span></span><span style="display:flex;"><span>        indexes[theta<span style="color:#f92672">.</span>T<span style="color:#f92672">.</span>values<span style="color:#f92672">.</span>argsort()[:, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">==</span> i], <span style="color:#e6db74">&#34;comments&#34;</span>
@@ -6232,7 +6241,7 @@ figured it out myself before anyone got back to me
     </main>
     
 <footer class="footer">
-    <span>&copy; 2025 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
+    <span>&copy; 2026 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
     <span>
         Powered by
         <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &

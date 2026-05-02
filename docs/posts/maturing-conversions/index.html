@@ -47,17 +47,20 @@
 
 <script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-ESWD18X008', { 'anonymize_ip': false });
-}
-</script>
-<meta property="og:title" content="Maturing Conversions in AB-experiment" />
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-ESWD18X008');
+        }
+      </script><meta property="og:title" content="Maturing Conversions in AB-experiment" />
 <meta property="og:description" content="Why you need to be patient and when cohort-wise approach is a flaw" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://npodlozhniy.github.io/posts/maturing-conversions/" /><meta property="article:section" content="posts" />
@@ -197,7 +200,7 @@ if (!doNotTrack) {
     <h1 class="post-title">
       Maturing Conversions in AB-experiment
     </h1>
-    <div class="post-meta"><span title='2024-08-20 00:00:00 +0000 UTC'>August 20, 2024</span>&nbsp;·&nbsp;18 min&nbsp;·&nbsp;Nikita Podlozhniy
+    <div class="post-meta">&lt;span title=&#39;2024-08-20 00:00:00 &#43;0000 UTC&#39;&gt;August 20, 2024&lt;/span&gt;&amp;nbsp;·&amp;nbsp;18 min&amp;nbsp;·&amp;nbsp;Nikita Podlozhniy
 
 </div>
   </header> <div class="toc">
@@ -251,7 +254,7 @@ This time I&rsquo;m eager to open the topic of maturing metrics, particularly co
 </blockquote>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>pip install <span style="color:#f92672">--</span>quiet <span style="color:#f92672">--</span>upgrade numpy<span style="color:#f92672">==</span><span style="color:#ae81ff">1.25.2</span> pandas<span style="color:#f92672">==</span><span style="color:#ae81ff">2.0.3</span> scipy<span style="color:#f92672">==</span><span style="color:#ae81ff">1.11.2</span> statsmodels<span style="color:#f92672">==</span><span style="color:#ae81ff">0.14.0</span> podlozhnyy_module<span style="color:#f92672">==</span><span style="color:#ae81ff">2.5.3</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>pip install <span style="color:#f92672">--</span>quiet <span style="color:#f92672">--</span>upgrade numpy<span style="color:#f92672">==</span><span style="color:#ae81ff">1.25.2</span> pandas<span style="color:#f92672">==</span><span style="color:#ae81ff">2.0.3</span> scipy<span style="color:#f92672">==</span><span style="color:#ae81ff">1.11.2</span> statsmodels<span style="color:#f92672">==</span><span style="color:#ae81ff">0.14.0</span> podlozhnyy_module<span style="color:#f92672">==</span><span style="color:#ae81ff">2.5.3</span>
 </span></span></code></pre></div></details>
 <h3 id="data">Data<a hidden class="anchor" aria-hidden="true" href="#data">#</a></h3>
 <p>We need more data!
@@ -265,7 +268,7 @@ This time the data simulation process is a little tricky than in case of a plain
 <p>For this post let&rsquo;s stop at one specific and quite realistic distribution of the metric maturation by days.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> podlozhnyy_module <span style="color:#66d9ef">as</span> pm
@@ -277,7 +280,7 @@ This time the data simulation process is a little tricky than in case of a plain
 <a href="https://github.com/NPodlozhniy/podlozhnyy-module/blob/d01847c676180537cc2f0a3279f2ae2748d1fecf/podlozhnyy_module/pareto.py#L54">ParetoExtended</a> in addition to Pareto specific <code>alpha</code>, <code>loc</code> and <code>scale</code> params is taking <code>default_proba</code> and <code>default_value</code> which means what ultimate percentage of visitors would never convert and which particular value should I assign to them, it&rsquo;s an arbitrary (usually negative) number that stands on the left of X axis from the main Pareto distribution.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>f <span style="color:#f92672">=</span> pm<span style="color:#f92672">.</span>pareto<span style="color:#f92672">.</span>ParetoExtended(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>f <span style="color:#f92672">=</span> pm<span style="color:#f92672">.</span>pareto<span style="color:#f92672">.</span>ParetoExtended(
 </span></span><span style="display:flex;"><span>    alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">1.161</span>,
 </span></span><span style="display:flex;"><span>    default_value<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,
 </span></span><span style="display:flex;"><span>    default_proba<span style="color:#f92672">=</span><span style="color:#ae81ff">0.5</span>
@@ -286,7 +289,7 @@ This time the data simulation process is a little tricky than in case of a plain
 <p>As an example here is the metric where the ultimate conversion is a half of the users (and the other half is never converted) and their conversions happen accordingly to a textbook Pareto principle 80-20</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> matplotlib <span style="color:#f92672">import</span> pyplot <span style="color:#66d9ef">as</span> plt
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> matplotlib <span style="color:#f92672">import</span> pyplot <span style="color:#66d9ef">as</span> plt
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>style<span style="color:#f92672">.</span>use(<span style="color:#e6db74">&#39;dark_background&#39;</span>)
 </span></span><span style="display:flex;"><span>
@@ -320,7 +323,7 @@ This time the data simulation process is a little tricky than in case of a plain
 <p>The line start from 0.5 because it&rsquo;s defined with <code>default_proba</code> that only a half of users will have a conversion after all, for the half of them there will be no conversion at all, so they reach the maturatity on the first day.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># eval: false</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># eval: false</span>
 </span></span><span style="display:flex;"><span>sample <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>rvs(<span style="color:#ae81ff">100_000</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># 80th percentile of Pareto part is 90th percentile of declared random variable</span>
@@ -338,7 +341,7 @@ This time the data simulation process is a little tricky than in case of a plain
 <p>First of all let&rsquo;s set a few introductory parameters and move on to the sample&rsquo;s size calculation, that we have to provide in order to achieve 80% power. We explore a deep conversion, so the base value is a matter of tenths of a percent, in addition we will employ multivariate testing approach as it&rsquo;s usually the case.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> podlozhnyy_module.abtesting <span style="color:#f92672">import</span> ZDunnett
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> podlozhnyy_module.abtesting <span style="color:#f92672">import</span> ZDunnett
 </span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> statsmodels.stats.proportion <span style="color:#f92672">import</span> proportion_confint
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
@@ -371,7 +374,7 @@ This time the data simulation process is a little tricky than in case of a plain
 <p>For an accurate size calculation let&rsquo;s get a proper estimate of the variance from a simulation of a future experiment. The conversions number is considered a binomial random variable, like there is no maturity, it&rsquo;s equal to a size estimation on the basis of the historical value of your conversion.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>input <span style="color:#f92672">=</span> dict()
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>input <span style="color:#f92672">=</span> dict()
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>input[<span style="color:#e6db74">&#34;names&#34;</span>] <span style="color:#f92672">=</span> [chr(ord(<span style="color:#e6db74">&#34;A&#34;</span>) <span style="color:#f92672">+</span> i) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(N_GROUPS)]
 </span></span><span style="display:flex;"><span>input[<span style="color:#e6db74">&#34;variant&#34;</span>] <span style="color:#f92672">=</span> input[<span style="color:#e6db74">&#34;names&#34;</span>][<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
@@ -389,7 +392,7 @@ This time the data simulation process is a little tricky than in case of a plain
 </code></pre>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>min_sample_size(mde<span style="color:#f92672">=</span>EFFECT_SIZE <span style="color:#f92672">*</span> CONVERSION, var<span style="color:#f92672">=</span>test<span style="color:#f92672">.</span>variance, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.1</span>, power<span style="color:#f92672">=</span><span style="color:#ae81ff">0.8</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>min_sample_size(mde<span style="color:#f92672">=</span>EFFECT_SIZE <span style="color:#f92672">*</span> CONVERSION, var<span style="color:#f92672">=</span>test<span style="color:#f92672">.</span>variance, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.1</span>, power<span style="color:#f92672">=</span><span style="color:#ae81ff">0.8</span>)
 </span></span></code></pre></div></details>
 <pre><code>207983
 </code></pre>
@@ -398,7 +401,7 @@ This time the data simulation process is a little tricky than in case of a plain
 <p>Let&rsquo;s design a procedure to look at the power in case of early stopping for different time frames and as a good habit it&rsquo;s always better to ensure the correctness of the criterion beforehand - so will measure that FWER is controlled accordingly as well.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># it can by any negative number, that works just like a signal of the lack of conversion</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># it can by any negative number, that works just like a signal of the lack of conversion</span>
 </span></span><span style="display:flex;"><span>DEFAULT <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">10</span>
 </span></span></code></pre></div></details>
 <p>It is proposed to use some arbitrary extended Pareto distribution, that has a few characteristics</p>
@@ -409,7 +412,7 @@ This time the data simulation process is a little tricky than in case of a plain
 </ul>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">distribution</span>(conv_proba: float) <span style="color:#f92672">-&gt;</span> pm<span style="color:#f92672">.</span>pareto<span style="color:#f92672">.</span>ParetoExtended:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">distribution</span>(conv_proba: float) <span style="color:#f92672">-&gt;</span> pm<span style="color:#f92672">.</span>pareto<span style="color:#f92672">.</span>ParetoExtended:
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Returns a possible distribution of a maturating metric
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
@@ -444,7 +447,7 @@ This time the data simulation process is a little tricky than in case of a plain
 Simplifying the code, Monte Carlo procedure is wrapped into a function with all the necessary parameters supplied as arguments.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_sample</span>(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_sample</span>(
 </span></span><span style="display:flex;"><span>    conv_proba: float,
 </span></span><span style="display:flex;"><span>    exp_duration: int,
 </span></span><span style="display:flex;"><span>    users_per_day: int,
@@ -546,7 +549,7 @@ Simplifying the code, Monte Carlo procedure is wrapped into a function with all 
 <p>It&rsquo;s never an excess to double check that the criterion that is used works as expected.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
 </span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>_ <span style="color:#f92672">=</span> monte_carlo()
 </span></span></code></pre></div></details>
@@ -561,7 +564,7 @@ Wall time: 8min 5s
 <p>In case of no pause after the latest visitor exposure - the power falls off to 60%, just a reminder that it supposed to be 80%, insane!</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
 </span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>_ <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
 </span></span></code></pre></div></details>
@@ -575,7 +578,7 @@ Wall time: 7min 32s
 <p>Let&rsquo;s explore what happens to the power if we are not in a hurry with conclusions.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_sample</span>(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_sample</span>(
 </span></span><span style="display:flex;"><span>    conv_proba: float,
 </span></span><span style="display:flex;"><span>    exp_duration: int,
 </span></span><span style="display:flex;"><span>    users_per_day: int,
@@ -600,7 +603,7 @@ Wall time: 7min 32s
 Be careful as the code below takes time!</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
 </span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>power_with_waiting <span style="color:#f92672">=</span> []
@@ -617,7 +620,7 @@ Wall time: 1h 17min 40s
 </code></pre>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
 </span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>power_with_waiting_4weeks <span style="color:#f92672">=</span> []
@@ -636,7 +639,7 @@ Wall time: 1h 37min 56s
 We lose about 10 percentage points of the power if we are not ready to wait yet another week.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly.express <span style="color:#66d9ef">as</span> px
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly.express <span style="color:#66d9ef">as</span> px
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly.graph_objs <span style="color:#66d9ef">as</span> go
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">hex2rgba</span>(hex, alpha):
@@ -733,7 +736,7 @@ In simple words a delay to maturation of the metric during the weekend is added,
 Of course it&rsquo;s intensely simplified example that only takes into account the first week of the maturation and doesn&rsquo;t account for users variation per day, the result speaks for itself though.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_sample</span>(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_sample</span>(
 </span></span><span style="display:flex;"><span>    conv_proba: float,
 </span></span><span style="display:flex;"><span>    exp_duration: int,
 </span></span><span style="display:flex;"><span>    users_per_day: int,
@@ -765,7 +768,7 @@ I suggest we reproducing this set up and assume we draw a conclusion at the next
 How the power of an experiment depends on a day of the week when it was run?</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
 </span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>weekday_power <span style="color:#f92672">=</span> []
@@ -782,7 +785,7 @@ Wall time: 33min 28s
 </code></pre>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly.graph_objects <span style="color:#66d9ef">as</span> go
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly.graph_objects <span style="color:#66d9ef">as</span> go
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>fig <span style="color:#f92672">=</span> go<span style="color:#f92672">.</span>Figure()
 </span></span><span style="display:flex;"><span>
@@ -816,7 +819,7 @@ Wall time: 33min 28s
 <p>As expected, worst day of the week scenario is Monday, interesting what happens to the power if we&rsquo;re ready to wait with analysis for an extra week until the next Monday?</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>_ <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, extra_waiting_days<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span>, weekday_exp_start<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
 </span></span></code></pre></div></details>
 <pre><code>TPR of 12% effect size 
@@ -831,7 +834,7 @@ where 10,000 users are exposed per day:
 Let&rsquo;s compare such a &ldquo;cohort based&rdquo; approach power against the basis &ldquo;count everything that&rsquo;s converted so far&rdquo;.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_sample</span>(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_sample</span>(
 </span></span><span style="display:flex;"><span>    conv_proba: float,
 </span></span><span style="display:flex;"><span>    exp_duration: int,
 </span></span><span style="display:flex;"><span>    users_per_day: int,
@@ -851,7 +854,7 @@ Let&rsquo;s compare such a &ldquo;cohort based&rdquo; approach power against the
 <p>We need to recalculate sample size as it would be different because now the ultimate conversion is lower, we only take into account specific time frame for every cohort.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>input <span style="color:#f92672">=</span> dict()
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>input <span style="color:#f92672">=</span> dict()
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>input[<span style="color:#e6db74">&#34;names&#34;</span>] <span style="color:#f92672">=</span> [chr(ord(<span style="color:#e6db74">&#34;A&#34;</span>) <span style="color:#f92672">+</span> i) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(N_GROUPS)]
 </span></span><span style="display:flex;"><span>input[<span style="color:#e6db74">&#34;variant&#34;</span>] <span style="color:#f92672">=</span> input[<span style="color:#e6db74">&#34;names&#34;</span>][<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
@@ -869,14 +872,14 @@ Let&rsquo;s compare such a &ldquo;cohort based&rdquo; approach power against the
 </code></pre>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>min_sample_size(mde<span style="color:#f92672">=</span>EFFECT_SIZE <span style="color:#f92672">*</span> np<span style="color:#f92672">.</span>mean(test<span style="color:#f92672">.</span>p_samples <span style="color:#f92672">/</span> test<span style="color:#f92672">.</span>n_samples), var<span style="color:#f92672">=</span>test<span style="color:#f92672">.</span>variance)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>min_sample_size(mde<span style="color:#f92672">=</span>EFFECT_SIZE <span style="color:#f92672">*</span> np<span style="color:#f92672">.</span>mean(test<span style="color:#f92672">.</span>p_samples <span style="color:#f92672">/</span> test<span style="color:#f92672">.</span>n_samples), var<span style="color:#f92672">=</span>test<span style="color:#f92672">.</span>variance)
 </span></span></code></pre></div></details>
 <pre><code>344708
 </code></pre>
 <p>As you can see more days of sampling are required for this technique, followed by those after the end of experiment when we wait for a convergence of a conversion.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>_ <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, baking_window<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span>)
 </span></span></code></pre></div></details>
 <pre><code>TPR of 12% effect size 
@@ -888,7 +891,7 @@ where 10,000 users are exposed per day:
 <p>If no more days provided - then the power is rather low, although for more extensive experiment it&rsquo;s mush higher.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>_ <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, exp_duration<span style="color:#f92672">=</span><span style="color:#ae81ff">28</span>, baking_window<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span>)
 </span></span></code></pre></div></details>
 <pre><code>TPR of 12% effect size 
@@ -904,7 +907,7 @@ where 10,000 users are exposed per day:
 </ul>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
 </span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>power_baking_window <span style="color:#f92672">=</span> []
@@ -921,7 +924,7 @@ Wall time: 1h 16min 40s
 </code></pre>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>figure <span style="color:#f92672">=</span> go<span style="color:#f92672">.</span>Figure()
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>figure <span style="color:#f92672">=</span> go<span style="color:#f92672">.</span>Figure()
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>add_chart(figure, power_with_waiting, title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;w/o baking window&#34;</span>, showtitle<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
 </span></span><span style="display:flex;"><span>add_chart(figure, power_baking_window, title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;with baking window&#34;</span>, showtitle<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
@@ -953,7 +956,7 @@ Wall time: 1h 16min 40s
 It provides a higher power by a wide margin if you wait just a few days after the experiment while if you have a forbearance to wait longer the difference is not significant.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">%%</span>time
 </span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>power_baking_window_4weeks <span style="color:#f92672">=</span> []
@@ -973,7 +976,7 @@ It&rsquo;s quite obvious that the longer experiment takes the less significant w
 Here is the comparison similar to one above but for 4-weeks experiment with a little less effect size, so it shall show close power numbers.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>figure <span style="color:#f92672">=</span> go<span style="color:#f92672">.</span>Figure()
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>figure <span style="color:#f92672">=</span> go<span style="color:#f92672">.</span>Figure()
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>add_chart(figure, power_with_waiting_4weeks, title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;w/o baking window&#34;</span>, showtitle<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
 </span></span><span style="display:flex;"><span>add_chart(figure, power_baking_window_4weeks, title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;with baking window&#34;</span>, showtitle<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
@@ -1077,7 +1080,7 @@ Here is the comparison similar to one above but for 4-weeks experiment with a li
     </main>
     
 <footer class="footer">
-    <span>&copy; 2025 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
+    <span>&copy; 2026 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
     <span>
         Powered by
         <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &

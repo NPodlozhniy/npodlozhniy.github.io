@@ -5,7 +5,7 @@
     <loc>https://npodlozhniy.github.io/ru/categories/</loc>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
+                hreflang="en-gb"
                 href="https://npodlozhniy.github.io/categories/"
                 />
     <xhtml:link
@@ -14,10 +14,22 @@
                 href="https://npodlozhniy.github.io/ru/categories/"
                 />
   </url><url>
+    <loc>https://npodlozhniy.github.io/ru/posts/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en-gb"
+                href="https://npodlozhniy.github.io/posts/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ru"
+                href="https://npodlozhniy.github.io/ru/posts/"
+                />
+  </url><url>
     <loc>https://npodlozhniy.github.io/ru/social/</loc>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
+                hreflang="en-gb"
                 href="https://npodlozhniy.github.io/social/"
                 />
     <xhtml:link
@@ -29,7 +41,7 @@
     <loc>https://npodlozhniy.github.io/ru/tags/</loc>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
+                hreflang="en-gb"
                 href="https://npodlozhniy.github.io/tags/"
                 />
     <xhtml:link
@@ -41,7 +53,7 @@
     <loc>https://npodlozhniy.github.io/ru/archives/</loc>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
+                hreflang="en-gb"
                 href="https://npodlozhniy.github.io/archives/"
                 />
     <xhtml:link
@@ -53,7 +65,7 @@
     <loc>https://npodlozhniy.github.io/ru/</loc>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
+                hreflang="en-gb"
                 href="https://npodlozhniy.github.io/"
                 />
     <xhtml:link
@@ -65,7 +77,7 @@
     <loc>https://npodlozhniy.github.io/ru/search/</loc>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
+                hreflang="en-gb"
                 href="https://npodlozhniy.github.io/search/"
                 />
     <xhtml:link

@@ -7,9 +7,29 @@
 <meta name="robots" content="index, follow">
 <title>Time Series Analysis in Python | Nikita Podlozhniy</title>
 <meta name="keywords" content="">
-<meta name="description" content="Intro It&rsquo;s a short yet handy guide on how to analyze time series data in a few clicks using modern Python libraries.
+<meta name="description" content="
+
+
+
+Intro
+It&rsquo;s a short yet handy guide on how to analyze time series data in a few clicks using modern Python libraries.
 Tech stack for this guide consists of
-duckdb and pandas packages for data processing Facebook&rsquo;s prophet for data exploration and forecasting plotly for data visualization Codeimport duckdb as db import pandas as pd import numpy as np orders = pd.read_csv(&#39;orders_data.csv&#39;) orders.sample() Created Date Country City Restaurant ID Restaurant Name Order State Cancel Reason Cuisine Platform Products in Order Order Value € (Gross) Delivery Fee Delivery Time Order ID 44255 10.">
+
+duckdb and pandas packages for data processing
+Facebook&rsquo;s prophet for data exploration and forecasting
+plotly for data visualization
+
+
+Code
+import duckdb as db
+import pandas as pd
+import numpy as np
+
+orders = pd.read_csv(&#39;orders_data.csv&#39;)
+orders.sample()
+
+
+">
 <meta name="author" content="Nikita Podlozhniy">
 <link rel="canonical" href="https://npodlozhniy.github.io/posts/timeseries-analysis/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
@@ -49,20 +69,43 @@ duckdb and pandas packages for data processing Facebook&rsquo;s prophet for data
 
 <script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-ESWD18X008', { 'anonymize_ip': false });
-}
-</script>
-<meta property="og:title" content="Time Series Analysis in Python" />
-<meta property="og:description" content="Intro It&rsquo;s a short yet handy guide on how to analyze time series data in a few clicks using modern Python libraries.
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-ESWD18X008');
+        }
+      </script><meta property="og:title" content="Time Series Analysis in Python" />
+<meta property="og:description" content="
+
+
+
+Intro
+It&rsquo;s a short yet handy guide on how to analyze time series data in a few clicks using modern Python libraries.
 Tech stack for this guide consists of
-duckdb and pandas packages for data processing Facebook&rsquo;s prophet for data exploration and forecasting plotly for data visualization Codeimport duckdb as db import pandas as pd import numpy as np orders = pd.read_csv(&#39;orders_data.csv&#39;) orders.sample() Created Date Country City Restaurant ID Restaurant Name Order State Cancel Reason Cuisine Platform Products in Order Order Value € (Gross) Delivery Fee Delivery Time Order ID 44255 10." />
+
+duckdb and pandas packages for data processing
+Facebook&rsquo;s prophet for data exploration and forecasting
+plotly for data visualization
+
+
+Code
+import duckdb as db
+import pandas as pd
+import numpy as np
+
+orders = pd.read_csv(&#39;orders_data.csv&#39;)
+orders.sample()
+
+
+" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://npodlozhniy.github.io/posts/timeseries-analysis/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-09-02T00:00:00+00:00" />
@@ -70,9 +113,29 @@ duckdb and pandas packages for data processing Facebook&rsquo;s prophet for data
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Time Series Analysis in Python"/>
-<meta name="twitter:description" content="Intro It&rsquo;s a short yet handy guide on how to analyze time series data in a few clicks using modern Python libraries.
+<meta name="twitter:description" content="
+
+
+
+Intro
+It&rsquo;s a short yet handy guide on how to analyze time series data in a few clicks using modern Python libraries.
 Tech stack for this guide consists of
-duckdb and pandas packages for data processing Facebook&rsquo;s prophet for data exploration and forecasting plotly for data visualization Codeimport duckdb as db import pandas as pd import numpy as np orders = pd.read_csv(&#39;orders_data.csv&#39;) orders.sample() Created Date Country City Restaurant ID Restaurant Name Order State Cancel Reason Cuisine Platform Products in Order Order Value € (Gross) Delivery Fee Delivery Time Order ID 44255 10."/>
+
+duckdb and pandas packages for data processing
+Facebook&rsquo;s prophet for data exploration and forecasting
+plotly for data visualization
+
+
+Code
+import duckdb as db
+import pandas as pd
+import numpy as np
+
+orders = pd.read_csv(&#39;orders_data.csv&#39;)
+orders.sample()
+
+
+"/>
 
 
 <script type="application/ld+json">
@@ -101,7 +164,7 @@ duckdb and pandas packages for data processing Facebook&rsquo;s prophet for data
   "@type": "BlogPosting",
   "headline": "Time Series Analysis in Python",
   "name": "Time Series Analysis in Python",
-  "description": "Intro It\u0026rsquo;s a short yet handy guide on how to analyze time series data in a few clicks using modern Python libraries.\nTech stack for this guide consists of\nduckdb and pandas packages for data processing Facebook\u0026rsquo;s prophet for data exploration and forecasting plotly for data visualization Code\rimport duckdb as db import pandas as pd import numpy as np orders = pd.read_csv(\u0026#39;orders_data.csv\u0026#39;) orders.sample() Created Date Country City Restaurant ID Restaurant Name Order State Cancel Reason Cuisine Platform Products in Order Order Value € (Gross) Delivery Fee Delivery Time Order ID 44255 10.",
+  "description": "\rIntro It\u0026rsquo;s a short yet handy guide on how to analyze time series data in a few clicks using modern Python libraries.\nTech stack for this guide consists of\nduckdb and pandas packages for data processing Facebook\u0026rsquo;s prophet for data exploration and forecasting plotly for data visualization Code\rimport duckdb as db import pandas as pd import numpy as np orders = pd.read_csv(\u0026#39;orders_data.csv\u0026#39;) orders.sample() ",
   "keywords": [
     
   ],
@@ -203,7 +266,7 @@ duckdb and pandas packages for data processing Facebook&rsquo;s prophet for data
     <h1 class="post-title">
       Time Series Analysis in Python
     </h1>
-    <div class="post-meta"><span title='2023-09-02 00:00:00 +0000 UTC'>September 2, 2023</span>&nbsp;·&nbsp;18 min&nbsp;·&nbsp;Nikita Podlozhniy
+    <div class="post-meta">&lt;span title=&#39;2023-09-02 00:00:00 &#43;0000 UTC&#39;&gt;September 2, 2023&lt;/span&gt;&amp;nbsp;·&amp;nbsp;18 min&amp;nbsp;·&amp;nbsp;Nikita Podlozhniy
 
 </div>
   </header> <div class="toc">
@@ -291,7 +354,7 @@ require(['plotly'], function(Plotly) {
 </ul>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> duckdb <span style="color:#66d9ef">as</span> db
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> duckdb <span style="color:#66d9ef">as</span> db
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
 </span></span><span style="display:flex;"><span>
@@ -313,44 +376,44 @@ require(['plotly'], function(Plotly) {
 </code></pre>
 <p></style></p>
 <table>
-<thead>
-<tr>
-<th></th>
-<th>Created Date</th>
-<th>Country</th>
-<th>City</th>
-<th>Restaurant ID</th>
-<th>Restaurant Name</th>
-<th>Order State</th>
-<th>Cancel Reason</th>
-<th>Cuisine</th>
-<th>Platform</th>
-<th>Products in Order</th>
-<th>Order Value € (Gross)</th>
-<th>Delivery Fee</th>
-<th>Delivery Time</th>
-<th>Order ID</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>44255</td>
-<td>10.01.2020</td>
-<td>Portugal</td>
-<td>Lisbon</td>
-<td>6167</td>
-<td>H3 Armazéns do Chiado</td>
-<td>delivered</td>
-<td>NaN</td>
-<td>Mediterranean</td>
-<td>ios</td>
-<td>1</td>
-<td>€9.55</td>
-<td>0.0</td>
-<td>14.7</td>
-<td>379143844</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th></th>
+          <th>Created Date</th>
+          <th>Country</th>
+          <th>City</th>
+          <th>Restaurant ID</th>
+          <th>Restaurant Name</th>
+          <th>Order State</th>
+          <th>Cancel Reason</th>
+          <th>Cuisine</th>
+          <th>Platform</th>
+          <th>Products in Order</th>
+          <th>Order Value € (Gross)</th>
+          <th>Delivery Fee</th>
+          <th>Delivery Time</th>
+          <th>Order ID</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>44255</td>
+          <td>10.01.2020</td>
+          <td>Portugal</td>
+          <td>Lisbon</td>
+          <td>6167</td>
+          <td>H3 Armazéns do Chiado</td>
+          <td>delivered</td>
+          <td>NaN</td>
+          <td>Mediterranean</td>
+          <td>ios</td>
+          <td>1</td>
+          <td>€9.55</td>
+          <td>0.0</td>
+          <td>14.7</td>
+          <td>379143844</td>
+      </tr>
+  </tbody>
 </table>
 </div>
 <h2 id="are-there-any-discernible-patterns-or-seasonality-present">Are there any discernible patterns or seasonality present?<a hidden class="anchor" aria-hidden="true" href="#are-there-any-discernible-patterns-or-seasonality-present">#</a></h2>
@@ -365,7 +428,7 @@ require(['plotly'], function(Plotly) {
 <p>If you never experienced <code>duckdb</code> before, I totally recommend you to try as it boosts your efficiency allowing simultaneous usage of best features from Python and SQL</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> db<span style="color:#f92672">.</span>query(<span style="color:#e6db74">&#34;&#34;&#34;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> db<span style="color:#f92672">.</span>query(<span style="color:#e6db74">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    SELECT strptime(&#34;Created Date&#34;, &#39;</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">.%m.%Y&#39;) as date
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        ,&#34;City&#34; as city
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        ,count(*) as orders
@@ -393,50 +456,50 @@ require(['plotly'], function(Plotly) {
 </code></pre>
 <p></style></p>
 <table>
-<thead>
-<tr>
-<th>city</th>
-<th>Accra</th>
-<th>Lisbon</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>date</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>2020-01-01</td>
-<td>124</td>
-<td>882</td>
-</tr>
-<tr>
-<td>2020-01-02</td>
-<td>126</td>
-<td>1104</td>
-</tr>
-<tr>
-<td>2020-01-03</td>
-<td>76</td>
-<td>1110</td>
-</tr>
-<tr>
-<td>2020-01-04</td>
-<td>169</td>
-<td>784</td>
-</tr>
-<tr>
-<td>2020-01-05</td>
-<td>198</td>
-<td>788</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>city</th>
+          <th>Accra</th>
+          <th>Lisbon</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>date</td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>2020-01-01</td>
+          <td>124</td>
+          <td>882</td>
+      </tr>
+      <tr>
+          <td>2020-01-02</td>
+          <td>126</td>
+          <td>1104</td>
+      </tr>
+      <tr>
+          <td>2020-01-03</td>
+          <td>76</td>
+          <td>1110</td>
+      </tr>
+      <tr>
+          <td>2020-01-04</td>
+          <td>169</td>
+          <td>784</td>
+      </tr>
+      <tr>
+          <td>2020-01-05</td>
+          <td>198</td>
+          <td>788</td>
+      </tr>
+  </tbody>
 </table>
 </div>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;We have data for </span><span style="color:#e6db74">{</span>pivot<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">0</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74"> consecutive days&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;We have data for </span><span style="color:#e6db74">{</span>pivot<span style="color:#f92672">.</span>shape[<span style="color:#ae81ff">0</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74"> consecutive days&#34;</span>)
 </span></span></code></pre></div></details>
 <pre><code>We have data for 59 consecutive days
 </code></pre>
@@ -444,7 +507,7 @@ require(['plotly'], function(Plotly) {
 <p>I&rsquo;m using my own time series model wrappers to explore and forecast the data, they are based upon popular libraries from big tech companies, in this particular case, on <a href="https://facebook.github.io/prophet/">Facebook Prophet</a></p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> datetime
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> datetime
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> re
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> typing <span style="color:#f92672">import</span> Optional, List, Tuple
@@ -459,7 +522,7 @@ require(['plotly'], function(Plotly) {
 </span></span></code></pre></div></details>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ModelWrapper</span>:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ModelWrapper</span>:
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Custom Wrapper for popular models for TimeSeries analysis, including but not limited to:
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        - Google Causal Impact https://pypi.org/project/causalimpact/
@@ -480,7 +543,7 @@ require(['plotly'], function(Plotly) {
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    show: visualization of the trained model, please notet that you need to run the model first
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
 </span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(
 </span></span><span style="display:flex;"><span>        self,
 </span></span><span style="display:flex;"><span>        df: pd<span style="color:#f92672">.</span>DataFrame,
 </span></span><span style="display:flex;"><span>        start_date: Optional[str] <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,
@@ -785,7 +848,7 @@ require(['plotly'], function(Plotly) {
 </span></span></code></pre></div></details>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CausalImpact</span>(ModelWrapper):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CausalImpact</span>(ModelWrapper):
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(
 </span></span><span style="display:flex;"><span>        self,
@@ -869,7 +932,7 @@ require(['plotly'], function(Plotly) {
 </span></span></code></pre></div></details>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Prophet</span>(ModelWrapper):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Prophet</span>(ModelWrapper):
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(
 </span></span><span style="display:flex;"><span>        self,
@@ -1066,7 +1129,7 @@ require(['plotly'], function(Plotly) {
 <p>Sure, you could spend more time trying different models like moving averages and seasonal arima to evaluate and choose better one eventually, but here it&rsquo;s a short way to get pretty good base model, which is fast and robust enough.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>model <span style="color:#f92672">=</span> Prophet(pivot<span style="color:#f92672">.</span>reset_index(), y<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Lisbon&#34;</span>, date<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;date&#34;</span>, test_days<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>model <span style="color:#f92672">=</span> Prophet(pivot<span style="color:#f92672">.</span>reset_index(), y<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Lisbon&#34;</span>, date<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;date&#34;</span>, test_days<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span>)
 </span></span><span style="display:flex;"><span>model<span style="color:#f92672">.</span>explore(scale<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Correlation: Lisbon vs Accra&#34;</span>, save<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
 </span></span></code></pre></div></details>
 
@@ -1080,7 +1143,7 @@ require(['plotly'], function(Plotly) {
 However if one is interested in more uniform way of storage, here is the function to save <code>html</code> as <code>json</code> without building Plotly figure from scratch.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> json
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> re
 </span></span><span style="display:flex;"><span>
@@ -1122,7 +1185,7 @@ However if one is interested in more uniform way of storage, here is the functio
 <p>To interpret outliers one of the possible options is to explore Delivery Success rate</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>db<span style="color:#f92672">.</span>query(<span style="color:#e6db74">&#34;&#34;&#34;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>db<span style="color:#f92672">.</span>query(<span style="color:#e6db74">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">WITH temp AS (
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    SELECT &#34;Created Date&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        ,&#34;City&#34;
@@ -1171,313 +1234,313 @@ However if one is interested in more uniform way of storage, here is the functio
 </code></pre>
 <p></style></p>
 <table>
-<thead>
-<tr>
-<th></th>
-<th>Created Date</th>
-<th>City</th>
-<th>Order State</th>
-<th>Orders Count</th>
-<th>Share</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0</td>
-<td>06.02.2020</td>
-<td>Accra</td>
-<td>delivered</td>
-<td>229</td>
-<td>91.60</td>
-</tr>
-<tr>
-<td>1</td>
-<td>06.02.2020</td>
-<td>Accra</td>
-<td>failed</td>
-<td>11</td>
-<td>4.40</td>
-</tr>
-<tr>
-<td>2</td>
-<td>06.02.2020</td>
-<td>Accra</td>
-<td>rejected</td>
-<td>10</td>
-<td>4.00</td>
-</tr>
-<tr>
-<td>3</td>
-<td>06.02.2020</td>
-<td>Lisbon</td>
-<td>delivered</td>
-<td>1855</td>
-<td>98.78</td>
-</tr>
-<tr>
-<td>4</td>
-<td>06.02.2020</td>
-<td>Lisbon</td>
-<td>failed</td>
-<td>1</td>
-<td>0.05</td>
-</tr>
-<tr>
-<td>5</td>
-<td>06.02.2020</td>
-<td>Lisbon</td>
-<td>rejected</td>
-<td>22</td>
-<td>1.17</td>
-</tr>
-<tr>
-<td>6</td>
-<td>07.02.2020</td>
-<td>Accra</td>
-<td>delivered</td>
-<td>161</td>
-<td>86.10</td>
-</tr>
-<tr>
-<td>7</td>
-<td>07.02.2020</td>
-<td>Accra</td>
-<td>failed</td>
-<td>23</td>
-<td>12.30</td>
-</tr>
-<tr>
-<td>8</td>
-<td>07.02.2020</td>
-<td>Accra</td>
-<td>rejected</td>
-<td>3</td>
-<td>1.60</td>
-</tr>
-<tr>
-<td>9</td>
-<td>07.02.2020</td>
-<td>Lisbon</td>
-<td>delivered</td>
-<td>1725</td>
-<td>99.19</td>
-</tr>
-<tr>
-<td>10</td>
-<td>07.02.2020</td>
-<td>Lisbon</td>
-<td>failed</td>
-<td>4</td>
-<td>0.23</td>
-</tr>
-<tr>
-<td>11</td>
-<td>07.02.2020</td>
-<td>Lisbon</td>
-<td>rejected</td>
-<td>10</td>
-<td>0.58</td>
-</tr>
-<tr>
-<td>12</td>
-<td>08.02.2020</td>
-<td>Accra</td>
-<td>delivered</td>
-<td>264</td>
-<td>95.65</td>
-</tr>
-<tr>
-<td>13</td>
-<td>08.02.2020</td>
-<td>Accra</td>
-<td>failed</td>
-<td>4</td>
-<td>1.45</td>
-</tr>
-<tr>
-<td>14</td>
-<td>08.02.2020</td>
-<td>Accra</td>
-<td>rejected</td>
-<td>8</td>
-<td>2.90</td>
-</tr>
-<tr>
-<td>15</td>
-<td>08.02.2020</td>
-<td>Lisbon</td>
-<td>delivered</td>
-<td>1246</td>
-<td>99.12</td>
-</tr>
-<tr>
-<td>16</td>
-<td>08.02.2020</td>
-<td>Lisbon</td>
-<td>failed</td>
-<td>6</td>
-<td>0.48</td>
-</tr>
-<tr>
-<td>17</td>
-<td>08.02.2020</td>
-<td>Lisbon</td>
-<td>rejected</td>
-<td>5</td>
-<td>0.40</td>
-</tr>
-<tr>
-<td>18</td>
-<td>26.02.2020</td>
-<td>Accra</td>
-<td>delivered</td>
-<td>355</td>
-<td>96.47</td>
-</tr>
-<tr>
-<td>19</td>
-<td>26.02.2020</td>
-<td>Accra</td>
-<td>failed</td>
-<td>6</td>
-<td>1.63</td>
-</tr>
-<tr>
-<td>20</td>
-<td>26.02.2020</td>
-<td>Accra</td>
-<td>rejected</td>
-<td>7</td>
-<td>1.90</td>
-</tr>
-<tr>
-<td>21</td>
-<td>26.02.2020</td>
-<td>Lisbon</td>
-<td>delivered</td>
-<td>2307</td>
-<td>98.84</td>
-</tr>
-<tr>
-<td>22</td>
-<td>26.02.2020</td>
-<td>Lisbon</td>
-<td>failed</td>
-<td>8</td>
-<td>0.34</td>
-</tr>
-<tr>
-<td>23</td>
-<td>26.02.2020</td>
-<td>Lisbon</td>
-<td>rejected</td>
-<td>19</td>
-<td>0.81</td>
-</tr>
-<tr>
-<td>24</td>
-<td>27.02.2020</td>
-<td>Accra</td>
-<td>delivered</td>
-<td>300</td>
-<td>92.31</td>
-</tr>
-<tr>
-<td>25</td>
-<td>27.02.2020</td>
-<td>Accra</td>
-<td>failed</td>
-<td>13</td>
-<td>4.00</td>
-</tr>
-<tr>
-<td>26</td>
-<td>27.02.2020</td>
-<td>Accra</td>
-<td>rejected</td>
-<td>12</td>
-<td>3.69</td>
-</tr>
-<tr>
-<td>27</td>
-<td>27.02.2020</td>
-<td>Lisbon</td>
-<td>delivered</td>
-<td>2201</td>
-<td>98.79</td>
-</tr>
-<tr>
-<td>28</td>
-<td>27.02.2020</td>
-<td>Lisbon</td>
-<td>failed</td>
-<td>6</td>
-<td>0.27</td>
-</tr>
-<tr>
-<td>29</td>
-<td>27.02.2020</td>
-<td>Lisbon</td>
-<td>rejected</td>
-<td>21</td>
-<td>0.94</td>
-</tr>
-<tr>
-<td>30</td>
-<td>28.02.2020</td>
-<td>Accra</td>
-<td>delivered</td>
-<td>206</td>
-<td>85.83</td>
-</tr>
-<tr>
-<td>31</td>
-<td>28.02.2020</td>
-<td>Accra</td>
-<td>failed</td>
-<td>17</td>
-<td>7.08</td>
-</tr>
-<tr>
-<td>32</td>
-<td>28.02.2020</td>
-<td>Accra</td>
-<td>rejected</td>
-<td>17</td>
-<td>7.08</td>
-</tr>
-<tr>
-<td>33</td>
-<td>28.02.2020</td>
-<td>Lisbon</td>
-<td>delivered</td>
-<td>2030</td>
-<td>98.88</td>
-</tr>
-<tr>
-<td>34</td>
-<td>28.02.2020</td>
-<td>Lisbon</td>
-<td>failed</td>
-<td>7</td>
-<td>0.34</td>
-</tr>
-<tr>
-<td>35</td>
-<td>28.02.2020</td>
-<td>Lisbon</td>
-<td>rejected</td>
-<td>16</td>
-<td>0.78</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th></th>
+          <th>Created Date</th>
+          <th>City</th>
+          <th>Order State</th>
+          <th>Orders Count</th>
+          <th>Share</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>0</td>
+          <td>06.02.2020</td>
+          <td>Accra</td>
+          <td>delivered</td>
+          <td>229</td>
+          <td>91.60</td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td>06.02.2020</td>
+          <td>Accra</td>
+          <td>failed</td>
+          <td>11</td>
+          <td>4.40</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td>06.02.2020</td>
+          <td>Accra</td>
+          <td>rejected</td>
+          <td>10</td>
+          <td>4.00</td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td>06.02.2020</td>
+          <td>Lisbon</td>
+          <td>delivered</td>
+          <td>1855</td>
+          <td>98.78</td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td>06.02.2020</td>
+          <td>Lisbon</td>
+          <td>failed</td>
+          <td>1</td>
+          <td>0.05</td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td>06.02.2020</td>
+          <td>Lisbon</td>
+          <td>rejected</td>
+          <td>22</td>
+          <td>1.17</td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td>07.02.2020</td>
+          <td>Accra</td>
+          <td>delivered</td>
+          <td>161</td>
+          <td>86.10</td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td>07.02.2020</td>
+          <td>Accra</td>
+          <td>failed</td>
+          <td>23</td>
+          <td>12.30</td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td>07.02.2020</td>
+          <td>Accra</td>
+          <td>rejected</td>
+          <td>3</td>
+          <td>1.60</td>
+      </tr>
+      <tr>
+          <td>9</td>
+          <td>07.02.2020</td>
+          <td>Lisbon</td>
+          <td>delivered</td>
+          <td>1725</td>
+          <td>99.19</td>
+      </tr>
+      <tr>
+          <td>10</td>
+          <td>07.02.2020</td>
+          <td>Lisbon</td>
+          <td>failed</td>
+          <td>4</td>
+          <td>0.23</td>
+      </tr>
+      <tr>
+          <td>11</td>
+          <td>07.02.2020</td>
+          <td>Lisbon</td>
+          <td>rejected</td>
+          <td>10</td>
+          <td>0.58</td>
+      </tr>
+      <tr>
+          <td>12</td>
+          <td>08.02.2020</td>
+          <td>Accra</td>
+          <td>delivered</td>
+          <td>264</td>
+          <td>95.65</td>
+      </tr>
+      <tr>
+          <td>13</td>
+          <td>08.02.2020</td>
+          <td>Accra</td>
+          <td>failed</td>
+          <td>4</td>
+          <td>1.45</td>
+      </tr>
+      <tr>
+          <td>14</td>
+          <td>08.02.2020</td>
+          <td>Accra</td>
+          <td>rejected</td>
+          <td>8</td>
+          <td>2.90</td>
+      </tr>
+      <tr>
+          <td>15</td>
+          <td>08.02.2020</td>
+          <td>Lisbon</td>
+          <td>delivered</td>
+          <td>1246</td>
+          <td>99.12</td>
+      </tr>
+      <tr>
+          <td>16</td>
+          <td>08.02.2020</td>
+          <td>Lisbon</td>
+          <td>failed</td>
+          <td>6</td>
+          <td>0.48</td>
+      </tr>
+      <tr>
+          <td>17</td>
+          <td>08.02.2020</td>
+          <td>Lisbon</td>
+          <td>rejected</td>
+          <td>5</td>
+          <td>0.40</td>
+      </tr>
+      <tr>
+          <td>18</td>
+          <td>26.02.2020</td>
+          <td>Accra</td>
+          <td>delivered</td>
+          <td>355</td>
+          <td>96.47</td>
+      </tr>
+      <tr>
+          <td>19</td>
+          <td>26.02.2020</td>
+          <td>Accra</td>
+          <td>failed</td>
+          <td>6</td>
+          <td>1.63</td>
+      </tr>
+      <tr>
+          <td>20</td>
+          <td>26.02.2020</td>
+          <td>Accra</td>
+          <td>rejected</td>
+          <td>7</td>
+          <td>1.90</td>
+      </tr>
+      <tr>
+          <td>21</td>
+          <td>26.02.2020</td>
+          <td>Lisbon</td>
+          <td>delivered</td>
+          <td>2307</td>
+          <td>98.84</td>
+      </tr>
+      <tr>
+          <td>22</td>
+          <td>26.02.2020</td>
+          <td>Lisbon</td>
+          <td>failed</td>
+          <td>8</td>
+          <td>0.34</td>
+      </tr>
+      <tr>
+          <td>23</td>
+          <td>26.02.2020</td>
+          <td>Lisbon</td>
+          <td>rejected</td>
+          <td>19</td>
+          <td>0.81</td>
+      </tr>
+      <tr>
+          <td>24</td>
+          <td>27.02.2020</td>
+          <td>Accra</td>
+          <td>delivered</td>
+          <td>300</td>
+          <td>92.31</td>
+      </tr>
+      <tr>
+          <td>25</td>
+          <td>27.02.2020</td>
+          <td>Accra</td>
+          <td>failed</td>
+          <td>13</td>
+          <td>4.00</td>
+      </tr>
+      <tr>
+          <td>26</td>
+          <td>27.02.2020</td>
+          <td>Accra</td>
+          <td>rejected</td>
+          <td>12</td>
+          <td>3.69</td>
+      </tr>
+      <tr>
+          <td>27</td>
+          <td>27.02.2020</td>
+          <td>Lisbon</td>
+          <td>delivered</td>
+          <td>2201</td>
+          <td>98.79</td>
+      </tr>
+      <tr>
+          <td>28</td>
+          <td>27.02.2020</td>
+          <td>Lisbon</td>
+          <td>failed</td>
+          <td>6</td>
+          <td>0.27</td>
+      </tr>
+      <tr>
+          <td>29</td>
+          <td>27.02.2020</td>
+          <td>Lisbon</td>
+          <td>rejected</td>
+          <td>21</td>
+          <td>0.94</td>
+      </tr>
+      <tr>
+          <td>30</td>
+          <td>28.02.2020</td>
+          <td>Accra</td>
+          <td>delivered</td>
+          <td>206</td>
+          <td>85.83</td>
+      </tr>
+      <tr>
+          <td>31</td>
+          <td>28.02.2020</td>
+          <td>Accra</td>
+          <td>failed</td>
+          <td>17</td>
+          <td>7.08</td>
+      </tr>
+      <tr>
+          <td>32</td>
+          <td>28.02.2020</td>
+          <td>Accra</td>
+          <td>rejected</td>
+          <td>17</td>
+          <td>7.08</td>
+      </tr>
+      <tr>
+          <td>33</td>
+          <td>28.02.2020</td>
+          <td>Lisbon</td>
+          <td>delivered</td>
+          <td>2030</td>
+          <td>98.88</td>
+      </tr>
+      <tr>
+          <td>34</td>
+          <td>28.02.2020</td>
+          <td>Lisbon</td>
+          <td>failed</td>
+          <td>7</td>
+          <td>0.34</td>
+      </tr>
+      <tr>
+          <td>35</td>
+          <td>28.02.2020</td>
+          <td>Lisbon</td>
+          <td>rejected</td>
+          <td>16</td>
+          <td>0.78</td>
+      </tr>
+  </tbody>
 </table>
 </div>
 <p>If you&rsquo;re a fan of <code>pandas</code> of course it may be easier to apply similar operations within familiar package, and it even may seem as more Pythonic way to do so, although believe me, once you start using <code>duckdb</code>, it turns out that some operations are just more native to SQL like complex joins and window functions and you naturally perform them faster in SQL; work smarter, not harder - if you&rsquo;re inventing a bicycle writing SQL alike transformations in Pandas, nobody beyond your internal perfectionist will reward it.</p>
 <h4 id="pandas-alternative">Pandas alternative<a hidden class="anchor" aria-hidden="true" href="#pandas-alternative">#</a></h4>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>temp <span style="color:#f92672">=</span> orders[
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>temp <span style="color:#f92672">=</span> orders[
 </span></span><span style="display:flex;"><span>    (
 </span></span><span style="display:flex;"><span>        (orders[<span style="color:#e6db74">&#34;City&#34;</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;Accra&#34;</span>) <span style="color:#f92672">|</span> 
 </span></span><span style="display:flex;"><span>        (orders[<span style="color:#e6db74">&#34;City&#34;</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;Lisbon&#34;</span>)
@@ -1505,7 +1568,7 @@ However if one is interested in more uniform way of storage, here is the functio
 <h4 id="fit">Fit<a hidden class="anchor" aria-hidden="true" href="#fit">#</a></h4>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>model <span style="color:#f92672">=</span> Prophet(pivot[<span style="color:#e6db74">&#34;Lisbon&#34;</span>]<span style="color:#f92672">.</span>reset_index(), y<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Lisbon&#34;</span>, date<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;date&#34;</span>, test_days<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>model <span style="color:#f92672">=</span> Prophet(pivot[<span style="color:#e6db74">&#34;Lisbon&#34;</span>]<span style="color:#f92672">.</span>reset_index(), y<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Lisbon&#34;</span>, date<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;date&#34;</span>, test_days<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span>)
 </span></span></code></pre></div></details>
 <p>Incorporate all the logic described within the previous point:</p>
 <ul>
@@ -1516,7 +1579,7 @@ However if one is interested in more uniform way of storage, here is the functio
 <p>Last week as a validation time frame</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>model<span style="color:#f92672">.</span>run(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>model<span style="color:#f92672">.</span>run(
 </span></span><span style="display:flex;"><span>    growth<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;linear&#39;</span>,
 </span></span><span style="display:flex;"><span>    yearly_seasonality<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>,
 </span></span><span style="display:flex;"><span>    monthly_seasonality<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>,
@@ -1542,7 +1605,7 @@ However if one is interested in more uniform way of storage, here is the functio
 <h4 id="predict">Predict<a hidden class="anchor" aria-hidden="true" href="#predict">#</a></h4>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>libon <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>model<span style="color:#f92672">.</span>make_future_dataframe(periods<span style="color:#f92672">=</span><span style="color:#ae81ff">36</span>)<span style="color:#f92672">.</span>join(pivot[<span style="color:#e6db74">&#34;Lisbon&#34;</span>], on<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ds&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>libon <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>model<span style="color:#f92672">.</span>make_future_dataframe(periods<span style="color:#f92672">=</span><span style="color:#ae81ff">36</span>)<span style="color:#f92672">.</span>join(pivot[<span style="color:#e6db74">&#34;Lisbon&#34;</span>], on<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ds&#34;</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>model <span style="color:#f92672">=</span> Prophet(libon, y<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Lisbon&#34;</span>, date<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ds&#34;</span>, test_days<span style="color:#f92672">=</span><span style="color:#ae81ff">28</span>)
 </span></span><span style="display:flex;"><span>
@@ -1573,7 +1636,7 @@ However if one is interested in more uniform way of storage, here is the functio
 <h4 id="fit-1">Fit<a hidden class="anchor" aria-hidden="true" href="#fit-1">#</a></h4>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>model <span style="color:#f92672">=</span> Prophet(pivot[<span style="color:#e6db74">&#34;Accra&#34;</span>]<span style="color:#f92672">.</span>reset_index(), y<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Accra&#34;</span>, date<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;date&#34;</span>, test_days<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>model <span style="color:#f92672">=</span> Prophet(pivot[<span style="color:#e6db74">&#34;Accra&#34;</span>]<span style="color:#f92672">.</span>reset_index(), y<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Accra&#34;</span>, date<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;date&#34;</span>, test_days<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span>)
 </span></span></code></pre></div></details>
 <p>Incorporate all the logic described within the previous point:</p>
 <ul>
@@ -1584,7 +1647,7 @@ However if one is interested in more uniform way of storage, here is the functio
 <p>Last week as a validation time frame</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>model<span style="color:#f92672">.</span>run(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>model<span style="color:#f92672">.</span>run(
 </span></span><span style="display:flex;"><span>    growth<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;linear&#39;</span>,
 </span></span><span style="display:flex;"><span>    yearly_seasonality<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>,
 </span></span><span style="display:flex;"><span>    monthly_seasonality<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>,
@@ -1609,7 +1672,7 @@ However if one is interested in more uniform way of storage, here is the functio
 <h4 id="predict-1">Predict<a hidden class="anchor" aria-hidden="true" href="#predict-1">#</a></h4>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>accra <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>model<span style="color:#f92672">.</span>make_future_dataframe(periods<span style="color:#f92672">=</span><span style="color:#ae81ff">36</span>)<span style="color:#f92672">.</span>join(pivot[<span style="color:#e6db74">&#34;Accra&#34;</span>], on<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ds&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>accra <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>model<span style="color:#f92672">.</span>make_future_dataframe(periods<span style="color:#f92672">=</span><span style="color:#ae81ff">36</span>)<span style="color:#f92672">.</span>join(pivot[<span style="color:#e6db74">&#34;Accra&#34;</span>], on<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ds&#34;</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>model <span style="color:#f92672">=</span> Prophet(accra, y<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Accra&#34;</span>, date<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ds&#34;</span>, test_days<span style="color:#f92672">=</span><span style="color:#ae81ff">28</span>)
 </span></span><span style="display:flex;"><span>
@@ -1718,7 +1781,7 @@ However if one is interested in more uniform way of storage, here is the functio
     </main>
     
 <footer class="footer">
-    <span>&copy; 2025 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
+    <span>&copy; 2026 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
     <span>
         Powered by
         <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &

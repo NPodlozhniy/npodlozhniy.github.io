@@ -47,17 +47,20 @@
 
 <script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
-<script>
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-	gtag('config', 'G-ESWD18X008', { 'anonymize_ip': false });
-}
-</script>
-<meta property="og:title" content="Dunnett&#39;s Correction for ABC testing" />
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-ESWD18X008"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-ESWD18X008');
+        }
+      </script><meta property="og:title" content="Dunnett&#39;s Correction for ABC testing" />
 <meta property="og:description" content="Improve your multivariate testing framework power and roll out the experiments much faster" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://npodlozhniy.github.io/posts/dunnett-correction/" /><meta property="article:section" content="posts" />
@@ -197,7 +200,7 @@ if (!doNotTrack) {
     <h1 class="post-title">
       Dunnett&#39;s Correction for ABC testing
     </h1>
-    <div class="post-meta"><span title='2024-07-28 00:00:00 +0000 UTC'>July 28, 2024</span>&nbsp;·&nbsp;15 min&nbsp;·&nbsp;Nikita Podlozhniy
+    <div class="post-meta">&lt;span title=&#39;2024-07-28 00:00:00 &#43;0000 UTC&#39;&gt;July 28, 2024&lt;/span&gt;&amp;nbsp;·&amp;nbsp;15 min&amp;nbsp;·&amp;nbsp;Nikita Podlozhniy
 
 </div>
   </header> <div class="toc">
@@ -260,7 +263,7 @@ Are you curious what it is?</p>
 The actual notebook was written on Python 3.11.4 and to keep the results reproducible here is the list of particular packages that are being used in the article specified with their versions.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>pip install <span style="color:#f92672">--</span>quiet <span style="color:#f92672">--</span>upgrade numpy<span style="color:#f92672">==</span><span style="color:#ae81ff">1.25.2</span> scipy<span style="color:#f92672">==</span><span style="color:#ae81ff">1.11.2</span> statsmodels<span style="color:#f92672">==</span><span style="color:#ae81ff">0.14.0</span> podlozhnyy_module<span style="color:#f92672">==</span><span style="color:#ae81ff">2.4</span>b0
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>pip install <span style="color:#f92672">--</span>quiet <span style="color:#f92672">--</span>upgrade numpy<span style="color:#f92672">==</span><span style="color:#ae81ff">1.25.2</span> scipy<span style="color:#f92672">==</span><span style="color:#ae81ff">1.11.2</span> statsmodels<span style="color:#f92672">==</span><span style="color:#ae81ff">0.14.0</span> podlozhnyy_module<span style="color:#f92672">==</span><span style="color:#ae81ff">2.4</span>b0
 </span></span></code></pre></div></details>
 <h2 id="problem-definition">Problem Definition<a hidden class="anchor" aria-hidden="true" href="#problem-definition">#</a></h2>
 <p>Imagine we want to optimize an onboarding funnel of an arbitrary product applying a new business idea.
@@ -272,7 +275,7 @@ The target metric is an abstract conversion and we carry out a classical AB test
 <p>$$ Z \stackrel{H_0}{\sim} \mathbb{N}(0, 1) $$</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> scipy.stats <span style="color:#f92672">import</span> binom
 </span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> statsmodels.stats.proportion <span style="color:#f92672">import</span> proportions_ztest, proportion_confint
@@ -280,7 +283,7 @@ The target metric is an abstract conversion and we carry out a classical AB test
 <p>There are multiple versions of classical Z-test in Python and even though those have its unique selling points this time I apply my own implementation to stay consistent across this article using the same interface for all criteria.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> podlozhnyy_module.abtesting <span style="color:#f92672">import</span> Dunnett, Ztest
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> podlozhnyy_module.abtesting <span style="color:#f92672">import</span> Dunnett, Ztest
 </span></span></code></pre></div></details>
 <h3 id="interface">Interface<a hidden class="anchor" aria-hidden="true" href="#interface">#</a></h3>
 <p>As a brief check that the method is working as expected and to make you acquainted with its interface let&rsquo;s identify a dummy experiment</p>
@@ -293,7 +296,7 @@ The target metric is an abstract conversion and we carry out a classical AB test
 <p>In addition <code>variant</code> is specified to explicitly define which group we&rsquo;re focus on (it makes sense in case of multivariate testing)</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>input <span style="color:#f92672">=</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>input <span style="color:#f92672">=</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;base&#34;</span>: [
 </span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">480</span>,
 </span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">437</span>,
@@ -312,7 +315,7 @@ The target metric is an abstract conversion and we carry out a classical AB test
 <p>Functionality is written leveraging well-known OOP principles, so the experiment is not a function that stands aside, but a class which besides <code>input</code> dictionary gets the keys of the corresponding entities.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>test <span style="color:#f92672">=</span> Ztest(input, base<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;base&#34;</span>, target<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;target&#34;</span>, groups<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;groups&#34;</span>, variant<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;variant&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>test <span style="color:#f92672">=</span> Ztest(input, base<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;base&#34;</span>, target<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;target&#34;</span>, groups<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;groups&#34;</span>, variant<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;variant&#34;</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;p-value: </span><span style="color:#e6db74">{</span>test<span style="color:#f92672">.</span>variant_pvalue(alternative<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;less&#39;</span>)<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">, Z-statistic: </span><span style="color:#e6db74">{</span>test<span style="color:#f92672">.</span>statistic[<span style="color:#ae81ff">0</span>]<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
 </span></span></code></pre></div></details>
@@ -321,7 +324,7 @@ The target metric is an abstract conversion and we carry out a classical AB test
 <p>For an on fly verification, the results might be compared to the output of a well known <code>statsmodels</code> package.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>count <span style="color:#f92672">=</span> input[<span style="color:#e6db74">&#34;target&#34;</span>]
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>count <span style="color:#f92672">=</span> input[<span style="color:#e6db74">&#34;target&#34;</span>]
 </span></span><span style="display:flex;"><span>nobs <span style="color:#f92672">=</span> input[<span style="color:#e6db74">&#34;base&#34;</span>]
 </span></span><span style="display:flex;"><span>stat, pval <span style="color:#f92672">=</span> proportions_ztest(count, nobs, alternative<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;smaller&#39;</span>)
 </span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;p-value: </span><span style="color:#e6db74">{0:0.3f}</span><span style="color:#e6db74">, Z-statistic: </span><span style="color:#e6db74">{1:0.3f}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(pval, stat))
@@ -356,7 +359,7 @@ What is good about proportions is that we can easily simulate the data in the bl
 <p>In addition to a point estimate of False Positive Rate I suggest building a 90% confidence interval to be more precise in the comparisons</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_sample</span>(size: int, prob: float) <span style="color:#f92672">-&gt;</span> int:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_sample</span>(size: int, prob: float) <span style="color:#f92672">-&gt;</span> int:
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Return the number of target events
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
@@ -365,7 +368,7 @@ What is good about proportions is that we can easily simulate the data in the bl
 <h3 id="correctness-in-aa">Correctness in AA<a hidden class="anchor" aria-hidden="true" href="#correctness-in-aa">#</a></h3>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.05</span>
 </span></span><span style="display:flex;"><span>n_iterations <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>
@@ -423,7 +426,7 @@ Z-test: 0.051 ± 0.011
 <h3 id="power-in-ab">Power in AB<a hidden class="anchor" aria-hidden="true" href="#power-in-ab">#</a></h3>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.05</span>
 </span></span><span style="display:flex;"><span>n_iterations <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>
@@ -484,7 +487,7 @@ Z-test: 0.992 ± 0.005
 <p>Now we will track how the criterion controls not a single FPR, but family-wise error rate (FWER) and what is more in order to continue the comparison with a classical Z-test the latter needs to have Bonferroni correction applied otherwise it wouldn&rsquo;t properly control FWER.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fwe</span>(x: np<span style="color:#f92672">.</span>ndarray, alpha: float) <span style="color:#f92672">-&gt;</span> bool:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fwe</span>(x: np<span style="color:#f92672">.</span>ndarray, alpha: float) <span style="color:#f92672">-&gt;</span> bool:
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Indicates either at least one of null hypotheses is rejected
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
@@ -500,7 +503,7 @@ Z-test: 0.992 ± 0.005
 <p>To simplify the code in the future Monte Carlo procedure is wrapped into a function with all the necessary parameters supplied as arguments.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">monte_carlo</span>(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">monte_carlo</span>(
 </span></span><span style="display:flex;"><span>    aa_test: bool <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>,
 </span></span><span style="display:flex;"><span>    verbose: bool <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>,
 </span></span><span style="display:flex;"><span>    n_iterations: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>,
@@ -558,7 +561,7 @@ Z-test: 0.992 ± 0.005
 <p>Validity first, let&rsquo;s check the ability to control FWER at predefined $\alpha$ level.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> size <span style="color:#f92672">in</span> [<span style="color:#ae81ff">1e2</span>, <span style="color:#ae81ff">5e2</span>, <span style="color:#ae81ff">1e3</span>, <span style="color:#ae81ff">5e3</span>]:
 </span></span><span style="display:flex;"><span>    _ <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, group_size<span style="color:#f92672">=</span>int(size))
@@ -585,7 +588,7 @@ FPR for sample size 5000
 I prefer Sidak-Holm procedure as it&rsquo;s known as the most powerful procedure that controls FWER, however as long as sample size is increased the difference from Bonferroni-Holm is hardly noticeable.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sidak_holm</span>(p_values: np<span style="color:#f92672">.</span>ndarray, alpha: float) <span style="color:#f92672">-&gt;</span> np<span style="color:#f92672">.</span>ndarray:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sidak_holm</span>(p_values: np<span style="color:#f92672">.</span>ndarray, alpha: float) <span style="color:#f92672">-&gt;</span> np<span style="color:#f92672">.</span>ndarray:
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Step down Sidak-Holm procedure
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    If the statistics are jointly independent, no procedure can be constructed to control FWER that is more powerful than the Sidak-Holm method
@@ -601,7 +604,7 @@ I prefer Sidak-Holm procedure as it&rsquo;s known as the most powerful procedure
 <p>For the power test I offer to use two treatment groups and a single control where in one of the treatments an effect of 20% uplift is added. So the null hypothesis should be rejected and True Positive Rate is measured - is the share of rejected hypotheses among the number of iterations.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> size <span style="color:#f92672">in</span> [<span style="color:#ae81ff">1e2</span>, <span style="color:#ae81ff">5e2</span>, <span style="color:#ae81ff">1e3</span>, <span style="color:#ae81ff">5e3</span>]:
 </span></span><span style="display:flex;"><span>    _ <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, group_size<span style="color:#f92672">=</span>int(size))
@@ -626,7 +629,7 @@ TPR of 20% effect size for sample size 5000
 The difference is not significant though, so we can&rsquo;t say for sure that it&rsquo;s better, let&rsquo;s experiment more with parameters and change <code>effect_size</code></p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> effect_size <span style="color:#f92672">in</span> [<span style="color:#ae81ff">0.1</span>, <span style="color:#ae81ff">0.2</span>, <span style="color:#ae81ff">0.3</span>]:
 </span></span><span style="display:flex;"><span>    _ <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, group_size<span style="color:#f92672">=</span><span style="color:#ae81ff">3000</span>, effect_size<span style="color:#f92672">=</span>effect_size)
@@ -646,7 +649,7 @@ TPR of 30% effect size for sample size 3000
 <p>It&rsquo;s exciting, the result remains the same, and if we know that Sidak-Holm is the most powerful method that controls FWER for the general use case, we see now that Dunnett&rsquo;s at least not worse. Finally, the most appealing variable is the number of treatment groups, let&rsquo;s vary it too.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> n_groups <span style="color:#f92672">in</span> [<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">7</span>]:
 </span></span><span style="display:flex;"><span>    _ <span style="color:#f92672">=</span> monte_carlo(aa_test<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, group_size<span style="color:#f92672">=</span><span style="color:#ae81ff">3000</span>, n_groups<span style="color:#f92672">=</span>n_groups)
@@ -667,7 +670,7 @@ TPR of 20% effect size for sample size 3000
 So, let&rsquo;s build a title image for this article that illustrates how Dunnett&rsquo;s test outperforms the well-known step-down procedure as the number of treatment groups increases.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> tqdm.notebook <span style="color:#f92672">import</span> tqdm
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> tqdm.notebook <span style="color:#f92672">import</span> tqdm
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">2024</span>)
 </span></span><span style="display:flex;"><span>ztest_values <span style="color:#f92672">=</span> []
@@ -681,7 +684,7 @@ So, let&rsquo;s build a title image for this article that illustrates how Dunnet
 <p>Plotly is used for interactive visualization, hover over the image to see details.</p>
 <details>
 <summary>Code</summary>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly.express <span style="color:#66d9ef">as</span> px
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly.express <span style="color:#66d9ef">as</span> px
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> plotly.graph_objs <span style="color:#66d9ef">as</span> go
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">hex2rgba</span>(hex, alpha):
@@ -849,7 +852,7 @@ So, let&rsquo;s build a title image for this article that illustrates how Dunnet
     </main>
     
 <footer class="footer">
-    <span>&copy; 2025 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
+    <span>&copy; 2026 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
     <span>
         Powered by
         <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
