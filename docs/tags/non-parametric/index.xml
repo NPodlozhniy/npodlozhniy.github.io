@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Non-Parametric on Nikita Podlozhniy</title>
-    <link>http://localhost:1313/tags/non-parametric/</link>
+    <link>https://npodlozhniy.github.io/tags/non-parametric/</link>
     <description>Recent content in Non-Parametric on Nikita Podlozhniy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-GB</language>
-    <lastBuildDate>Tue, 16 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/non-parametric/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 16 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/tags/non-parametric/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Bootstrap Methods for AB Testing</title>
-      <link>http://localhost:1313/posts/bootstrap/</link>
+      <link>https://npodlozhniy.github.io/posts/bootstrap/</link>
       <pubDate>Tue, 16 Aug 2022 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/bootstrap/</guid>
+      <guid>https://npodlozhniy.github.io/posts/bootstrap/</guid>
       <description>Classical and Poisson bootstrap as non-parametric tools for normalizing skewed metrics and enabling valid T-tests on small samples</description>
     </item>
     
     <item>
       <title>Bucketing: Variance Reduction and Faster AB Tests</title>
-      <link>http://localhost:1313/posts/bucketing/</link>
+      <link>https://npodlozhniy.github.io/posts/bucketing/</link>
       <pubDate>Tue, 16 Aug 2022 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/bucketing/</guid>
+      <guid>https://npodlozhniy.github.io/posts/bucketing/</guid>
       <description>How aggregating observations into buckets normalises skewed metrics, reduces variance, and cuts computation — with a probability proof for choosing the right bucket count</description>
     </item>
     

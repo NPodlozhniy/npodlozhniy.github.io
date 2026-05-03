@@ -2,32 +2,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Statistics on Nikita Podlozhniy</title>
-    <link>http://localhost:1313/tags/statistics/</link>
+    <link>https://npodlozhniy.github.io/tags/statistics/</link>
     <description>Recent content in Statistics on Nikita Podlozhniy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-GB</language>
-    <lastBuildDate>Tue, 01 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/statistics/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 01 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/tags/statistics/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linearization: Turning Ratio Metrics into Per-User Metrics</title>
-      <link>http://localhost:1313/posts/linearization/</link>
+      <link>https://npodlozhniy.github.io/posts/linearization/</link>
       <pubDate>Tue, 01 Oct 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/linearization/</guid>
+      <guid>https://npodlozhniy.github.io/posts/linearization/</guid>
       <description>A simple algebraic transformation that converts ratio metrics into independent per-user values, making T-tests and sensitivity techniques directly applicable</description>
     </item>
     
     <item>
       <title>Delta Method for Ratio Metrics in AB Testing</title>
-      <link>http://localhost:1313/posts/delta-method/</link>
+      <link>https://npodlozhniy.github.io/posts/delta-method/</link>
       <pubDate>Wed, 31 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/delta-method/</guid>
+      <guid>https://npodlozhniy.github.io/posts/delta-method/</guid>
       <description>Correct variance estimation for ratio metrics using the Delta Method — and why naive approaches quietly break your confidence intervals</description>
     </item>
     
     <item>
       <title>CUPED: Reducing Metric Variance with Pre-Experiment Data</title>
-      <link>http://localhost:1313/posts/cuped/</link>
+      <link>https://npodlozhniy.github.io/posts/cuped/</link>
       <pubDate>Thu, 18 Apr 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/cuped/</guid>
+      <guid>https://npodlozhniy.github.io/posts/cuped/</guid>
       <description>How CUPED uses pre-experiment covariates to cut metric variance and boost AB test sensitivity — with a rigorous proof of what works and what silently breaks</description>
     </item>
     

@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Traffic-Splitting on Nikita Podlozhniy</title>
-    <link>http://localhost:1313/tags/traffic-splitting/</link>
+    <link>https://npodlozhniy.github.io/tags/traffic-splitting/</link>
     <description>Recent content in Traffic-Splitting on Nikita Podlozhniy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-GB</language>
-    <lastBuildDate>Tue, 13 Sep 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/traffic-splitting/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 13 Sep 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/tags/traffic-splitting/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Salts and Layers: Running Multiple AB Tests Simultaneously</title>
-      <link>http://localhost:1313/posts/ab-salts/</link>
+      <link>https://npodlozhniy.github.io/posts/ab-salts/</link>
       <pubDate>Tue, 13 Sep 2022 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/ab-salts/</guid>
+      <guid>https://npodlozhniy.github.io/posts/ab-salts/</guid>
       <description>How MD5-based traffic splitting with salts and a layer system lets you run dozens of orthogonal experiments without conflicts</description>
     </item>
     
