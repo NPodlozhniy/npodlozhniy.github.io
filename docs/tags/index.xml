@@ -2,136 +2,136 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on Nikita Podlozhniy</title>
-    <link>https://npodlozhniy.github.io/tags/</link>
+    <link>http://localhost:1313/tags/</link>
     <description>Recent content in Tags on Nikita Podlozhniy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-GB</language>
-    <lastBuildDate>Thu, 11 Dec 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 11 Dec 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Ab-Testing</title>
-      <link>https://npodlozhniy.github.io/tags/ab-testing/</link>
+      <link>http://localhost:1313/tags/ab-testing/</link>
       <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/tags/ab-testing/</guid>
+      <guid>http://localhost:1313/tags/ab-testing/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Hypothesis-Testing</title>
-      <link>https://npodlozhniy.github.io/tags/hypothesis-testing/</link>
+      <link>http://localhost:1313/tags/hypothesis-testing/</link>
       <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/tags/hypothesis-testing/</guid>
+      <guid>http://localhost:1313/tags/hypothesis-testing/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Sample-Size</title>
-      <link>https://npodlozhniy.github.io/tags/sample-size/</link>
+      <link>http://localhost:1313/tags/sample-size/</link>
       <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/tags/sample-size/</guid>
+      <guid>http://localhost:1313/tags/sample-size/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Bayesian-Inference</title>
-      <link>https://npodlozhniy.github.io/tags/bayesian-inference/</link>
+      <link>http://localhost:1313/tags/bayesian-inference/</link>
       <pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/tags/bayesian-inference/</guid>
+      <guid>http://localhost:1313/tags/bayesian-inference/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Monte-Carlo</title>
-      <link>https://npodlozhniy.github.io/tags/monte-carlo/</link>
+      <link>http://localhost:1313/tags/monte-carlo/</link>
       <pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/tags/monte-carlo/</guid>
+      <guid>http://localhost:1313/tags/monte-carlo/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Pymc</title>
-      <link>https://npodlozhniy.github.io/tags/pymc/</link>
+      <link>http://localhost:1313/tags/pymc/</link>
       <pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/tags/pymc/</guid>
+      <guid>http://localhost:1313/tags/pymc/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Sequential-Testing</title>
-      <link>https://npodlozhniy.github.io/tags/sequential-testing/</link>
+      <link>http://localhost:1313/tags/sequential-testing/</link>
       <pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/tags/sequential-testing/</guid>
+      <guid>http://localhost:1313/tags/sequential-testing/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Ratio-Metrics</title>
-      <link>https://npodlozhniy.github.io/tags/ratio-metrics/</link>
+      <link>http://localhost:1313/tags/ratio-metrics/</link>
       <pubDate>Tue, 01 Oct 2024 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/tags/ratio-metrics/</guid>
+      <guid>http://localhost:1313/tags/ratio-metrics/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Statistics</title>
-      <link>https://npodlozhniy.github.io/tags/statistics/</link>
+      <link>http://localhost:1313/tags/statistics/</link>
       <pubDate>Tue, 01 Oct 2024 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/tags/statistics/</guid>
+      <guid>http://localhost:1313/tags/statistics/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Variance-Reduction</title>
-      <link>https://npodlozhniy.github.io/tags/variance-reduction/</link>
+      <link>http://localhost:1313/tags/variance-reduction/</link>
       <pubDate>Tue, 01 Oct 2024 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/tags/variance-reduction/</guid>
+      <guid>http://localhost:1313/tags/variance-reduction/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Cuped</title>
-      <link>https://npodlozhniy.github.io/tags/cuped/</link>
+      <link>http://localhost:1313/tags/cuped/</link>
       <pubDate>Thu, 18 Apr 2024 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/tags/cuped/</guid>
+      <guid>http://localhost:1313/tags/cuped/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Experimentation-Platform</title>
-      <link>https://npodlozhniy.github.io/tags/experimentation-platform/</link>
+      <link>http://localhost:1313/tags/experimentation-platform/</link>
       <pubDate>Tue, 13 Sep 2022 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/tags/experimentation-platform/</guid>
+      <guid>http://localhost:1313/tags/experimentation-platform/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Traffic-Splitting</title>
-      <link>https://npodlozhniy.github.io/tags/traffic-splitting/</link>
+      <link>http://localhost:1313/tags/traffic-splitting/</link>
       <pubDate>Tue, 13 Sep 2022 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/tags/traffic-splitting/</guid>
+      <guid>http://localhost:1313/tags/traffic-splitting/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Bootstrap</title>
-      <link>https://npodlozhniy.github.io/tags/bootstrap/</link>
+      <link>http://localhost:1313/tags/bootstrap/</link>
       <pubDate>Tue, 16 Aug 2022 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/tags/bootstrap/</guid>
+      <guid>http://localhost:1313/tags/bootstrap/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Bucketing</title>
-      <link>https://npodlozhniy.github.io/tags/bucketing/</link>
+      <link>http://localhost:1313/tags/bucketing/</link>
       <pubDate>Tue, 16 Aug 2022 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/tags/bucketing/</guid>
+      <guid>http://localhost:1313/tags/bucketing/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Non-Parametric</title>
-      <link>https://npodlozhniy.github.io/tags/non-parametric/</link>
+      <link>http://localhost:1313/tags/non-parametric/</link>
       <pubDate>Tue, 16 Aug 2022 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/tags/non-parametric/</guid>
+      <guid>http://localhost:1313/tags/non-parametric/</guid>
       <description></description>
     </item>
     

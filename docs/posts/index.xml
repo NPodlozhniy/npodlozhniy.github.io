@@ -2,88 +2,88 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on Nikita Podlozhniy</title>
-    <link>https://npodlozhniy.github.io/posts/</link>
+    <link>http://localhost:1313/posts/</link>
     <description>Recent content in Posts on Nikita Podlozhniy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-GB</language>
-    <lastBuildDate>Thu, 11 Dec 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 11 Dec 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Superiority vs Non-Inferiority Trials in AB Testing</title>
-      <link>https://npodlozhniy.github.io/posts/non-inferiority-test/</link>
+      <link>http://localhost:1313/posts/non-inferiority-test/</link>
       <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/posts/non-inferiority-test/</guid>
+      <guid>http://localhost:1313/posts/non-inferiority-test/</guid>
       <description>Not every experiment needs to show improvement — sometimes proving you haven&amp;rsquo;t made things worse is enough. A practical guide to non-inferiority trial design.</description>
     </item>
     
     <item>
       <title>Bayesian A/B Test is NOT immune to peeking</title>
-      <link>https://npodlozhniy.github.io/posts/bayesian-test/</link>
+      <link>http://localhost:1313/posts/bayesian-test/</link>
       <pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/posts/bayesian-test/</guid>
+      <guid>http://localhost:1313/posts/bayesian-test/</guid>
       <description>Practical guide: PyMC examples, hierarchical models, loss functions, HDI, and safe stopping rules</description>
     </item>
     
     <item>
       <title>Sequential Testing Guide</title>
-      <link>https://npodlozhniy.github.io/posts/sequential-testing/</link>
+      <link>http://localhost:1313/posts/sequential-testing/</link>
       <pubDate>Wed, 25 Dec 2024 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/posts/sequential-testing/</guid>
+      <guid>http://localhost:1313/posts/sequential-testing/</guid>
       <description>How GST is often misinterpreted and why its genuine version is way better than AVI?</description>
     </item>
     
     <item>
       <title>Mastering Homogeneity Hypothesis testing</title>
-      <link>https://npodlozhniy.github.io/posts/contingency-test/</link>
+      <link>http://localhost:1313/posts/contingency-test/</link>
       <pubDate>Sun, 01 Dec 2024 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/posts/contingency-test/</guid>
+      <guid>http://localhost:1313/posts/contingency-test/</guid>
       <description>Why Fisher&amp;rsquo;s Exact test is the relic of the past and Chi-squared is all the way</description>
     </item>
     
     <item>
       <title>Linearization: Turning Ratio Metrics into Per-User Metrics</title>
-      <link>https://npodlozhniy.github.io/posts/linearization/</link>
+      <link>http://localhost:1313/posts/linearization/</link>
       <pubDate>Tue, 01 Oct 2024 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/posts/linearization/</guid>
+      <guid>http://localhost:1313/posts/linearization/</guid>
       <description>A simple algebraic transformation that converts ratio metrics into independent per-user values, making T-tests and sensitivity techniques directly applicable</description>
     </item>
     
     <item>
       <title>Maturing Conversions in AB-experiment</title>
-      <link>https://npodlozhniy.github.io/posts/maturing-conversions/</link>
+      <link>http://localhost:1313/posts/maturing-conversions/</link>
       <pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/posts/maturing-conversions/</guid>
+      <guid>http://localhost:1313/posts/maturing-conversions/</guid>
       <description>Why you need to be patient and when cohort-wise approach is a flaw</description>
     </item>
     
     <item>
       <title>Delta Method for Ratio Metrics in AB Testing</title>
-      <link>https://npodlozhniy.github.io/posts/delta-method/</link>
+      <link>http://localhost:1313/posts/delta-method/</link>
       <pubDate>Wed, 31 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/posts/delta-method/</guid>
+      <guid>http://localhost:1313/posts/delta-method/</guid>
       <description>Correct variance estimation for ratio metrics using the Delta Method — and why naive approaches quietly break your confidence intervals</description>
     </item>
     
     <item>
       <title>Dunnett&#39;s Correction for ABC testing</title>
-      <link>https://npodlozhniy.github.io/posts/dunnett-correction/</link>
+      <link>http://localhost:1313/posts/dunnett-correction/</link>
       <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/posts/dunnett-correction/</guid>
+      <guid>http://localhost:1313/posts/dunnett-correction/</guid>
       <description>Improve your multivariate testing framework power and roll out the experiments much faster</description>
     </item>
     
     <item>
       <title>CUPED: Reducing Metric Variance with Pre-Experiment Data</title>
-      <link>https://npodlozhniy.github.io/posts/cuped/</link>
+      <link>http://localhost:1313/posts/cuped/</link>
       <pubDate>Thu, 18 Apr 2024 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/posts/cuped/</guid>
+      <guid>http://localhost:1313/posts/cuped/</guid>
       <description>How CUPED uses pre-experiment covariates to cut metric variance and boost AB test sensitivity — with a rigorous proof of what works and what silently breaks</description>
     </item>
     
     <item>
       <title>Customer Feedback Analysis in Python</title>
-      <link>https://npodlozhniy.github.io/posts/feedback-analysis/</link>
+      <link>http://localhost:1313/posts/feedback-analysis/</link>
       <pubDate>Sun, 29 Oct 2023 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/posts/feedback-analysis/</guid>
+      <guid>http://localhost:1313/posts/feedback-analysis/</guid>
       <description>&lt;!-- comment it out
 &lt;script src=&#34;https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js&#34; integrity=&#34;sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==&#34; crossorigin=&#34;anonymous&#34;&gt;&lt;/script&gt;
 &lt;script src=&#34;https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js&#34; integrity=&#34;sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==&#34; crossorigin=&#34;anonymous&#34;&gt;&lt;/script&gt;
@@ -97,9 +97,9 @@
     
     <item>
       <title>Time Series Analysis in Python</title>
-      <link>https://npodlozhniy.github.io/posts/timeseries-analysis/</link>
+      <link>http://localhost:1313/posts/timeseries-analysis/</link>
       <pubDate>Sat, 02 Sep 2023 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/posts/timeseries-analysis/</guid>
+      <guid>http://localhost:1313/posts/timeseries-analysis/</guid>
       <description>&lt;script src=&#34;https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js&#34; integrity=&#34;sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==&#34; crossorigin=&#34;anonymous&#34;&gt;&lt;/script&gt;
 &lt;script src=&#34;https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js&#34; integrity=&#34;sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==&#34; crossorigin=&#34;anonymous&#34;&gt;&lt;/script&gt;
 &lt;script type=&#34;application/javascript&#34;&gt;define(&#39;jquery&#39;, [],function() {return window.jQuery;})&lt;/script&gt;
@@ -153,25 +153,25 @@ require([&#39;plotly&#39;], function(Plotly) {
     
     <item>
       <title>Salts and Layers: Running Multiple AB Tests Simultaneously</title>
-      <link>https://npodlozhniy.github.io/posts/ab-salts/</link>
+      <link>http://localhost:1313/posts/ab-salts/</link>
       <pubDate>Tue, 13 Sep 2022 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/posts/ab-salts/</guid>
+      <guid>http://localhost:1313/posts/ab-salts/</guid>
       <description>How MD5-based traffic splitting with salts and a layer system lets you run dozens of orthogonal experiments without conflicts</description>
     </item>
     
     <item>
       <title>Bootstrap Methods for AB Testing</title>
-      <link>https://npodlozhniy.github.io/posts/bootstrap/</link>
+      <link>http://localhost:1313/posts/bootstrap/</link>
       <pubDate>Tue, 16 Aug 2022 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/posts/bootstrap/</guid>
+      <guid>http://localhost:1313/posts/bootstrap/</guid>
       <description>Classical and Poisson bootstrap as non-parametric tools for normalizing skewed metrics and enabling valid T-tests on small samples</description>
     </item>
     
     <item>
       <title>Bucketing: Variance Reduction and Faster AB Tests</title>
-      <link>https://npodlozhniy.github.io/posts/bucketing/</link>
+      <link>http://localhost:1313/posts/bucketing/</link>
       <pubDate>Tue, 16 Aug 2022 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/posts/bucketing/</guid>
+      <guid>http://localhost:1313/posts/bucketing/</guid>
       <description>How aggregating observations into buckets normalises skewed metrics, reduces variance, and cuts computation — with a probability proof for choosing the right bucket count</description>
     </item>
     
