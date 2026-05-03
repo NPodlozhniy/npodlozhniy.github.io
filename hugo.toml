@@ -1,5 +1,4 @@
 baseURL = "https://npodlozhniy.github.io/"
-languageCode = "en-gb"
 title = "Nikita Podlozhniy"
 theme = "PaperMod"
 publishDir = "docs"
@@ -85,7 +84,8 @@ url = "https://github.com/NPodlozhniy"
 [languages]
 
   [languages.en]
-  languageName = ":en:"
+  label = ":en:"
+  locale = "en-GB"
   weight = 10
 
   [languages.en.params]
@@ -118,7 +118,8 @@ url = "https://github.com/NPodlozhniy"
 	weight = 4
 
   [languages.ru]
-  languageName = ":ru:"
+  label = ":ru:"
+  locale = "ru-RU"
   weight = 1
   title = "Подложный Никита"
 

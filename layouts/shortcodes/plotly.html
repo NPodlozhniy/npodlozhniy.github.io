@@ -39,7 +39,7 @@ Include this in the head element of your baseof.html template:
 
 {{- $obj := "" }}
 {{- with .Get "obj" }}
-  {{- with index site.Data.plotly . }}
+  {{- with index hugo.Data.plotly . }}
     {{- $obj = . }}
   {{- else }}
     {{- errorf "The %q shortcode was unable to obtain the %q data object. See %s." $.Name . $.Position  }}
