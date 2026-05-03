@@ -196,14 +196,14 @@ Therefore:
 
 $$ P(n, b) = \frac{\binom{n-1}{b-1}}{(n + 1)^{b - 1}} $$
 
-Applying Stirling's approximation $n! \approx \sqrt{2\pi n}\,(n/e)^n$:
+Applying Stirling's approximation $n! \approx \sqrt{2\pi n}(n/e)^n$:
 
 $$ P(n, b) \approx \frac{n!}{(n-b)!\cdot b! \cdot n^b} \xrightarrow{n \to \infty} 0 $$
 
 Two particularly informative regimes:
 
-- $b \sim n$: $\;P \sim 1/n^n \to 0$ (vanishingly small probability)
-- $b \sim n/2$: $\;P \sim \sqrt{2/(\pi n)}\,(4/n)^{n/2} \to 0$ (also zero)
+- $b \sim n$: $P \sim 1/n^n \to 0$ (vanishingly small probability)
+- $b \sim n/2$: $P \sim \sqrt{2/(\pi n)}(4/n)^{n/2} \to 0$ (also zero)
 
 **Practical rule of thumb:** keep $b \ll n$, typically $b \leq n/10$.
 With 1 000 users, use at most 100 buckets; with 10 000 users, 200--500 buckets is reasonable.

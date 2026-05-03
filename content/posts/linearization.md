@@ -70,7 +70,7 @@ The group-level mean of $L$ satisfies:
 $$\overline{L_A} = \overline{X_A} - \alpha \cdot \overline{Y_A} = \overline{Y_A}\left(\mathcal{R}_A - \alpha\right)$$
 
 Since $\overline{Y_A} > 0$, the sign of $\overline{L_A}$ equals the sign of $(\mathcal{R}_A - \alpha)$.
-This means the T-test on $L$ **rejects whenever $\mathcal{R}_{test} \neq \mathcal{R}_{control}$** — exactly what we want.
+This means the T-test on $L$ rejects whenever $\mathcal{R}_{test} \neq \mathcal{R}_{control}$ — exactly what we want.
 
 The parameter $\alpha$ is estimated from the control group:
 

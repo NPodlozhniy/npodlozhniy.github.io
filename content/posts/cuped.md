@@ -46,13 +46,13 @@ $$ Y_{\text{CUPED}} = Y - \theta(X - \mathbb{E}X) $$
 
 Computing the moments:
 
-$$ \mathbb{E}[Y_{\text{CUPED}}] = \mathbb{E}[Y] - \theta \underbrace{\mathbb{E}[X - \mathbb{E}X]}_{=\,0} = \mathbb{E}[Y] $$
+$$ \mathbb{E}[Y_{\text{CUPED}}] = \mathbb{E}[Y] - \theta \underbrace{\mathbb{E}[X - \mathbb{E}X]}_{=0} = \mathbb{E}[Y] $$
 
-$$ \mathbb{D}[Y_{\text{CUPED}}] = \mathbb{D}[Y] + \theta^2 \mathbb{D}[X] - 2\theta\,\text{cov}(Y, X) $$
+$$ \mathbb{D}[Y_{\text{CUPED}}] = \mathbb{D}[Y] + \theta^2 \mathbb{D}[X] - 2\theta \operatorname{cov}(Y, X) $$
 
 The expectation is preserved. The variance can be reduced by choosing $\theta$ to minimise $\mathbb{D}[Y_{\text{CUPED}}]$:
 
-$$ \frac{\partial}{\partial \theta}\mathbb{D}[Y_{\text{CUPED}}] = 2\theta\mathbb{D}[X] - 2\,\text{cov}(Y, X) = 0 \implies \theta^* = \frac{\text{cov}(Y, X)}{\mathbb{D}[X]} $$
+$$ \frac{\partial}{\partial \theta}\mathbb{D}[Y_{\text{CUPED}}] = 2\theta\mathbb{D}[X] - 2\operatorname{cov}(Y, X) = 0 \implies \theta^* = \frac{\operatorname{cov}(Y, X)}{\mathbb{D}[X]} $$
 
 Substituting back:
 
@@ -162,7 +162,7 @@ $$ \theta^* = \frac{\text{cov}(T, A) + \text{cov}(C, B)}{\mathbb{D}[A] + \mathbb
 
 The resulting variance reduction:
 
-$$ \mathbb{D}[T_{\text{CUPED}} - C_{\text{CUPED}}] = \left(1 - \rho^2\right)\mathbb{D}[T - C], \quad \rho = \text{corr}(T - C,\; A - B) $$
+$$ \mathbb{D}[T_{\text{CUPED}} - C_{\text{CUPED}}] = \left(1 - \rho^2\right)\mathbb{D}[T - C], \quad \rho = \text{corr}(T - C, A - B) $$
 
 <details class="code-fold">
 <summary>Two-sample CUPED implementation</summary>

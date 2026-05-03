@@ -47,7 +47,7 @@ def assign_group(visitor_id: str, salt: str) -> str:
 For large traffic, two experiments using **different salts** are **orthogonal**: each group in experiment A contains approximately half test and half control users from experiment B.
 Neither experiment biases the other.
 
-In practice, traffic is divided into $2^{16} = 65\,536$ slots for finer-grained allocation:
+In practice, traffic is divided into $2^{16} = 65536$ slots for finer-grained allocation:
 
 <details class="code-fold">
 <summary>Basic traffic allocation via MD5</summary>

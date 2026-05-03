@@ -104,7 +104,7 @@ Classical bootstrap draws $n$ samples **with replacement** from the observed dat
 
 The weight of each observation in a single bootstrap draw follows a multinomial distribution:
 
-$$ \forall\, \text{resample}:\; (w_1, \ldots, w_n) \sim \mathrm{Multinomial}_n\!\left(\tfrac{1}{n}, \ldots, \tfrac{1}{n}\right) $$
+$$ \forall \text{ resample}: (w_1, \ldots, w_n) \sim \mathrm{Multinomial}_n\left(\tfrac{1}{n}, \ldots, \tfrac{1}{n}\right) $$
 
 A confidence interval is then obtained as empirical quantiles of the bootstrapped statistic distribution.
 
@@ -183,7 +183,7 @@ fig.show()
 An alternative to drawing resamples is to assign a random weight to each observation.
 If weights are drawn independently from $\mathrm{Poisson}(1)$, the resulting weighted mean approximates the classical bootstrap mean while allowing **distributed computation** --- each worker can independently draw its own set of weights and compute a local weighted sum, with no need to share data.
 
-$$ \forall\, i:\; w_i \sim \mathrm{Poisson}(1) $$
+$$ \forall i: w_i \sim \mathrm{Poisson}(1) $$
 
 The weighted mean per bootstrap iteration is then:
 

@@ -67,15 +67,15 @@ $$ \hat{\theta}_n \xrightarrow{dist} \mathbb{N}(\theta_0, V/n) $$
 
 For a continuously differentiable function $g: \mathbb{R} \to \mathbb{R}$, the **Delta Method** states:
 
-$$ g(\hat\theta_n) \xrightarrow{dist} \mathbb{N}\!\left(g(\theta_0),\; \left(\frac{dg}{d\theta}\right)^2_{\!\theta_0} \cdot \frac{V}{n}\right) $$
+$$ g(\hat\theta_n) \xrightarrow{dist} \mathbb{N}\left(g(\theta_0), \left(\frac{dg}{d\theta}\right)^2_{\theta_0} \cdot \frac{V}{n}\right) $$
 
-**Proof sketch:** By the mean value theorem, $\exists\, \bar\theta$ between $\hat\theta_n$ and $\theta_0$ such that
+**Proof sketch:** By the mean value theorem, $\exists \bar\theta$ between $\hat\theta_n$ and $\theta_0$ such that
 
-$$ g(\hat\theta_n) - g(\theta_0) = \left(\frac{dg}{d\theta}\right)_{\!\bar\theta} \cdot (\hat\theta_n - \theta_0) $$
+$$ g(\hat\theta_n) - g(\theta_0) = \left(\frac{dg}{d\theta}\right)_{\bar\theta} \cdot (\hat\theta_n - \theta_0) $$
 
 Since $\hat\theta_n \xrightarrow{\mathbb{P}} \theta_0$, we have $\bar\theta \xrightarrow{\mathbb{P}} \theta_0$. By the continuous mapping theorem and Slutsky's theorem the product converges in distribution, giving
 
-$$ g(\hat\theta_n) - g(\theta_0) \xrightarrow{dist} \mathbb{N}\!\left(0,\; \left(\frac{dg}{d\theta}\right)^2_{\!\theta_0} \cdot \frac{V}{n}\right) $$
+$$ g(\hat\theta_n) - g(\theta_0) \xrightarrow{dist} \mathbb{N}\left(0, \left(\frac{dg}{d\theta}\right)^2_{\theta_0} \cdot \frac{V}{n}\right) $$
 
 ### Application to ratio metrics
 
