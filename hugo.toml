@@ -16,6 +16,12 @@ googleAnalytics = "G-ESWD18X008"
 
 # configure Hugo’s markdown renderer to allow raw HTML
 ignoreFiles = ["\\.ipynb$", "\\.csv$", "\\.html$"]
+
+[module]
+  [[module.mounts]]
+    source = "content"
+    target = "content"
+    excludeFiles = "**/*.html"
 [markup.goldmark.renderer]
 unsafe= true
 

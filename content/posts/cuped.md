@@ -5,7 +5,7 @@ summary: >-
   How CUPED uses pre-experiment covariates to cut metric variance and boost AB
   test sensitivity — with a rigorous proof of what works and what silently
   breaks
-date: '2026-03-15'
+date: '2024-04-18'
 format:
   hugo-md:
     output-file: cuped.md

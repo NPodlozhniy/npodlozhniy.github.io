@@ -5,7 +5,7 @@ summary: >-
   How aggregating observations into buckets normalises skewed metrics, reduces
   variance, and cuts computation — with a probability proof for choosing the
   right bucket count
-date: '2026-02-01'
+date: '2022-08-16'
 format:
   hugo-md:
     output-file: bucketing.md

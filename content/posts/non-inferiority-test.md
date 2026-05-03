@@ -5,7 +5,7 @@ summary: >-
   Not every experiment needs to show improvement — sometimes proving you haven't
   made things worse is enough. A practical guide to non-inferiority trial
   design.
-date: '2026-03-01'
+date: '2025-12-11'
 format:
   hugo-md:
     output-file: non-inferiority-test.md

@@ -4,7 +4,7 @@ author: Nikita Podlozhniy
 summary: >-
   Correct variance estimation for ratio metrics using the Delta Method — and why
   naive approaches quietly break your confidence intervals
-date: '2025-12-15'
+date: '2024-07-31'
 format:
   hugo-md:
     output-file: delta-method.md

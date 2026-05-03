@@ -4,7 +4,7 @@ author: Nikita Podlozhniy
 summary: >-
   A simple algebraic transformation that converts ratio metrics into independent
   per-user values, making T-tests and sensitivity techniques directly applicable
-date: '2026-04-01'
+date: '2024-10-01'
 format:
   hugo-md:
     output-file: linearization.md

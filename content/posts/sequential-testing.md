@@ -391,10 +391,6 @@ gst_cubic = gatsby.GST(actual=10, expected=10, iuse=3, phi=3, alpha=alpha)
 
 You can play around the trade-off: would you like to spend more $\alpha$ at the start, detecting faster if there are greater uplifts in you experiment group or to preserve the major part of alpha until the end keeping maximum power to reject the hypothesis when the expected sample size is reached.
 
-> **💡 Tip**
->
-> If the title or the legend items are not visible to you - double click to one of legend items and it will make the chart rendered properly. It may happen due to LaTeX usage.
-
 <details>
 <summary>Code</summary>
 

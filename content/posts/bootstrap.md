@@ -4,7 +4,7 @@ author: Nikita Podlozhniy
 summary: >-
   Classical and Poisson bootstrap as non-parametric tools for normalizing skewed
   metrics and enabling valid T-tests on small samples
-date: '2026-01-10'
+date: '2022-08-16'
 format:
   hugo-md:
     output-file: bootstrap.md

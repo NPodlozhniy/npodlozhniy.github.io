@@ -37,11 +37,11 @@ a_scores = list(map(np.mean, get_bootstrap_samples(df[df.group == 'test'].metric
 b_scores = list(map(np.mean, get_bootstrap_samples(df[df.group == 'control'].metric.values, 1000)))
 
 fig = make_subplots(rows=2, cols=2,
-    subplot_titles=('Raw Metric — Test', 'Raw Metric — Control',
-                    'Bootstrap Means — Test', 'Bootstrap Means — Control'))
+    subplot_titles=('Raw Metric - Test', 'Raw Metric - Control',
+                    'Bootstrap Means - Test', 'Bootstrap Means - Control'))
 colors = {'test': '#636efa', 'control': '#EF553B'}
 for col, (grp, label) in enumerate([('test', a_scores), ('control', b_scores)], start=1):
-    raw = df[df.group == grp].metric.values
+    raw = df[df.group == grp].metric.values.tolist()
     fig.add_trace(go.Histogram(x=raw, nbinsx=100, name=f'Raw {grp}',
                                marker_color=colors[grp], showlegend=False), row=1, col=col)
     fig.add_trace(go.Histogram(x=label, name=f'Bootstrap {grp}',
@@ -63,13 +63,13 @@ a_pois = get_poisson_samples(df[df.group == 'test'], 'metric', 1000)
 b_pois = get_poisson_samples(df[df.group == 'control'], 'metric', 1000)
 
 fig2 = make_subplots(rows=2, cols=2,
-    subplot_titles=('Raw Metric — Test', 'Raw Metric — Control',
-                    'Poisson Bootstrap Means — Test', 'Poisson Bootstrap Means — Control'))
+    subplot_titles=('Raw Metric - Test', 'Raw Metric - Control',
+                    'Poisson Bootstrap Means - Test', 'Poisson Bootstrap Means - Control'))
 for col, (grp, label) in enumerate([('test', a_pois), ('control', b_pois)], start=1):
-    raw = df[df.group == grp].metric.values
+    raw = df[df.group == grp].metric.values.tolist()
     fig2.add_trace(go.Histogram(x=raw, nbinsx=100, name=f'Raw {grp}',
                                 marker_color=colors[grp], showlegend=False), row=1, col=col)
-    fig2.add_trace(go.Histogram(x=label, name=f'Poisson bootstrap {grp}',
+    fig2.add_trace(go.Histogram(x=label.tolist(), name=f'Poisson bootstrap {grp}',
                                 marker_color=colors[grp], showlegend=False), row=2, col=col)
 fig2.update_layout(title={'text': 'Poisson Bootstrap: Raw vs Bootstrap Mean Distribution', 'x': 0.5},
                    template='plotly_dark', height=600)
@@ -87,12 +87,12 @@ def make_bucket(df, ids='user_id', groups='group', num_buck=100):
 
 bucketed = make_bucket(df)
 fig3 = make_subplots(rows=2, cols=2,
-    subplot_titles=('Raw Metric — Test', 'Raw Metric — Control',
-                    'Bucket Sums — Test', 'Bucket Sums — Control'))
+    subplot_titles=('Raw Metric - Test', 'Raw Metric - Control',
+                    'Bucket Sums - Test', 'Bucket Sums - Control'))
 for col, grp in enumerate(['test', 'control'], start=1):
-    fig3.add_trace(go.Histogram(x=df[df.group == grp].metric.values, nbinsx=100,
+    fig3.add_trace(go.Histogram(x=df[df.group == grp].metric.values.tolist(), nbinsx=100,
                                 name=f'Raw {grp}', marker_color=colors[grp], showlegend=False), row=1, col=col)
-    fig3.add_trace(go.Histogram(x=bucketed[bucketed.group == grp].metric.values,
+    fig3.add_trace(go.Histogram(x=bucketed[bucketed.group == grp].metric.values.tolist(),
                                 name=f'Buckets {grp}', marker_color=colors[grp], showlegend=False), row=2, col=col)
 fig3.update_layout(title={'text': 'Bucketing: Raw vs Bucket-Sum Distribution', 'x': 0.5},
                    template='plotly_dark', height=600)

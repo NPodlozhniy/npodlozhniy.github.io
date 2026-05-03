@@ -4,7 +4,7 @@ author: Nikita Podlozhniy
 summary: >-
   How MD5-based traffic splitting with salts and a layer system lets you run
   dozens of orthogonal experiments without conflicts
-date: '2026-02-15'
+date: '2022-09-13'
 format:
   hugo-md:
     output-file: ab-salts.md
