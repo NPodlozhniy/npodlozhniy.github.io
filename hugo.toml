@@ -14,7 +14,7 @@ enableRobotsTXT = true
 googleAnalytics = "G-ESWD18X008"
 
 # configure Hugo’s markdown renderer to allow raw HTML
-ignoreFiles = ["\\.ipynb$", "\\.csv$"]
+ignoreFiles = ["\\.ipynb$", "\\.csv$", "content/posts/.+\\.html$"]
 [markup.goldmark.renderer]
 unsafe= true
 
