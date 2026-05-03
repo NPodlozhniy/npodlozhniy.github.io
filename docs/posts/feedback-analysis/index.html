@@ -5979,10 +5979,9 @@ Topic Num = 7 Coherence = -5.01
 </span></span><span style="display:flex;"><span>theta <span style="color:#f92672">=</span> get_theta(ldamodel)
 </span></span></code></pre></div></details>
 <p>Let&rsquo;s make a map of words broken down by topic and to do this the matrix $\Phi$ should be turned over first. To get the topic profile of a word Bayes&rsquo; formula might be used:</p>
-<p>$$
-P(topic|word) = \frac {P(word|topic) P(topic)} {\sum_t&rsquo; P(word|t&rsquo;) P(t&rsquo;)}
-$$</p>
-<details>
+$$
+    P(topic|word) = \frac {P(word|topic) P(topic)} {\sum_t' P(word|t') P(t')}
+$$<details>
 <summary>Code</summary>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>phi_top_words <span style="color:#f92672">=</span> (
 </span></span><span style="display:flex;"><span>    phi<span style="color:#f92672">.</span>assign(sum<span style="color:#f92672">=</span>phi<span style="color:#f92672">.</span>sum(axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>))
