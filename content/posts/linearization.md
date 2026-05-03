@@ -27,14 +27,14 @@ categories:
 ## Background
 
 We at HomeBuddy track many **ratio metrics**: average session duration, pages per visit, revenue per order.
-These metrics share a common structure --- a sum of events in the numerator divided by a count of sessions (or users) in the denominator, where both vary per user.
+These metrics share a common structure — a sum of events in the numerator divided by a count of sessions (or users) in the denominator, where both vary per user.
 
 $$\mathcal{R} = \frac{\sum_{u \in A} X(u)}{\sum_{u \in A} Y(u)}$$
 
 The problem: $\mathcal{R}$ is **not** a simple average of independent observations.
 Each user $u$ contributes $Y(u)$ observations to the denominator, creating dependence between rows.
 Naively applying a T-test to the raw rows yields invalid p-values.
-Collapsing to a per-user mean loses the weighting --- a user with 100 sessions gets the same weight as one with 1 session, which distorts the direction of the test.
+Collapsing to a per-user mean loses the weighting — a user with 100 sessions gets the same weight as one with 1 session, which distorts the direction of the test.
 
 **Linearization** resolves this with an elegant algebraic trick: it produces a **per-user scalar** that is both unbiased for $\mathcal{R}$ and fully compatible with standard T-tests and sensitivity methods.
 
@@ -61,7 +61,7 @@ Denoting $\alpha = \mu_X / \mu_Y = \mathcal{R}_{control}$ (the control group rat
 
 $$L(u) = X(u) - \alpha \cdot Y(u)$$
 
-The per-user values $\{L(u)\}$ are independent and identically distributed --- T-test ready.
+The per-user values $\{L(u)\}$ are independent and identically distributed — T-test ready.
 
 ### Why It Works
 
@@ -70,7 +70,7 @@ The group-level mean of $L$ satisfies:
 $$\overline{L_A} = \overline{X_A} - \alpha \cdot \overline{Y_A} = \overline{Y_A}\left(\mathcal{R}_A - \alpha\right)$$
 
 Since $\overline{Y_A} > 0$, the sign of $\overline{L_A}$ equals the sign of $(\mathcal{R}_A - \alpha)$.
-This means the T-test on $L$ **rejects whenever $\mathcal{R}_{test} \neq \mathcal{R}_{control}$** --- exactly what we want.
+This means the T-test on $L$ **rejects whenever $\mathcal{R}_{test} \neq \mathcal{R}_{control}$** — exactly what we want.
 
 The parameter $\alpha$ is estimated from the control group:
 
@@ -92,7 +92,7 @@ def linearization(control: list[list], test: list[list]) -> tuple[list, list]:
 
     Returns
     -------
-    (linearized_control, linearized_test) — one scalar per user, T-test compatible
+    (linearized_control, linearized_test) ” one scalar per user, T-test compatible
     """
     total_x = sum(sum(row) for row in control)
     total_y = sum(len(row) for row in control)
@@ -107,8 +107,8 @@ def linearization(control: list[list], test: list[list]) -> tuple[list, list]:
 
 ## Synthetic Data
 
-We simulate an AB test with a lognormal metric --- many rows per user, users split into test and control.
-The test group gets a 5% uplift on the ratio metric.
+We simulate an AB test where each user has a persistent quality effect that correlates all their sessions — the key property that makes row-level tests invalid for ratio metrics.
+The test group gets a 5% uplift on the ratio metric for the single-run p-value comparison.
 
 <details class="code-fold">
 <summary>Data generation</summary>
@@ -117,19 +117,25 @@ The test group gets a 5% uplift on the ratio metric.
 def generate_samples(n_users, n_samples, seed=0, effect=0.0):
     np.random.seed(seed)
 
+    # User-level quality — each user has a fixed base that correlates all their sessions
+    user_quality = np.random.lognormal(0, 1, n_users)
+
     def encoder(x):
         uid = hashlib.md5(str(x).encode()).hexdigest()
-        test_flg = hash(str(x).encode()) % 2
-        return (uid, 'test' if test_flg else 'control')
+        # deterministic group split via MD5 (avoids Python hash randomisation)
+        test_flg = int(uid, 16) % 2
+        return (uid, 'test' if test_flg else 'control', float(user_quality[x]))
 
-    df = pd.DataFrame(
-        list(map(encoder, np.random.randint(0, n_users, 2 * n_samples))),
-        columns=['user_id', 'group'],
-    )
-    metric = sts.lognorm.rvs(3, loc=100, size=2 * n_samples)
-    is_test = df['group'] == 'test'
-    metric[is_test.values] *= (1 + effect)
-    return df.assign(metric=metric)
+    rows = list(map(encoder, np.random.randint(0, n_users, 2 * n_samples)))
+    df = pd.DataFrame(rows, columns=['user_id', 'group', 'user_quality'])
+
+    # Row metric = user quality * session noise (creates within-user correlation)
+    row_noise = sts.lognorm.rvs(0.5, size=2 * n_samples)
+    metric = df['user_quality'].values * row_noise * 100
+
+    is_test = (df['group'] == 'test').values
+    metric[is_test] *= (1 + effect)
+    return df[['user_id', 'group']].assign(metric=metric)
 
 
 df = generate_samples(100, 10000, effect=0.05)
@@ -145,8 +151,8 @@ print(f'Avg obs per control user: {np.mean([len(r) for r in control_obs]):.1f}')
 
 </details>
 
-    Control users: 51, test users: 49
-    Avg obs per control user: 199.1
+    Control users: 48, test users: 52
+    Avg obs per control user: 200.2
 
 <details class="code-fold">
 <summary>Apply linearization and compare approaches</summary>
@@ -174,13 +180,14 @@ print(f'Linearization p-value:         {p_lin:.4f}')
 
 </details>
 
-    Row-level T-test p-value:      0.3446
-    Per-user average p-value:      0.4058
-    Linearization p-value:         0.3539
+    Row-level T-test p-value:      0.0000
+    Per-user average p-value:      0.0715
+    Linearization p-value:         0.0635
 
 ## Correctness and Power
 
-A simulation over 500 AA (no-effect) trials verifies that the linearized T-test holds the FPR at $\alpha = 5\%$, while the row-level approach is anti-conservative.
+A simulation over 500 AA (no-effect) trials verifies that the linearized T-test holds the FPR at $\alpha = 5\%$, while the row-level approach inflates it to ~88% due to within-user correlation.
+A subsequent AB test with a 50% effect checks true power once the FPR is controlled.
 
 <details class="code-fold">
 <summary>AA / AB simulation</summary>
@@ -219,20 +226,20 @@ def simulate(effect=0.0, n_tests=500, alpha=0.05):
 
 
 simulate(effect=0.0)
-simulate(effect=0.05)
+simulate(effect=0.50)
 ```
 
 </details>
 
     AA FPR
-      Row-level:      0.022 [0.012,0.039]
-      Per-user avg:   0.022 [0.012,0.039]
-      Linearization:  0.022 [0.012,0.039]
+      Row-level:      0.884 [0.853,0.909]
+      Per-user avg:   0.036 [0.023,0.056]
+      Linearization:  0.038 [0.024,0.059]
 
-    AB power (5% effect)
-      Row-level:      0.052 [0.036,0.075]
-      Per-user avg:   0.050 [0.034,0.073]
-      Linearization:  0.050 [0.034,0.073]
+    AB power (50% effect)
+      Row-level:      0.972 [0.954,0.983]
+      Per-user avg:   0.370 [0.329,0.413]
+      Linearization:  0.378 [0.337,0.421]
 
 ## Linearization vs Delta Method
 
@@ -241,7 +248,7 @@ Both linearization and the [Delta Method](../delta-method) address ratio metrics
 |  | Linearization | Delta Method |
 |:-----------------------|:-----------------------|:-----------------------|
 | **Output** | Per-user scalar (T-test ready) | Asymptotic confidence interval |
-| **Variance reduction** | Yes --- enables CUPED on the linearized metric | Not directly |
+| **Variance reduction** | Yes — enables CUPED on the linearized metric | Not directly |
 | **Bias** | Slight bias: α estimated from control only | Asymptotically unbiased |
 | **Enables bucketing/CUPED** | Yes | No |
 | **SQL friendliness** | Very high | Very high |
@@ -255,13 +262,13 @@ Linearization is a lightweight transformation that unlocks the full toolkit of p
 The formula is a single line: `L(u) = X(u) - alpha * Y(u)` where `alpha` is the control group ratio.
 
 Practical notes:
-- Estimate $\alpha$ from the **control group only** --- using test data would introduce a circular dependency.
-- The linearized metric has mean $\approx 0$ in the control group by construction --- this is expected and correct.
+- Estimate $\alpha$ from the **control group only** — using test data would introduce a circular dependency.
+- The linearized metric has mean $\approx 0$ in the control group by construction — this is expected and correct.
 - For further variance reduction, apply [CUPED](../cuped) or [bucketing](../bucketing) to the linearized values.
 
 ## References
 
 1.  Deng, A. et al. (2018). [Applying the Delta Method in Metric Analytics](https://arxiv.org/pdf/1803.06336.pdf)
-2.  [Video: Sensitivity improvement for ratio metrics](https://www.youtube.com/watch?v=z8CqaOQgYcI&t=1204s) --- includes the square-root reweighting trick
+2.  [Video: Sensitivity improvement for ratio metrics](https://www.youtube.com/watch?v=z8CqaOQgYcI&t=1204s) — includes the square-root reweighting trick
 3.  [Video: Advantages of linearization vs reweighting](https://www.youtube.com/watch?v=HpinAY5QfCo)
-4.  Avito variance reduction series --- [Part 1](https://habr.com/ru/companies/avito/articles/571094/), [Part 2](https://habr.com/ru/companies/avito/articles/571096/)
+4.  Avito variance reduction series — [Part 1](https://habr.com/ru/companies/avito/articles/571094/), [Part 2](https://habr.com/ru/companies/avito/articles/571096/)
