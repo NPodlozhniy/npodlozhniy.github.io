@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Bucketing on Nikita Podlozhniy</title>
-    <link>http://localhost:1313/tags/bucketing/</link>
+    <link>https://npodlozhniy.github.io/tags/bucketing/</link>
     <description>Recent content in Bucketing on Nikita Podlozhniy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-GB</language>
-    <lastBuildDate>Tue, 16 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/bucketing/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 16 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/tags/bucketing/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Bucketing: Variance Reduction and Faster AB Tests</title>
-      <link>http://localhost:1313/posts/bucketing/</link>
+      <link>https://npodlozhniy.github.io/posts/bucketing/</link>
       <pubDate>Tue, 16 Aug 2022 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/bucketing/</guid>
+      <guid>https://npodlozhniy.github.io/posts/bucketing/</guid>
       <description>How aggregating observations into buckets normalises skewed metrics, reduces variance, and cuts computation — with a probability proof for choosing the right bucket count</description>
     </item>
     

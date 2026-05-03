@@ -2,88 +2,88 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/ru/categories/</loc>
+    <loc>https://npodlozhniy.github.io/ru/categories/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-GB"
-                href="http://localhost:1313/categories/"
+                href="https://npodlozhniy.github.io/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ru-RU"
-                href="http://localhost:1313/ru/categories/"
+                href="https://npodlozhniy.github.io/ru/categories/"
                 />
   </url><url>
-    <loc>http://localhost:1313/ru/posts/</loc>
+    <loc>https://npodlozhniy.github.io/ru/posts/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-GB"
-                href="http://localhost:1313/posts/"
+                href="https://npodlozhniy.github.io/posts/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ru-RU"
-                href="http://localhost:1313/ru/posts/"
+                href="https://npodlozhniy.github.io/ru/posts/"
                 />
   </url><url>
-    <loc>http://localhost:1313/ru/social/</loc>
+    <loc>https://npodlozhniy.github.io/ru/social/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-GB"
-                href="http://localhost:1313/social/"
+                href="https://npodlozhniy.github.io/social/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ru-RU"
-                href="http://localhost:1313/ru/social/"
+                href="https://npodlozhniy.github.io/ru/social/"
                 />
   </url><url>
-    <loc>http://localhost:1313/ru/tags/</loc>
+    <loc>https://npodlozhniy.github.io/ru/tags/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-GB"
-                href="http://localhost:1313/tags/"
+                href="https://npodlozhniy.github.io/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ru-RU"
-                href="http://localhost:1313/ru/tags/"
+                href="https://npodlozhniy.github.io/ru/tags/"
                 />
   </url><url>
-    <loc>http://localhost:1313/ru/archives/</loc>
+    <loc>https://npodlozhniy.github.io/ru/archives/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-GB"
-                href="http://localhost:1313/archives/"
+                href="https://npodlozhniy.github.io/archives/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ru-RU"
-                href="http://localhost:1313/ru/archives/"
+                href="https://npodlozhniy.github.io/ru/archives/"
                 />
   </url><url>
-    <loc>http://localhost:1313/ru/</loc>
+    <loc>https://npodlozhniy.github.io/ru/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-GB"
-                href="http://localhost:1313/"
+                href="https://npodlozhniy.github.io/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ru-RU"
-                href="http://localhost:1313/ru/"
+                href="https://npodlozhniy.github.io/ru/"
                 />
   </url><url>
-    <loc>http://localhost:1313/ru/search/</loc>
+    <loc>https://npodlozhniy.github.io/ru/search/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-GB"
-                href="http://localhost:1313/search/"
+                href="https://npodlozhniy.github.io/search/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ru-RU"
-                href="http://localhost:1313/ru/search/"
+                href="https://npodlozhniy.github.io/ru/search/"
                 />
   </url>
 </urlset>
