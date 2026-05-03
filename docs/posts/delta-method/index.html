@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
@@ -9,17 +9,17 @@
 <meta name="keywords" content="ab-testing, statistics, ratio-metrics, variance-reduction">
 <meta name="description" content="Correct variance estimation for ratio metrics using the Delta Method — and why naive approaches quietly break your confidence intervals">
 <meta name="author" content="Nikita Podlozhniy">
-<link rel="canonical" href="https://npodlozhniy.github.io/posts/delta-method/">
+<link rel="canonical" href="http://localhost:1313/posts/delta-method/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
-<link rel="icon" href="https://npodlozhniy.github.io/favicons/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://npodlozhniy.github.io/favicons/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://npodlozhniy.github.io/favicons/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://npodlozhniy.github.io/favicons/apple-touch-icon.png">
-<link rel="mask-icon" href="https://npodlozhniy.github.io/safari-pinned-tab.svg">
+<link rel="icon" href="http://localhost:1313/favicons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicons/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicons/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/favicons/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="https://npodlozhniy.github.io/posts/delta-method/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/delta-method/">
 <noscript>
     <style>
         #theme-toggle,
@@ -49,9 +49,9 @@
 <meta property="og:title" content="Delta Method for Ratio Metrics in AB Testing" />
 <meta property="og:description" content="Correct variance estimation for ratio metrics using the Delta Method — and why naive approaches quietly break your confidence intervals" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://npodlozhniy.github.io/posts/delta-method/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2025-12-15T00:00:00+00:00" />
-<meta property="article:modified_time" content="2025-12-15T00:00:00+00:00" />
+<meta property="og:url" content="http://localhost:1313/posts/delta-method/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-07-31T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-07-31T00:00:00+00:00" />
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Delta Method for Ratio Metrics in AB Testing"/>
@@ -67,13 +67,13 @@
       "@type": "ListItem",
       "position":  1 ,
       "name": "Posts",
-      "item": "https://npodlozhniy.github.io/posts/"
+      "item": "http://localhost:1313/posts/"
     }, 
     {
       "@type": "ListItem",
       "position":  2 ,
       "name": "Delta Method for Ratio Metrics in AB Testing",
-      "item": "https://npodlozhniy.github.io/posts/delta-method/"
+      "item": "http://localhost:1313/posts/delta-method/"
     }
   ]
 }
@@ -88,25 +88,25 @@
   "keywords": [
     "ab-testing", "statistics", "ratio-metrics", "variance-reduction"
   ],
-  "articleBody": "\rBackground We at HomeBuddy run dozens of AB tests to improve the customer journey across our onboarding funnel. Many of our key metrics are ratio metrics: average revenue per session, orders per visit, or any per-user aggregate where both the numerator and denominator vary from user to user. Treating such metrics naively — as if each row were an independent observation — leads to underestimated variance, artificially narrow confidence intervals, and inflated false-positive rates.\nThe Delta Method provides the correct asymptotic variance for any continuously differentiable function of random variables, and applying it to ratio metrics is surprisingly straightforward.\nPrerequisites The reader is expected to be comfortable with Python and standard data-science libraries. The notebook was written on Python 3.11.4; below is the minimal set of packages required.\nProblem Definition Consider a metric defined as the ratio $R = X / Y$, where for each user $i$:\n$X_i$ is the total value of some event (e.g. revenue) $Y_i$ is the number of sessions Three common — but not equally correct — ways to estimate the mean and its confidence interval for such a metric are:\nA. Row-level average — treat every row as an independent sample. Underestimates variance because multiple rows from the same user are correlated.\nB. User-level naive average — aggregate to one value per user, then use the sample variance of those averages. Still wrong: the average of per-user averages is not the same as the ratio of sums, and its variance formula does not account for the denominator’s variability.\nC. Delta Method — compute the exact asymptotic variance for $X/Y$ by propagating the variance of both $X$ and $Y$ and their covariance.\nTheory Let $\\hat\\theta_n$ be a sequence of random variables converging in distribution:\n$$ \\hat{\\theta}_n \\xrightarrow{dist} \\mathbb{N}(\\theta_0, V/n) $$\nFor a continuously differentiable function $g: \\mathbb{R} \\to \\mathbb{R}$, the Delta Method states:\n$$ g(\\hat\\theta_n) \\xrightarrow{dist} \\mathbb{N}!\\left(g(\\theta_0),; \\left(\\frac{dg}{d\\theta}\\right)^2_{!\\theta_0} \\cdot \\frac{V}{n}\\right) $$\nProof sketch: By the mean value theorem, $\\exists, \\bar\\theta$ between $\\hat\\theta_n$ and $\\theta_0$ such that\n$$ g(\\hat\\theta_n) - g(\\theta_0) = \\left(\\frac{dg}{d\\theta}\\right)_{!\\bar\\theta} \\cdot (\\hat\\theta_n - \\theta_0) $$\nSince $\\hat\\theta_n \\xrightarrow{\\mathbb{P}} \\theta_0$, we have $\\bar\\theta \\xrightarrow{\\mathbb{P}} \\theta_0$. By the continuous mapping theorem and Slutsky’s theorem the product converges in distribution, giving\n$$ g(\\hat\\theta_n) - g(\\theta_0) \\xrightarrow{dist} \\mathbb{N}!\\left(0,; \\left(\\frac{dg}{d\\theta}\\right)^2_{!\\theta_0} \\cdot \\frac{V}{n}\\right) $$\nApplication to ratio metrics For $R = X/Y$ the asymptotic variance of the sample ratio $\\bar R = \\bar X / \\bar Y$ is:\n$$ \\mathbb{D}\\bar{R} = \\left(\\frac{\\bar{X}}{\\bar{Y}}\\right)^2 \\cdot \\left(\\frac{\\mathbb{D}\\bar{X}}{\\bar{X}^2} + \\frac{\\mathbb{D}\\bar{Y}}{\\bar{Y}^2} - 2\\frac{\\mathrm{cov}(\\bar{X}, \\bar{Y})}{\\bar{X} \\cdot \\bar{Y}} \\right) $$\nwhere\n$$ \\mathrm{cov}(\\bar{X}, \\bar{Y}) = \\frac{\\sum_{i=1}^N(X_i - \\bar{X})(Y_i - \\bar{Y})}{N(N - 1)} $$\nThis formula requires only three aggregations per user — $\\sum X_i$, $\\sum Y_i$, $\\sum X_i Y_i$ — making it trivially parallelisable in any SQL or distributed compute environment.\nRatioXY class implementation\rimport numpy as np import scipy.stats as sts class RatioXY: \"\"\"Confidence interval for a ratio metric X/Y using the Delta Method.\"\"\" def __init__(self, X, Y): self.n = len(X) self.X_mean = np.mean(X) self.Y_mean = np.mean(Y) self.X_var = np.var(X, ddof=1) self.Y_var = np.var(Y, ddof=1) self.XY_cov = np.cov(X, Y, bias=False)[0][1] def ratio_variance(self): return self.X_mean**2 / self.Y_mean**2 * ( self.X_var / self.X_mean**2 + self.Y_var / self.Y_mean**2 - 2 * self.XY_cov / (self.X_mean * self.Y_mean) ) def bias_correction(self): return 1 / self.n * ( self.Y_var * self.X_mean / self.Y_mean**3 - self.XY_cov / self.Y_mean**2 ) def point_estimate(self, bias=False): bc = self.bias_correction() if bias else 0 return self.X_mean / self.Y_mean + bc def deltaci(self, alpha=0.05, bias=False, two_sided=True): pest = self.point_estimate(bias=bias) vest = self.ratio_variance() z = sts.norm.ppf(1 - alpha / 2) if two_sided else sts.norm.ppf(1 - alpha) return pest + np.array([-1, 1]) * z * np.sqrt(vest / self.n) Synthetic Data We simulate a dataset where each user has a variable number of sessions and a lognormally distributed metric per session. The lognormal distribution mimics real-world revenue data: heavy right tail, all positive values.\nSynthetic data generation\rimport pandas as pd import hashlib def generate_samples(n_users, n_samples, seed=2023): np.random.seed(seed) def encoder(x): uid = hashlib.md5(str(x).encode()).hexdigest() test_flg = hash(str(x).encode()) % 2 return (uid, 'test' if test_flg else 'control') df = pd.DataFrame( list(map(encoder, np.random.randint(0, n_users, 2 * n_samples))), columns=['user_id', 'group'], ) return df.assign(metric=sts.lognorm.rvs(3, loc=100, size=2 * n_samples)) df = generate_samples(1000, 10000) print(f'Rows: {df.shape[0]}, unique users: {df.user_id.nunique()}') df.sample(3) Rows: 20000, unique users: 1000\ruser_id group metric 8225 274ad4786c3abca69fa097b85867d9a4 test 108.472413 775 bea5955b308361a1b07bc55042e25e54 control 114.576327 14845 389bc7bb1e1c2a5e7e147703232a88f6 test 106.192022 Variance Estimation: Three Approaches Each approach estimates a 95% confidence interval for the control group mean. The true population mean is approximately 180.5 (lognormal with s=3, loc=100). We compare how wide — and how correct — each CI is.\nA. Row-level (incorrect)\rrow_level = df.groupby('group')['metric'].agg(['mean', 'var']) report( 'A. Row-level', row_level.loc['control', 'mean'], row_level.loc['control', 'var'], df.shape[0], ) A. Row-level: mean=193.92, 95% CI = [164.56, 223.27], width=58.71\rThe row-level approach treats 20 000 rows as independent observations. The sample mean is unbiased, but the variance is severely underestimated because many rows belong to the same user.\nB. User-level naive average (incorrect)\rtemp = ( df.groupby(['group', 'user_id'])['metric'] .agg(['sum', 'count']) .reset_index(level=1) ) temp['avg'] = temp['sum'] / temp['count'] user_level = temp.groupby('group')['avg'].agg(['mean', 'var']) report( 'B. User avg', user_level.loc['control', 'mean'], user_level.loc['control', 'var'], temp.shape[0], ) B. User avg: mean=196.76, 95% CI = [167.11, 226.41], width=59.30\rAveraging per-user averages gives neither the correct point estimate (the mean of averages $\\neq$ the ratio of sums) nor the correct variance, because the denominator $Y_i$ varies across users.\nC. Delta Method (correct)\rX_control = temp.loc['control', 'sum'].values Y_control = temp.loc['control', 'count'].values ctrl = RatioXY(X_control, Y_control) lo, hi = ctrl.deltaci(bias=False) print( f'C. Delta Method: mean={ctrl.point_estimate():.2f}, ' f'95% CI = [{lo:.2f}, {hi:.2f}], width={hi-lo:.2f}' ) C. Delta Method: mean=193.92, 95% CI = [152.50, 235.34], width=82.84\rThe Delta Method produces a wider confidence interval — not because it is less precise, but because it correctly captures the additional uncertainty from the denominator. The narrower intervals from approaches A and B are over-confident and would inflate your false-positive rate in an AB test.\nConfidence interval comparison chart\rimport plotly.graph_objs as go from pathlib import Path def find_git_repo(path=None): source = Path(path) if path else Path.cwd() for p in source.parents: if (p / '.git').is_dir(): return p row_mean = row_level.loc['control', 'mean'] row_var = row_level.loc['control', 'var'] row_lo, row_hi = row_mean - z * np.sqrt(row_var / df.shape[0]), row_mean + z * np.sqrt(row_var / df.shape[0]) usr_mean = user_level.loc['control', 'mean'] usr_var = user_level.loc['control', 'var'] usr_lo, usr_hi = usr_mean - z * np.sqrt(usr_var / temp.shape[0]), usr_mean + z * np.sqrt(usr_var / temp.shape[0]) dlt_lo, dlt_hi = ctrl.deltaci() dlt_mean = ctrl.point_estimate() labels = ['A. Row-Level', 'B. User Average', 'C. Delta Method'] means = [row_mean, usr_mean, dlt_mean] lows = [row_lo, usr_lo, dlt_lo] highs = [row_hi, usr_hi, dlt_hi] figure = go.Figure() figure.add_trace(go.Scatter( x=labels, y=means, error_y=dict( type='data', symmetric=False, array=[hi - m for m, hi in zip(means, highs)], arrayminus=[m - lo for m, lo in zip(means, lows)], ), mode='markers', marker=dict(size=12), name='95% CI', )) figure.update_layout( title={'text': '95% Confidence Intervals — Three Approaches', 'x': 0.5}, yaxis_title='Estimated Mean', template='plotly_dark', ) figure.show() Conclusion Whenever your AB test metric is a ratio — revenue per visit, events per user, average order value — the Delta Method is the correct tool for variance estimation. It requires only three per-user aggregations ($\\sum X_i$, $\\sum Y_i$, $\\sum X_i Y_i$) and is trivially expressible in SQL, making it production-ready with no additional infrastructure.\nThe naive alternatives consistently underestimate variance, leading to confidence intervals that are too narrow and hypothesis tests that reject the null too often.\nReferences Deng, A. et al. (2018). Applying the Delta Method in Metric Analytics — the original paper this implementation is based on. Medium: Applying Delta Method for A/B Tests Analysis StackExchange: Example of using the Delta Method StatLect: Delta Method — theory with examples Avito variance reduction series — Part 1, Part 2 ",
+  "articleBody": " Background We at HomeBuddy run dozens of AB tests to improve the customer journey across our onboarding funnel. Many of our key metrics are ratio metrics: average revenue per session, orders per visit, or any per-user aggregate where both the numerator and denominator vary from user to user. Treating such metrics naively — as if each row were an independent observation — leads to underestimated variance, artificially narrow confidence intervals, and inflated false-positive rates.\nThe Delta Method provides the correct asymptotic variance for any continuously differentiable function of random variables, and applying it to ratio metrics is surprisingly straightforward.\nPrerequisites The reader is expected to be comfortable with Python and standard data-science libraries. The notebook was written on Python 3.11.4; below is the minimal set of packages required.\nProblem Definition Consider a metric defined as the ratio $R = X / Y$, where for each user $i$:\n$X_i$ is the total value of some event (e.g. revenue) $Y_i$ is the number of sessions Three common — but not equally correct — ways to estimate the mean and its confidence interval for such a metric are:\nA. Row-level average — treat every row as an independent sample. Underestimates variance because multiple rows from the same user are correlated.\nB. User-level naive average — aggregate to one value per user, then use the sample variance of those averages. Still wrong: the average of per-user averages is not the same as the ratio of sums, and its variance formula does not account for the denominator’s variability.\nC. Delta Method — compute the exact asymptotic variance for $X/Y$ by propagating the variance of both $X$ and $Y$ and their covariance.\nTheory Let $\\hat\\theta_n$ be a sequence of random variables converging in distribution:\n$$ \\hat{\\theta}_n \\xrightarrow{dist} \\mathbb{N}(\\theta_0, V/n) $$\nFor a continuously differentiable function $g: \\mathbb{R} \\to \\mathbb{R}$, the Delta Method states:\n$$ g(\\hat\\theta_n) \\xrightarrow{dist} \\mathbb{N}!\\left(g(\\theta_0),; \\left(\\frac{dg}{d\\theta}\\right)^2_{!\\theta_0} \\cdot \\frac{V}{n}\\right) $$\nProof sketch: By the mean value theorem, $\\exists, \\bar\\theta$ between $\\hat\\theta_n$ and $\\theta_0$ such that\n$$ g(\\hat\\theta_n) - g(\\theta_0) = \\left(\\frac{dg}{d\\theta}\\right)_{!\\bar\\theta} \\cdot (\\hat\\theta_n - \\theta_0) $$\nSince $\\hat\\theta_n \\xrightarrow{\\mathbb{P}} \\theta_0$, we have $\\bar\\theta \\xrightarrow{\\mathbb{P}} \\theta_0$. By the continuous mapping theorem and Slutsky’s theorem the product converges in distribution, giving\n$$ g(\\hat\\theta_n) - g(\\theta_0) \\xrightarrow{dist} \\mathbb{N}!\\left(0,; \\left(\\frac{dg}{d\\theta}\\right)^2_{!\\theta_0} \\cdot \\frac{V}{n}\\right) $$\nApplication to ratio metrics For $R = X/Y$ the asymptotic variance of the sample ratio $\\bar R = \\bar X / \\bar Y$ is:\n$$ \\mathbb{D}\\bar{R} = \\left(\\frac{\\bar{X}}{\\bar{Y}}\\right)^2 \\cdot \\left(\\frac{\\mathbb{D}\\bar{X}}{\\bar{X}^2} + \\frac{\\mathbb{D}\\bar{Y}}{\\bar{Y}^2} - 2\\frac{\\mathrm{cov}(\\bar{X}, \\bar{Y})}{\\bar{X} \\cdot \\bar{Y}} \\right) $$\nwhere\n$$ \\mathrm{cov}(\\bar{X}, \\bar{Y}) = \\frac{\\sum_{i=1}^N(X_i - \\bar{X})(Y_i - \\bar{Y})}{N(N - 1)} $$\nThis formula requires only three aggregations per user — $\\sum X_i$, $\\sum Y_i$, $\\sum X_i Y_i$ — making it trivially parallelisable in any SQL or distributed compute environment.\nRatioXY class implementation import numpy as np import scipy.stats as sts class RatioXY: \"\"\"Confidence interval for a ratio metric X/Y using the Delta Method.\"\"\" def __init__(self, X, Y): self.n = len(X) self.X_mean = np.mean(X) self.Y_mean = np.mean(Y) self.X_var = np.var(X, ddof=1) self.Y_var = np.var(Y, ddof=1) self.XY_cov = np.cov(X, Y, bias=False)[0][1] def ratio_variance(self): return self.X_mean**2 / self.Y_mean**2 * ( self.X_var / self.X_mean**2 + self.Y_var / self.Y_mean**2 - 2 * self.XY_cov / (self.X_mean * self.Y_mean) ) def bias_correction(self): return 1 / self.n * ( self.Y_var * self.X_mean / self.Y_mean**3 - self.XY_cov / self.Y_mean**2 ) def point_estimate(self, bias=False): bc = self.bias_correction() if bias else 0 return self.X_mean / self.Y_mean + bc def deltaci(self, alpha=0.05, bias=False, two_sided=True): pest = self.point_estimate(bias=bias) vest = self.ratio_variance() z = sts.norm.ppf(1 - alpha / 2) if two_sided else sts.norm.ppf(1 - alpha) return pest + np.array([-1, 1]) * z * np.sqrt(vest / self.n) Synthetic Data We simulate a dataset where each user has a variable number of sessions and a lognormally distributed metric per session. The lognormal distribution mimics real-world revenue data: heavy right tail, all positive values.\nSynthetic data generation import pandas as pd import hashlib def generate_samples(n_users, n_samples, seed=2023): np.random.seed(seed) def encoder(x): uid = hashlib.md5(str(x).encode()).hexdigest() test_flg = hash(str(x).encode()) % 2 return (uid, 'test' if test_flg else 'control') df = pd.DataFrame( list(map(encoder, np.random.randint(0, n_users, 2 * n_samples))), columns=['user_id', 'group'], ) return df.assign(metric=sts.lognorm.rvs(3, loc=100, size=2 * n_samples)) df = generate_samples(1000, 10000) print(f'Rows: {df.shape[0]}, unique users: {df.user_id.nunique()}') df.sample(3) Rows: 20000, unique users: 1000 user_id group metric 8225 274ad4786c3abca69fa097b85867d9a4 test 108.472413 775 bea5955b308361a1b07bc55042e25e54 control 114.576327 14845 389bc7bb1e1c2a5e7e147703232a88f6 test 106.192022 Variance Estimation: Three Approaches Each approach estimates a 95% confidence interval for the control group mean. The true population mean is approximately 180.5 (lognormal with s=3, loc=100). We compare how wide — and how correct — each CI is.\nA. Row-level (incorrect) row_level = df.groupby('group')['metric'].agg(['mean', 'var']) report( 'A. Row-level', row_level.loc['control', 'mean'], row_level.loc['control', 'var'], df.shape[0], ) A. Row-level: mean=193.92, 95% CI = [164.56, 223.27], width=58.71 The row-level approach treats 20 000 rows as independent observations. The sample mean is unbiased, but the variance is severely underestimated because many rows belong to the same user.\nB. User-level naive average (incorrect) temp = ( df.groupby(['group', 'user_id'])['metric'] .agg(['sum', 'count']) .reset_index(level=1) ) temp['avg'] = temp['sum'] / temp['count'] user_level = temp.groupby('group')['avg'].agg(['mean', 'var']) report( 'B. User avg', user_level.loc['control', 'mean'], user_level.loc['control', 'var'], temp.shape[0], ) B. User avg: mean=196.76, 95% CI = [167.11, 226.41], width=59.30 Averaging per-user averages gives neither the correct point estimate (the mean of averages $\\neq$ the ratio of sums) nor the correct variance, because the denominator $Y_i$ varies across users.\nC. Delta Method (correct) X_control = temp.loc['control', 'sum'].values Y_control = temp.loc['control', 'count'].values ctrl = RatioXY(X_control, Y_control) lo, hi = ctrl.deltaci(bias=False) print( f'C. Delta Method: mean={ctrl.point_estimate():.2f}, ' f'95% CI = [{lo:.2f}, {hi:.2f}], width={hi-lo:.2f}' ) C. Delta Method: mean=193.92, 95% CI = [152.50, 235.34], width=82.84 The Delta Method produces a wider confidence interval — not because it is less precise, but because it correctly captures the additional uncertainty from the denominator. The narrower intervals from approaches A and B are over-confident and would inflate your false-positive rate in an AB test.\nConfidence interval comparison chart import plotly.graph_objs as go from pathlib import Path def find_git_repo(path=None): source = Path(path) if path else Path.cwd() for p in source.parents: if (p / '.git').is_dir(): return p row_mean = row_level.loc['control', 'mean'] row_var = row_level.loc['control', 'var'] row_lo, row_hi = row_mean - z * np.sqrt(row_var / df.shape[0]), row_mean + z * np.sqrt(row_var / df.shape[0]) usr_mean = user_level.loc['control', 'mean'] usr_var = user_level.loc['control', 'var'] usr_lo, usr_hi = usr_mean - z * np.sqrt(usr_var / temp.shape[0]), usr_mean + z * np.sqrt(usr_var / temp.shape[0]) dlt_lo, dlt_hi = ctrl.deltaci() dlt_mean = ctrl.point_estimate() labels = ['A. Row-Level', 'B. User Average', 'C. Delta Method'] means = [row_mean, usr_mean, dlt_mean] lows = [row_lo, usr_lo, dlt_lo] highs = [row_hi, usr_hi, dlt_hi] figure = go.Figure() figure.add_trace(go.Scatter( x=labels, y=means, error_y=dict( type='data', symmetric=False, array=[hi - m for m, hi in zip(means, highs)], arrayminus=[m - lo for m, lo in zip(means, lows)], ), mode='markers', marker=dict(size=12), name='95% CI', )) figure.update_layout( title={'text': '95% Confidence Intervals — Three Approaches', 'x': 0.5}, yaxis_title='Estimated Mean', template='plotly_dark', ) figure.show() Conclusion Whenever your AB test metric is a ratio — revenue per visit, events per user, average order value — the Delta Method is the correct tool for variance estimation. It requires only three per-user aggregations ($\\sum X_i$, $\\sum Y_i$, $\\sum X_i Y_i$) and is trivially expressible in SQL, making it production-ready with no additional infrastructure.\nThe naive alternatives consistently underestimate variance, leading to confidence intervals that are too narrow and hypothesis tests that reject the null too often.\nReferences Deng, A. et al. (2018). Applying the Delta Method in Metric Analytics — the original paper this implementation is based on. Medium: Applying Delta Method for A/B Tests Analysis StackExchange: Example of using the Delta Method StatLect: Delta Method — theory with examples Avito variance reduction series — Part 1, Part 2 ",
   "wordCount" : "1258",
   "inLanguage": "en",
-  "datePublished": "2025-12-15T00:00:00Z",
-  "dateModified": "2025-12-15T00:00:00Z",
+  "datePublished": "2024-07-31T00:00:00Z",
+  "dateModified": "2024-07-31T00:00:00Z",
   "author":{
     "@type": "Person",
     "name": "Nikita Podlozhniy"
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://npodlozhniy.github.io/posts/delta-method/"
+    "@id": "http://localhost:1313/posts/delta-method/"
   },
   "publisher": {
     "@type": "Organization",
     "name": "Nikita Podlozhniy",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://npodlozhniy.github.io/favicons/favicon.ico"
+      "url": "http://localhost:1313/favicons/favicon.ico"
     }
   }
 }
@@ -124,7 +124,7 @@
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://npodlozhniy.github.io/" accesskey="h" title="Nikita Podlozhniy (Alt + H)">Nikita Podlozhniy</a>
+            <a href="http://localhost:1313/" accesskey="h" title="Nikita Podlozhniy (Alt + H)">Nikita Podlozhniy</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -148,7 +148,7 @@
                 </button>
                 <ul class="lang-switch"><li>|</li>
                     <li>
-                        <a href="https://npodlozhniy.github.io/ru/" title="Russian"
+                        <a href="http://localhost:1313/ru/" title="Russian"
                             aria-label=":ru:">Ru</a>
                     </li>
                 </ul>
@@ -156,22 +156,22 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="https://npodlozhniy.github.io/" title="Home">
+                <a href="http://localhost:1313/" title="Home">
                     <span>Home</span>
                 </a>
             </li>
             <li>
-                <a href="https://npodlozhniy.github.io/posts/" title="Posts">
+                <a href="http://localhost:1313/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="https://npodlozhniy.github.io/search" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="http://localhost:1313/search" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
             <li>
-                <a href="https://npodlozhniy.github.io/archives" title="Archive">
+                <a href="http://localhost:1313/archives" title="Archive">
                     <span>Archive</span>
                 </a>
             </li>
@@ -182,11 +182,11 @@
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="https://npodlozhniy.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://npodlozhniy.github.io/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
     <h1 class="post-title">
       Delta Method for Ratio Metrics in AB Testing
     </h1>
-    <div class="post-meta"><span title='2025-12-15 00:00:00 +0000 UTC'>December 15, 2025</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;Nikita Podlozhniy
+    <div class="post-meta"><span title='2024-07-31 00:00:00 +0000 UTC'>July 31, 2024</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;Nikita Podlozhniy
 
 </div>
   </header> <div class="toc">
@@ -502,36 +502,36 @@ It requires only three per-user aggregations ($\sum X_i$, $\sum Y_i$, $\sum X_i 
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="https://npodlozhniy.github.io/tags/ab-testing/">Ab-Testing</a></li>
-      <li><a href="https://npodlozhniy.github.io/tags/statistics/">Statistics</a></li>
-      <li><a href="https://npodlozhniy.github.io/tags/ratio-metrics/">Ratio-Metrics</a></li>
-      <li><a href="https://npodlozhniy.github.io/tags/variance-reduction/">Variance-Reduction</a></li>
+      <li><a href="http://localhost:1313/tags/ab-testing/">Ab-Testing</a></li>
+      <li><a href="http://localhost:1313/tags/statistics/">Statistics</a></li>
+      <li><a href="http://localhost:1313/tags/ratio-metrics/">Ratio-Metrics</a></li>
+      <li><a href="http://localhost:1313/tags/variance-reduction/">Variance-Reduction</a></li>
     </ul>
 
 <div class="share-buttons">
     <a target="_blank" rel="noopener noreferrer" aria-label="share Delta Method for Ratio Metrics in AB Testing on twitter"
-        href="https://twitter.com/intent/tweet/?text=Delta%20Method%20for%20Ratio%20Metrics%20in%20AB%20Testing&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fdelta-method%2f&amp;hashtags=ab-testing%2cstatistics%2cratio-metrics%2cvariance-reduction">
+        href="https://twitter.com/intent/tweet/?text=Delta%20Method%20for%20Ratio%20Metrics%20in%20AB%20Testing&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fdelta-method%2f&amp;hashtags=ab-testing%2cstatistics%2cratio-metrics%2cvariance-reduction">
         <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
             <path
                 d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
         </svg>
     </a>
     <a target="_blank" rel="noopener noreferrer" aria-label="share Delta Method for Ratio Metrics in AB Testing on linkedin"
-        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fdelta-method%2f&amp;title=Delta%20Method%20for%20Ratio%20Metrics%20in%20AB%20Testing&amp;summary=Delta%20Method%20for%20Ratio%20Metrics%20in%20AB%20Testing&amp;source=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fdelta-method%2f">
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fdelta-method%2f&amp;title=Delta%20Method%20for%20Ratio%20Metrics%20in%20AB%20Testing&amp;summary=Delta%20Method%20for%20Ratio%20Metrics%20in%20AB%20Testing&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2fdelta-method%2f">
         <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
             <path
                 d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
         </svg>
     </a>
     <a target="_blank" rel="noopener noreferrer" aria-label="share Delta Method for Ratio Metrics in AB Testing on facebook"
-        href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fdelta-method%2f">
+        href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fdelta-method%2f">
         <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
             <path
                 d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
         </svg>
     </a>
     <a target="_blank" rel="noopener noreferrer" aria-label="share Delta Method for Ratio Metrics in AB Testing on telegram"
-        href="https://telegram.me/share/url?text=Delta%20Method%20for%20Ratio%20Metrics%20in%20AB%20Testing&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fdelta-method%2f">
+        href="https://telegram.me/share/url?text=Delta%20Method%20for%20Ratio%20Metrics%20in%20AB%20Testing&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fdelta-method%2f">
         <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
             <path
                 d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
@@ -543,7 +543,7 @@ It requires only three per-user aggregations ($\sum X_i$, $\sum Y_i$, $\sum X_i 
 <script>
 	
     var disqus_config = function () {
-    this.page.url = 'https:\/\/npodlozhniy.github.io\/posts\/delta-method\/';  
+    this.page.url = 'http:\/\/localhost:1313\/posts\/delta-method\/';  
     this.page.identifier = ''; 
 	this.language = document.documentElement.lang; 
 	};
@@ -567,7 +567,7 @@ It requires only three per-user aggregations ($\sum X_i$, $\sum Y_i$, $\sum X_i 
     </main>
     
 <footer class="footer">
-    <span>&copy; 2026 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
+    <span>&copy; 2026 <a href="http://localhost:1313/">Nikita Podlozhniy</a></span>
     <span>
         Powered by
         <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &

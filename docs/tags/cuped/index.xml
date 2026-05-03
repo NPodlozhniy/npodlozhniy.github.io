@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Cuped on Nikita Podlozhniy</title>
-    <link>https://npodlozhniy.github.io/tags/cuped/</link>
+    <link>http://localhost:1313/tags/cuped/</link>
     <description>Recent content in Cuped on Nikita Podlozhniy</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-GB</language>
-    <lastBuildDate>Sun, 15 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://npodlozhniy.github.io/tags/cuped/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 18 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/cuped/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CUPED: Reducing Metric Variance with Pre-Experiment Data</title>
-      <link>https://npodlozhniy.github.io/posts/cuped/</link>
-      <pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>https://npodlozhniy.github.io/posts/cuped/</guid>
+      <link>http://localhost:1313/posts/cuped/</link>
+      <pubDate>Thu, 18 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/cuped/</guid>
       <description>How CUPED uses pre-experiment covariates to cut metric variance and boost AB test sensitivity — with a rigorous proof of what works and what silently breaks</description>
     </item>
     

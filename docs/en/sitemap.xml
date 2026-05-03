@@ -2,197 +2,185 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://npodlozhniy.github.io/tags/ab-testing/</loc>
-    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/tags/ab-testing/</loc>
+    <lastmod>2025-12-11T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/categories/</loc>
-    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/categories/</loc>
+    <lastmod>2025-12-11T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="ru-RU"
-                href="https://npodlozhniy.github.io/ru/categories/"
+                href="http://localhost:1313/ru/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en-GB"
-                href="https://npodlozhniy.github.io/categories/"
+                href="http://localhost:1313/categories/"
                 />
   </url><url>
-    <loc>https://npodlozhniy.github.io/posts/linearization/</loc>
-    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/tags/hypothesis-testing/</loc>
+    <lastmod>2025-12-11T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/</loc>
-    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2025-12-11T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="ru-RU"
-                href="https://npodlozhniy.github.io/ru/"
+                href="http://localhost:1313/ru/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en-GB"
-                href="https://npodlozhniy.github.io/"
+                href="http://localhost:1313/"
                 />
   </url><url>
-    <loc>https://npodlozhniy.github.io/categories/posts/</loc>
-    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/categories/posts/</loc>
+    <lastmod>2025-12-11T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/posts/</loc>
-    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2025-12-11T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="ru-RU"
-                href="https://npodlozhniy.github.io/ru/posts/"
+                href="http://localhost:1313/ru/posts/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en-GB"
-                href="https://npodlozhniy.github.io/posts/"
+                href="http://localhost:1313/posts/"
                 />
   </url><url>
-    <loc>https://npodlozhniy.github.io/tags/ratio-metrics/</loc>
-    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/tags/sample-size/</loc>
+    <lastmod>2025-12-11T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/tags/statistics/</loc>
-    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/posts/non-inferiority-test/</loc>
+    <lastmod>2025-12-11T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/tags/</loc>
-    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2025-12-11T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="ru-RU"
-                href="https://npodlozhniy.github.io/ru/tags/"
+                href="http://localhost:1313/ru/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en-GB"
-                href="https://npodlozhniy.github.io/tags/"
+                href="http://localhost:1313/tags/"
                 />
   </url><url>
-    <loc>https://npodlozhniy.github.io/tags/variance-reduction/</loc>
-    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://npodlozhniy.github.io/tags/cuped/</loc>
-    <lastmod>2026-03-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://npodlozhniy.github.io/posts/cuped/</loc>
-    <lastmod>2026-03-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://npodlozhniy.github.io/tags/hypothesis-testing/</loc>
-    <lastmod>2026-03-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://npodlozhniy.github.io/tags/sample-size/</loc>
-    <lastmod>2026-03-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://npodlozhniy.github.io/posts/non-inferiority-test/</loc>
-    <lastmod>2026-03-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://npodlozhniy.github.io/tags/experimentation-platform/</loc>
-    <lastmod>2026-02-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://npodlozhniy.github.io/posts/ab-salts/</loc>
-    <lastmod>2026-02-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://npodlozhniy.github.io/tags/traffic-splitting/</loc>
-    <lastmod>2026-02-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://npodlozhniy.github.io/tags/bucketing/</loc>
-    <lastmod>2026-02-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://npodlozhniy.github.io/posts/bucketing/</loc>
-    <lastmod>2026-02-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://npodlozhniy.github.io/tags/non-parametric/</loc>
-    <lastmod>2026-02-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://npodlozhniy.github.io/tags/bootstrap/</loc>
-    <lastmod>2026-01-10T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://npodlozhniy.github.io/posts/bootstrap/</loc>
-    <lastmod>2026-01-10T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://npodlozhniy.github.io/posts/delta-method/</loc>
-    <lastmod>2025-12-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://npodlozhniy.github.io/posts/bayesian-test/</loc>
+    <loc>http://localhost:1313/posts/bayesian-test/</loc>
     <lastmod>2025-11-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/tags/bayesian-inference/</loc>
+    <loc>http://localhost:1313/tags/bayesian-inference/</loc>
     <lastmod>2025-11-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/tags/monte-carlo/</loc>
+    <loc>http://localhost:1313/tags/monte-carlo/</loc>
     <lastmod>2025-11-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/tags/pymc/</loc>
+    <loc>http://localhost:1313/tags/pymc/</loc>
     <lastmod>2025-11-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/tags/sequential-testing/</loc>
+    <loc>http://localhost:1313/tags/sequential-testing/</loc>
     <lastmod>2025-11-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/posts/sequential-testing/</loc>
+    <loc>http://localhost:1313/posts/sequential-testing/</loc>
     <lastmod>2024-12-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/posts/contingency-test/</loc>
+    <loc>http://localhost:1313/posts/contingency-test/</loc>
     <lastmod>2024-12-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/posts/maturing-conversions/</loc>
+    <loc>http://localhost:1313/posts/linearization/</loc>
+    <lastmod>2024-10-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/ratio-metrics/</loc>
+    <lastmod>2024-10-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/statistics/</loc>
+    <lastmod>2024-10-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/variance-reduction/</loc>
+    <lastmod>2024-10-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/maturing-conversions/</loc>
     <lastmod>2024-08-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/posts/dunnett-correction/</loc>
+    <loc>http://localhost:1313/posts/delta-method/</loc>
+    <lastmod>2024-07-31T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/dunnett-correction/</loc>
     <lastmod>2024-07-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/posts/feedback-analysis/</loc>
+    <loc>http://localhost:1313/tags/cuped/</loc>
+    <lastmod>2024-04-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/cuped/</loc>
+    <lastmod>2024-04-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/feedback-analysis/</loc>
     <lastmod>2023-10-29T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/posts/timeseries-analysis/</loc>
+    <loc>http://localhost:1313/posts/timeseries-analysis/</loc>
     <lastmod>2023-09-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/posts/feedback-analysis/data-profile/</loc>
+    <loc>http://localhost:1313/tags/experimentation-platform/</loc>
+    <lastmod>2022-09-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/posts/timeseries-analysis/accra/</loc>
+    <loc>http://localhost:1313/posts/ab-salts/</loc>
+    <lastmod>2022-09-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/posts/timeseries-analysis/accra_prognosis/</loc>
+    <loc>http://localhost:1313/tags/traffic-splitting/</loc>
+    <lastmod>2022-09-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/posts/timeseries-analysis/correlation_lisbon_vs_accra/</loc>
+    <loc>http://localhost:1313/tags/bootstrap/</loc>
+    <lastmod>2022-08-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/posts/timeseries-analysis/lisbon/</loc>
+    <loc>http://localhost:1313/posts/bootstrap/</loc>
+    <lastmod>2022-08-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/posts/timeseries-analysis/lisbon_prognosis/</loc>
+    <loc>http://localhost:1313/tags/bucketing/</loc>
+    <lastmod>2022-08-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://npodlozhniy.github.io/archives/</loc>
+    <loc>http://localhost:1313/posts/bucketing/</loc>
+    <lastmod>2022-08-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/non-parametric/</loc>
+    <lastmod>2022-08-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/archives/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="ru-RU"
-                href="https://npodlozhniy.github.io/ru/archives/"
+                href="http://localhost:1313/ru/archives/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en-GB"
-                href="https://npodlozhniy.github.io/archives/"
+                href="http://localhost:1313/archives/"
                 />
   </url><url>
-    <loc>https://npodlozhniy.github.io/search/</loc>
+    <loc>http://localhost:1313/search/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="ru-RU"
-                href="https://npodlozhniy.github.io/ru/search/"
+                href="http://localhost:1313/ru/search/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en-GB"
-                href="https://npodlozhniy.github.io/search/"
+                href="http://localhost:1313/search/"
                 />
   </url><url>
-    <loc>https://npodlozhniy.github.io/social/</loc>
+    <loc>http://localhost:1313/social/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="ru-RU"
-                href="https://npodlozhniy.github.io/ru/social/"
+                href="http://localhost:1313/ru/social/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en-GB"
-                href="https://npodlozhniy.github.io/social/"
+                href="http://localhost:1313/social/"
                 />
   </url>
 </urlset>

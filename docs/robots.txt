@@ -1,3 +1,0 @@
-User-agent: *
-Disallow:
-Sitemap: https://npodlozhniy.github.io/sitemap.xml

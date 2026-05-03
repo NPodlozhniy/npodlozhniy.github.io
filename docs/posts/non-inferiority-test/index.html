@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
@@ -9,17 +9,17 @@
 <meta name="keywords" content="ab-testing, hypothesis-testing, sample-size">
 <meta name="description" content="Not every experiment needs to show improvement — sometimes proving you haven&rsquo;t made things worse is enough. A practical guide to non-inferiority trial design.">
 <meta name="author" content="Nikita Podlozhniy">
-<link rel="canonical" href="https://npodlozhniy.github.io/posts/non-inferiority-test/">
+<link rel="canonical" href="http://localhost:1313/posts/non-inferiority-test/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
-<link rel="icon" href="https://npodlozhniy.github.io/favicons/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://npodlozhniy.github.io/favicons/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://npodlozhniy.github.io/favicons/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://npodlozhniy.github.io/favicons/apple-touch-icon.png">
-<link rel="mask-icon" href="https://npodlozhniy.github.io/safari-pinned-tab.svg">
+<link rel="icon" href="http://localhost:1313/favicons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicons/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicons/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/favicons/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="https://npodlozhniy.github.io/posts/non-inferiority-test/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/non-inferiority-test/">
 <noscript>
     <style>
         #theme-toggle,
@@ -47,9 +47,9 @@
 <meta property="og:title" content="Superiority vs Non-Inferiority Trials in AB Testing" />
 <meta property="og:description" content="Not every experiment needs to show improvement — sometimes proving you haven&rsquo;t made things worse is enough. A practical guide to non-inferiority trial design." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://npodlozhniy.github.io/posts/non-inferiority-test/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2026-03-01T00:00:00+00:00" />
-<meta property="article:modified_time" content="2026-03-01T00:00:00+00:00" />
+<meta property="og:url" content="http://localhost:1313/posts/non-inferiority-test/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2025-12-11T00:00:00+00:00" />
+<meta property="article:modified_time" content="2025-12-11T00:00:00+00:00" />
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Superiority vs Non-Inferiority Trials in AB Testing"/>
@@ -65,13 +65,13 @@
       "@type": "ListItem",
       "position":  1 ,
       "name": "Posts",
-      "item": "https://npodlozhniy.github.io/posts/"
+      "item": "http://localhost:1313/posts/"
     }, 
     {
       "@type": "ListItem",
       "position":  2 ,
       "name": "Superiority vs Non-Inferiority Trials in AB Testing",
-      "item": "https://npodlozhniy.github.io/posts/non-inferiority-test/"
+      "item": "http://localhost:1313/posts/non-inferiority-test/"
     }
   ]
 }
@@ -89,22 +89,22 @@
   "articleBody": " Background Most AB tests at HomeBuddy ask: “is the new variant better?” — a superiority trial. But sometimes the question is different: we want to ship a change for cost, performance, or architectural reasons, and we need to verify that it does not harm the key metric by more than a tolerable margin. This is a non-inferiority trial.\nThe distinction is not cosmetic — it changes the null hypothesis, the test statistic, and critically, the sample size formula. Using a superiority design when you actually want non-inferiority leads to either an underpowered test (too few users to detect the margin) or a miscalibrated one (wrong null hypothesis).\nProblem Definition Let $\\mu_E$ and $\\mu_C$ be the true means of the experimental and control groups respectively. Both trial types test a claim about $\\mu_E - \\mu_C$, but they differ in what they try to prove.\nSuperiority trial\n$$H_0: \\mu_E - \\mu_C \\le 0 \\quad \\text{vs} \\quad H_1: \\mu_E - \\mu_C \u003e 0$$\nRejecting $H_0$ means the treatment is strictly better than control.\nNon-inferiority trial\n$$H_0: \\mu_E - \\mu_C \\le -\\Delta \\quad \\text{vs} \\quad H_1: \\mu_E - \\mu_C \u003e -\\Delta$$\nwhere $\\Delta \u003e 0$ is the non-inferiority margin — the largest degradation you are willing to tolerate. Rejecting $H_0$ means the treatment is not worse than control by more than $\\Delta$.\nSide-by-Side Comparison Feature Superiority Trial Non-Inferiority Trial Goal Prove $\\mu_E \u003e \\mu_C$ Prove $\\mu_E \\ge \\mu_C - \\Delta$ Null hypothesis $\\mu_E - \\mu_C \\le 0$ $\\mu_E - \\mu_C \\le -\\Delta$ Alternative $\\mu_E - \\mu_C \u003e 0$ $\\mu_E - \\mu_C \u003e -\\Delta$ Test type Two-sided (typically) One-sided (always) Null center $0$ $-\\Delta$ Test statistic $Z = \\dfrac{(\\bar x_E - \\bar x_C) - 0}{SE}$ $Z = \\dfrac{(\\bar x_E - \\bar x_C) - (-\\Delta)}{SE}$ Key parameter $\\delta$ (MDE) $\\Delta$ (margin) Sample size See below See below Sample Size Formulas Let $\\sigma^2$ be the common variance, $\\alpha$ the significance level, and $1-\\beta$ the desired power.\nSuperiority (two-sided, detects effect $\\delta$):\n$$ n \\approx \\frac{\\left(Z_{1-\\alpha/2} + Z_{1-\\beta}\\right)^2 \\cdot 2\\sigma^2}{\\delta^2} $$\nNon-inferiority (one-sided, with anticipated true effect $\\delta_{\\text{ant}}$):\n$$ n \\approx \\frac{\\left(Z_{1-\\alpha} + Z_{1-\\beta}\\right)^2 \\cdot 2\\sigma^2}{(\\Delta - \\delta_{\\text{ant}})^2} $$\nTypically $\\delta_{\\text{ant}} = 0$ is assumed (no true difference), which simplifies the denominator to $\\Delta^2$.\nKey insight: the non-inferiority formula uses the one-sided critical value $Z_{1-\\alpha}$ (not $Z_{1-\\alpha/2}$), and the effect in the denominator is the margin $\\Delta$, not the MDE $\\delta$. For a tight margin (small $\\Delta$), non-inferiority tests require more users than an equivalent superiority test.\nSample size calculator from scipy.stats import norm import numpy as np def n_superiority(delta, sigma2, alpha=0.05, power=0.8): \"\"\"Per-group sample size for a two-sided superiority test.\"\"\" z = norm.ppf(1 - alpha / 2) + norm.ppf(power) return int(np.ceil(z**2 * 2 * sigma2 / delta**2)) def n_non_inferiority(margin, sigma2, alpha=0.05, power=0.8, anticipated_delta=0.0): \"\"\"Per-group sample size for a one-sided non-inferiority test.\"\"\" z = norm.ppf(1 - alpha) + norm.ppf(power) return int(np.ceil(z**2 * 2 * sigma2 / (margin - anticipated_delta)**2)) # Example: conversion rate ~ 20%, margin / MDE = 1 pp p = 0.20 sigma2 = p * (1 - p) effect = 0.01 # 1 percentage point n_sup = n_superiority(effect, sigma2) n_ni = n_non_inferiority(effect, sigma2) print(f'Conversion rate: {p:.0%}, effect / margin: {effect:.1%}') print(f'Superiority n per group: {n_sup:\u003e8,}') print(f'Non-inferiority n per group: {n_ni:\u003e8,}') Conversion rate: 20%, effect / margin: 1.0% Superiority n per group: 25,117 Non-inferiority n per group: 19,785 Comparison across margins and conversion rates import pandas as pd rows = [] for p in [0.05, 0.10, 0.20]: for margin_pct in [0.01, 0.02, 0.05]: s2 = p * (1 - p) rows.append({ 'Baseline p': f'{p:.0%}', 'Margin': f'{margin_pct:.0%}', 'Superiority n': n_superiority(margin_pct, s2), 'Non-inferiority n': n_non_inferiority(margin_pct, s2), }) pd.DataFrame(rows).set_index(['Baseline p', 'Margin']) Superiority n Non-inferiority n Baseline p Margin 5% 1% 7457 5874 2% 1865 1469 5% 299 235 10% 1% 14128 11129 2% 3532 2783 5% 566 446 20% 1% 25117 19785 2% 6280 4947 5% 1005 792 When to Use Each Use a superiority trial when:\nYou expect the new variant to improve a metric and want to prove it. The cost of a false positive (shipping a harmful change) is high. Use a non-inferiority trial when:\nYou are shipping a change for non-metric reasons (performance, cost, tech debt) and need to confirm no regression. You are replacing an old component and the new one is expected to be equivalent, not better. You want to retire a feature and need to prove its removal doesn’t degrade key metrics. A common mistake is to run a superiority test and interpret a non-significant result as proof of non-inferiority — it is not. “We couldn’t detect a difference” is not the same as “we proved there is no meaningful difference.” Only a properly designed non-inferiority test with a pre-specified margin gives you that guarantee.\nConclusion Superiority and non-inferiority trials answer fundamentally different questions and require different statistical designs. Choosing the right one before you run the experiment — not after — is essential for valid inference.\nFor practical implementation: non-inferiority tests at HomeBuddy use one-sided Z-tests with the margin as the null center. The sample size is calculated against the margin $\\Delta$, not the MDE, and the significance level uses the one-sided critical value $Z_{1-\\alpha}$ instead of $Z_{1-\\alpha/2}$.\nReferences Non-inferiority trials — FDA guidance Superiority, equivalence, and non-inferiority trials Sample size for non-inferiority studies ",
   "wordCount" : "873",
   "inLanguage": "en",
-  "datePublished": "2026-03-01T00:00:00Z",
-  "dateModified": "2026-03-01T00:00:00Z",
+  "datePublished": "2025-12-11T00:00:00Z",
+  "dateModified": "2025-12-11T00:00:00Z",
   "author":{
     "@type": "Person",
     "name": "Nikita Podlozhniy"
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://npodlozhniy.github.io/posts/non-inferiority-test/"
+    "@id": "http://localhost:1313/posts/non-inferiority-test/"
   },
   "publisher": {
     "@type": "Organization",
     "name": "Nikita Podlozhniy",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://npodlozhniy.github.io/favicons/favicon.ico"
+      "url": "http://localhost:1313/favicons/favicon.ico"
     }
   }
 }
@@ -122,7 +122,7 @@
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://npodlozhniy.github.io/" accesskey="h" title="Nikita Podlozhniy (Alt + H)">Nikita Podlozhniy</a>
+            <a href="http://localhost:1313/" accesskey="h" title="Nikita Podlozhniy (Alt + H)">Nikita Podlozhniy</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -146,7 +146,7 @@
                 </button>
                 <ul class="lang-switch"><li>|</li>
                     <li>
-                        <a href="https://npodlozhniy.github.io/ru/" title="Russian"
+                        <a href="http://localhost:1313/ru/" title="Russian"
                             aria-label=":ru:">Ru</a>
                     </li>
                 </ul>
@@ -154,22 +154,22 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="https://npodlozhniy.github.io/" title="Home">
+                <a href="http://localhost:1313/" title="Home">
                     <span>Home</span>
                 </a>
             </li>
             <li>
-                <a href="https://npodlozhniy.github.io/posts/" title="Posts">
+                <a href="http://localhost:1313/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="https://npodlozhniy.github.io/search" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="http://localhost:1313/search" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
             <li>
-                <a href="https://npodlozhniy.github.io/archives" title="Archive">
+                <a href="http://localhost:1313/archives" title="Archive">
                     <span>Archive</span>
                 </a>
             </li>
@@ -180,11 +180,11 @@
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="https://npodlozhniy.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://npodlozhniy.github.io/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
     <h1 class="post-title">
       Superiority vs Non-Inferiority Trials in AB Testing
     </h1>
-    <div class="post-meta"><span title='2026-03-01 00:00:00 +0000 UTC'>March 1, 2026</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;Nikita Podlozhniy
+    <div class="post-meta"><span title='2025-12-11 00:00:00 +0000 UTC'>December 11, 2025</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;Nikita Podlozhniy
 
 </div>
   </header> <div class="toc">
@@ -460,35 +460,35 @@ The sample size is calculated against the margin $\Delta$, not the MDE, and the 
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="https://npodlozhniy.github.io/tags/ab-testing/">Ab-Testing</a></li>
-      <li><a href="https://npodlozhniy.github.io/tags/hypothesis-testing/">Hypothesis-Testing</a></li>
-      <li><a href="https://npodlozhniy.github.io/tags/sample-size/">Sample-Size</a></li>
+      <li><a href="http://localhost:1313/tags/ab-testing/">Ab-Testing</a></li>
+      <li><a href="http://localhost:1313/tags/hypothesis-testing/">Hypothesis-Testing</a></li>
+      <li><a href="http://localhost:1313/tags/sample-size/">Sample-Size</a></li>
     </ul>
 
 <div class="share-buttons">
     <a target="_blank" rel="noopener noreferrer" aria-label="share Superiority vs Non-Inferiority Trials in AB Testing on twitter"
-        href="https://twitter.com/intent/tweet/?text=Superiority%20vs%20Non-Inferiority%20Trials%20in%20AB%20Testing&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fnon-inferiority-test%2f&amp;hashtags=ab-testing%2chypothesis-testing%2csample-size">
+        href="https://twitter.com/intent/tweet/?text=Superiority%20vs%20Non-Inferiority%20Trials%20in%20AB%20Testing&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnon-inferiority-test%2f&amp;hashtags=ab-testing%2chypothesis-testing%2csample-size">
         <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
             <path
                 d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
         </svg>
     </a>
     <a target="_blank" rel="noopener noreferrer" aria-label="share Superiority vs Non-Inferiority Trials in AB Testing on linkedin"
-        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fnon-inferiority-test%2f&amp;title=Superiority%20vs%20Non-Inferiority%20Trials%20in%20AB%20Testing&amp;summary=Superiority%20vs%20Non-Inferiority%20Trials%20in%20AB%20Testing&amp;source=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fnon-inferiority-test%2f">
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnon-inferiority-test%2f&amp;title=Superiority%20vs%20Non-Inferiority%20Trials%20in%20AB%20Testing&amp;summary=Superiority%20vs%20Non-Inferiority%20Trials%20in%20AB%20Testing&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2fnon-inferiority-test%2f">
         <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
             <path
                 d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
         </svg>
     </a>
     <a target="_blank" rel="noopener noreferrer" aria-label="share Superiority vs Non-Inferiority Trials in AB Testing on facebook"
-        href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fnon-inferiority-test%2f">
+        href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fnon-inferiority-test%2f">
         <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
             <path
                 d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
         </svg>
     </a>
     <a target="_blank" rel="noopener noreferrer" aria-label="share Superiority vs Non-Inferiority Trials in AB Testing on telegram"
-        href="https://telegram.me/share/url?text=Superiority%20vs%20Non-Inferiority%20Trials%20in%20AB%20Testing&amp;url=https%3a%2f%2fnpodlozhniy.github.io%2fposts%2fnon-inferiority-test%2f">
+        href="https://telegram.me/share/url?text=Superiority%20vs%20Non-Inferiority%20Trials%20in%20AB%20Testing&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnon-inferiority-test%2f">
         <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
             <path
                 d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
@@ -500,7 +500,7 @@ The sample size is calculated against the margin $\Delta$, not the MDE, and the 
 <script>
 	
     var disqus_config = function () {
-    this.page.url = 'https:\/\/npodlozhniy.github.io\/posts\/non-inferiority-test\/';  
+    this.page.url = 'http:\/\/localhost:1313\/posts\/non-inferiority-test\/';  
     this.page.identifier = ''; 
 	this.language = document.documentElement.lang; 
 	};
@@ -524,7 +524,7 @@ The sample size is calculated against the margin $\Delta$, not the MDE, and the 
     </main>
     
 <footer class="footer">
-    <span>&copy; 2026 <a href="https://npodlozhniy.github.io/">Nikita Podlozhniy</a></span>
+    <span>&copy; 2026 <a href="http://localhost:1313/">Nikita Podlozhniy</a></span>
     <span>
         Powered by
         <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
